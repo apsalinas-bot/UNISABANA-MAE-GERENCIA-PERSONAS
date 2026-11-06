@@ -1,0 +1,1021 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Consultoría y Rediseño de Procesos en la Gestión de Personas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: plano de procesos sobrio. Barra de pestañas fija, columna de 1000px; el modo presentación es un escenario 16:9 con paleta propia para proyectar. */
+:root{
+  --bg:#f5f7fb; --surface:#ffffff; --ink:#0b2447; --muted:#51607a; --line:#d7deea; --grid:#e8edf5;
+  --accent:#0b4da2; --accent-soft:#e4edf9; --signal:#a67800; --signal-soft:#fbf1d2; --ok:#1d7552; --ok-soft:#e1f1e9;
+  --pause:#7a8497; --pause-soft:#edf0f4;
+  --ch-a:#c99400; --ch-b:#8a93a5; --ch-c:#0b4da2; --ch-grid:#d7deea; --ch-text:#51607a; --ch-hi:#c99400;
+  --cons:#6b3fa0; --cons-soft:#efe7f8; --navy:#0b2447; --gold:#f2b91f; --navy-2:#12305c; --gold:#f2b91f; --on-navy:#eaf0f8; --on-navy-muted:#afc0da;
+  color-scheme:light;
+  --display:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --body:"Instrument Sans","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:1000px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);line-height:1.12;text-wrap:balance;margin:0}
+p{margin:0}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.label{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:600;color:var(--muted)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:14px;padding-block:10px}
+.brand{font-family:var(--display);font-weight:800;font-size:15px;white-space:nowrap}
+.brand span{color:var(--signal)}
+.brand{font-family:var(--display)!important;font-weight:700!important}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;min-width:0;flex:1}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:1px solid transparent;background:none;color:var(--muted);padding:6px 11px;border-radius:8px;white-space:nowrap;font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:6px}
+.tab:hover{color:var(--ink);background:var(--bg)}
+.tab[aria-current="page"]{color:var(--ink);background:var(--accent-soft)}
+.tab .d{font-family:var(--mono);font-weight:400;font-size:11.5px;opacity:.8}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--signal);display:inline-block}
+
+main{padding-block:28px 80px}
+section.view{display:flex;flex-direction:column;gap:34px}
+.block{display:flex;flex-direction:column;gap:14px}
+.block>h2{font-size:22px;font-weight:800}
+.block>.lead{color:var(--muted);max-width:66ch}
+
+.hero{border-radius:16px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-top:5px solid var(--gold,#f2b91f);padding:clamp(24px,4.5vw,44px);position:relative;overflow:hidden}
+.hero .label{color:var(--signal)}
+.hero .thesis{color:var(--muted)!important}
+.hero .thesis b{color:var(--ink)!important}
+.hero .pill{background:var(--bg);border-color:var(--line);color:var(--ink)}
+.hero::after{content:"";position:absolute;right:-70px;top:-70px;width:220px;height:220px;border-radius:50%;border:26px solid var(--gold,#f2b91f);opacity:.16;pointer-events:none}
+.hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;opacity:.5;pointer-events:none}
+.hero h1{font-size:clamp(30px,5vw,50px);font-weight:700;letter-spacing:-.01em;max-width:18ch;margin-top:12px;color:var(--ink)}
+.hero .thesis{margin-top:14px;font-size:clamp(16px,2vw,18px);max-width:58ch;color:var(--muted)}
+.hero .thesis b{color:var(--ink)}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.pill{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 11px;font-size:13px;font-weight:500}
+
+.route{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.stop{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:14px;text-align:left;color:var(--ink);display:flex;flex-direction:column;gap:6px;position:relative}
+.stop:hover{border-color:var(--accent)}
+.stop .num{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.stop h3{font-size:16px}
+.stop .adv{font-size:12.5px;color:var(--ok);font-weight:600;line-height:1.35}
+.stop .when{font-family:var(--mono);font-size:12px;color:var(--accent);margin-top:auto;padding-top:4px}
+.stop.today{border-color:var(--signal);box-shadow:0 0 0 1px var(--signal)}
+.stop .flag{position:absolute;top:10px;right:10px;font-size:10.5px;font-weight:700;color:var(--signal);letter-spacing:.08em;text-transform:uppercase}
+@media (max-width:900px){.route{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:520px){.route{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:760px){.grid2,.grid3{grid-template-columns:minmax(0,1fr)}}
+.card{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card h3{font-size:17px;font-weight:700}
+.card p,.card li{font-size:14px}
+.card ul,.card ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:5px}
+.card .muted{color:var(--muted)}
+
+.eval{border:1px solid var(--accent);border-radius:14px;background:var(--accent-soft);padding:clamp(18px,3vw,26px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px}
+@media (max-width:760px){.eval{grid-template-columns:minmax(0,1fr)}}
+.eval h3{font-size:clamp(20px,2.6vw,26px);font-weight:800}
+.eval .facts{display:flex;flex-direction:column;gap:8px}
+.fact{display:grid;grid-template-columns:120px minmax(0,1fr);gap:10px;font-size:14px;border-top:1px solid var(--line);padding-top:8px}
+.fact b{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+@media (max-width:420px){.fact{grid-template-columns:minmax(0,1fr);gap:2px}}
+
+.stage-card{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.stage-card h3{font-size:24px;font-weight:700}
+.block>h2{font-weight:700!important;font-size:24px!important}
+.stage-card .sq{font-size:14.5px;color:var(--muted)}
+.sbtns{display:flex;flex-direction:column;gap:8px}
+.sbtn{border:1px solid var(--line);border-radius:10px;background:var(--bg);padding:10px 12px;text-align:left;color:var(--ink);display:flex;flex-direction:column;gap:2px}
+.sbtn:hover{border-color:var(--accent)}
+.sbtn .mono{font-size:12px;color:var(--accent)}
+.sbtn b{font-size:14px}
+.sbtn.today{border-color:var(--signal);background:var(--signal-soft)} .sbtn.today .mono{color:var(--signal)}
+.eje{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.eje a{color:var(--accent);font-weight:600;font-size:13.5px}
+.prod{font-size:13.5px;color:var(--ok);margin-top:auto}
+.flowv{display:flex;flex-direction:column;gap:8px}
+.tl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.tl-seg{padding:18px 18px 16px;display:flex;flex-direction:column;gap:14px;border-right:1px dashed var(--line);min-width:0}
+.tl-seg:last-child{border-right:0}
+.tl-head{display:flex;flex-direction:column;gap:2px}
+.tl-head b{font-family:var(--display);font-size:21px;font-weight:700;line-height:1.15}
+.tl-track{display:flex;flex-direction:column;position:relative;padding-left:18px;gap:10px}
+.tl-track::before{content:"";position:absolute;left:5px;top:10px;bottom:10px;width:2px;background:var(--line)}
+.tl-node{position:relative;text-align:left;background:none;border:0;padding:4px 0;color:var(--ink);display:flex;flex-direction:column;gap:1px}
+.tl-node::before{content:"";position:absolute;left:-18px;top:9px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:2px solid var(--accent)}
+.tl-node.today::before{background:var(--gold,#f2b91f);border-color:var(--signal)}
+.tl-node:hover .tl-t{color:var(--accent);text-decoration:underline}
+.tl-d{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600}
+.tl-t{font-size:14px;font-weight:600;line-height:1.35}
+.tl-hoy{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--signal)}
+.tl-read{position:relative;background:var(--signal-soft);border-radius:8px;padding:8px 10px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
+.tl-read::before{content:"";position:absolute;left:-17px;top:13px;width:10px;height:10px;transform:rotate(45deg);background:var(--gold,#f2b91f)}
+.tl-read span{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--signal);width:100%}
+.tl-read b{font-family:var(--display);font-size:16px}
+.tl-para{width:100%;font-size:12.5px;color:var(--ink)}
+.tl-read a{font-size:12.5px;font-weight:600;color:var(--accent)}
+.tl-prod{font-size:13px;color:var(--ok);margin-top:auto}
+@media (max-width:760px){.tl{grid-template-columns:minmax(0,1fr)}.tl-seg{border-right:0;border-bottom:1px dashed var(--line)}.tl-seg:last-child{border-bottom:0}}
+.flowv .eje{border:0;border-radius:10px;background:var(--signal-soft);padding:12px;margin:0}
+.flowv .eje .label{color:var(--signal)}
+.conv{font-size:12.5px;color:var(--muted);padding-left:12px;border-left:2px solid var(--signal)}
+.rit-page{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.rit-page .rrow{display:grid;grid-template-columns:150px minmax(0,1fr) 64px minmax(0,1.2fr);gap:14px;align-items:center}
+.rit-page b{font-family:var(--display);font-size:16px}
+.rit-page .trk{height:12px;background:var(--bg);border-radius:6px;overflow:hidden}
+.rit-page .trk i{display:block;height:100%;border-radius:6px}
+.rit-page .mono{font-size:12.5px;color:var(--muted)}
+.rit-page small{font-size:13px;color:var(--muted)}
+@media (max-width:700px){.rit-page .rrow{grid-template-columns:110px minmax(0,1fr) 56px}.rit-page small{grid-column:1/-1;margin-top:-6px}}
+.case{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:clamp(18px,3vw,26px);display:flex;flex-direction:column;gap:14px}
+.case-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.case-h h3{font-size:22px;font-weight:800;margin:4px 0 2px}
+.case p{font-size:14.5px;max-width:75ch}
+.case blockquote{margin:0;border-left:3px solid var(--signal);padding:6px 0 6px 14px;font-size:15.5px;font-family:var(--display);font-weight:600;max-width:70ch}
+.case ul{margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:14px}
+.case details{border:1px dashed var(--line);border-radius:10px;padding:10px 14px}
+.case details summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--muted)}
+.case details[open] summary{margin-bottom:10px}
+.case .behind{margin-top:10px;font-size:14px}
+.case .behind b{color:var(--signal)}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+table.rub{min-width:820px;font-size:13.5px}
+table.rub td:first-child{font-weight:600;min-width:170px}
+table.rub td:first-child span{display:block;font-family:var(--mono);font-weight:400;color:var(--accent);font-size:12.5px}
+
+.reading{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.reading .when{font-family:var(--mono);font-size:12px;color:var(--signal);font-weight:600}
+.reading .ref{font-size:14.5px;line-height:1.5}
+.reading .why{font-size:13.5px;color:var(--muted)}
+.reading ol{margin:0;padding-left:20px;font-size:13.5px;display:flex;flex-direction:column;gap:4px}
+.reading .dyn{font-size:13px;border-top:1px dashed var(--line);padding-top:8px}
+
+/* sesión */
+.s-head{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px}
+@media (max-width:820px){.s-head{grid-template-columns:minmax(0,1fr)}}
+.s-title{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:clamp(20px,3vw,28px);display:flex;flex-direction:column;gap:12px}
+.s-title h1{font-size:clamp(26px,4.2vw,38px);font-weight:800;letter-spacing:-.02em}
+.s-title .q{font-size:16.5px;max-width:54ch;color:var(--muted)}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--surface);border-radius:9px;padding:10px 16px;font-weight:600;font-size:14.5px;align-self:flex-start}
+.btn:hover{filter:brightness(1.08)}
+.s-side{display:flex;flex-direction:column;gap:12px}
+.box{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.box.ok{border-color:var(--ok);background:var(--ok-soft)} .box.ok .label{color:var(--ok)}
+.box.rd{border-color:var(--signal);background:var(--signal-soft)} .box.rd .label{color:var(--signal)}
+
+.ribbon{display:flex;height:30px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.ribbon div{min-width:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;white-space:nowrap;border-right:1px solid var(--surface)}
+.ribbon div:last-child{border-right:0}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.t-expo{background:var(--accent-soft);color:var(--accent)} .t-din{background:var(--signal-soft);color:var(--signal)}
+.t-taller{background:var(--ok-soft);color:var(--ok)} .t-pausa{background:var(--pause-soft);color:var(--pause)} .t-plen{background:var(--bg);color:var(--ink)}
+.t-cons{background:var(--cons-soft);color:var(--cons)} .sw-cons{background:var(--cons)}
+.sw-expo{background:var(--accent)} .sw-din{background:var(--signal)} .sw-taller{background:var(--ok)} .sw-pausa{background:var(--pause)} .sw-plen{background:var(--ink)}
+
+.guion{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.row{display:grid;grid-template-columns:92px minmax(0,1fr);gap:16px;padding:13px 18px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .time{font-family:var(--mono);font-size:13.5px;font-weight:600}
+.row .time small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.row h3{font-size:15.5px;font-weight:700;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.chip{font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:6px}
+.row p{font-size:14px;color:var(--muted);margin-top:3px;max-width:72ch}
+.row.pausa{background:var(--pause-soft)}
+@media (max-width:520px){.row{grid-template-columns:minmax(0,1fr);gap:4px}}
+
+details.prep{border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+details.prep summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:14px}
+details.prep .inner{padding:0 16px 14px;display:flex;flex-direction:column;gap:8px}
+.check{display:flex;gap:9px;align-items:flex-start;font-size:14px}
+.check input{margin-top:4px;accent-color:var(--accent);width:16px;height:16px;flex:none}
+.cut{font-size:14px;color:var(--muted)} .cut b{color:var(--signal)}
+
+.nums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.nums{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.numc{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:16px}
+.numc b{display:block;font-family:var(--display);font-size:28px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.numc span{font-size:13px;color:var(--muted)}
+.chart{width:100%;height:auto;display:block}
+.chart text{font-family:var(--body)}
+.note{font-size:13px;color:var(--muted)}
+
+.sim{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+@media (max-width:700px){.sim{grid-template-columns:minmax(0,1fr)}}
+.sim label{display:flex;flex-direction:column;gap:4px;font-size:13.5px;font-weight:600}
+.sim label span.v{font-family:var(--mono);color:var(--accent)}
+.sim input[type=range]{width:100%;accent-color:var(--accent)}
+.sim .ins{display:flex;flex-direction:column;gap:14px}
+.sim .outs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-content:start}
+.sim .o{border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.sim .o b{font-family:var(--mono);font-size:20px;display:block}
+.sim .o span{font-size:12px;color:var(--muted)}
+.gauge{grid-column:1/-1;height:10px;border-radius:6px;background:var(--bg);border:1px solid var(--line);overflow:hidden}
+.gauge i{display:block;height:100%;background:var(--ok);transition:width .2s}
+.gauge.warn i{background:var(--signal)} .gauge.bad i{background:#c0392b}
+.sim .msg{grid-column:1/-1;font-size:13.5px}
+
+.copybox{border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden;min-width:0}
+.copybox pre{margin:0;padding:14px 16px;font-family:var(--mono);font-size:12.5px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;max-height:300px;overflow:auto;color:var(--ink)}
+.copybox .bar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--bg)}
+.copybox .bar b{font-size:13.5px}
+.cbtn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:7px;padding:4px 10px;font-size:12.5px;font-weight:600;flex:none}
+.cbtn.done{border-color:var(--ok);color:var(--ok)}
+
+/* ===== modo presentación ===== */
+#deck{position:fixed;inset:0;z-index:100;background:#e9eef5;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  --ch-a:#8f6700; --ch-b:#6b7a93; --ch-c:#0b4da2; --ch-grid:#dfe6f0; --ch-text:#51607a; --ch-hi:#8f6700; color-scheme:light}
+.stage-wrap{flex:1;display:grid;place-items:center;min-height:0;padding:10px}
+.stage{width:min(calc(100vw - 20px),calc((100dvh - 86px) * 16 / 9));aspect-ratio:16/9;max-width:100%;container-type:inline-size;background:#ffffff;color:#0b2447;position:relative;overflow:hidden;border-radius:10px;
+  background-image:linear-gradient(#eef2f8 1px,transparent 1px),linear-gradient(90deg,#eef2f8 1px,transparent 1px);background-size:3.2cqw 3.2cqw}
+#deck.notes-open .stage{width:min(calc(100vw - 20px),calc((100dvh - 250px) * 16 / 9))}
+.sl{position:absolute;inset:0;padding:5cqw 6cqw;display:flex;flex-direction:column;gap:1.6cqw;font-family:var(--body)}
+.sl .kick{font-family:var(--mono);font-size:1.25cqw;letter-spacing:.14em;text-transform:uppercase;color:#8f6700}
+.sl h1{font-family:var(--display);font-weight:800;font-size:5.6cqw;letter-spacing:-.025em;line-height:1.03;max-width:17ch}
+.sl h2{font-family:var(--display);font-weight:800;font-size:3.3cqw;letter-spacing:-.015em;line-height:1.1;max-width:30ch}
+.sl .sub{font-size:2cqw;color:#51607a;max-width:54ch;line-height:1.4}
+.sl.cover,.sl.center{justify-content:center}
+.sl.cover .bar{width:8cqw;height:.45cqw;background:#f2b91f;border-radius:1cqw}
+.sl .foot{font-size:1.2cqw;color:#6b7a93;font-family:var(--mono);margin-top:3cqw}
+.sl .bigtext{font-family:var(--display);font-weight:800;font-size:4.2cqw;line-height:1.13;letter-spacing:-.02em;max-width:25ch}
+.sl .bigtext em{font-style:normal;color:#8f6700}
+.sl ol.items{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:1.2cqw;font-size:2cqw;line-height:1.35}
+.sl .items li{display:grid;grid-template-columns:3.2cqw minmax(0,1fr);align-items:baseline}
+.sl .items li::before{content:attr(data-n);font-family:var(--mono);font-size:1.3cqw;color:#0b4da2}
+.sl .items b{color:#0b2447}
+.sl .items .t{color:#3d4b63}
+.sl .items.two{display:grid;grid-template-columns:1fr 1fr;column-gap:4cqw;row-gap:1.3cqw}
+.sl.tight ol.items{gap:.85cqw;font-size:1.72cqw}
+.sl .chain{display:flex;gap:.8cqw;margin-top:1cqw}
+.sl .chain div{flex:1;border:1px solid #d5dde9;border-radius:.8cqw;padding:1.3cqw 1cqw;background:#f3f6fb;font-size:1.55cqw;font-weight:700;display:flex;flex-direction:column;gap:.6cqw}
+.sl .chain div small{font-weight:400;color:#51607a;font-size:1.25cqw;line-height:1.3}
+.sl .chain div span{font-family:var(--mono);color:#0b4da2;font-size:1.1cqw;font-weight:400}
+.sl .split{display:grid;grid-template-columns:1fr 1fr;gap:2.4cqw;margin-top:1cqw}
+.sl .split>div{border:1px solid #d5dde9;border-radius:1cqw;padding:2.2cqw;background:#f3f6fb;display:flex;flex-direction:column;gap:1cqw}
+.sl .split h3{font-family:var(--display);font-size:2.3cqw}
+.sl .split p{font-size:1.75cqw;color:#3d4b63;line-height:1.4}
+.sl .split>div.hi{border-color:#8f6700} .sl .split>div.hi h3{color:#8f6700}
+.sl .opts{display:grid;grid-template-columns:1fr 1fr;gap:1.4cqw;margin-top:1cqw}
+.sl .opts div{border:1px solid #d5dde9;border-radius:1cqw;padding:1.6cqw 2cqw;background:#f3f6fb;font-size:1.9cqw;display:flex;gap:1.6cqw;align-items:baseline}
+.sl .opts div b{font-family:var(--mono);color:#8f6700;font-size:2cqw}
+.sl .badge{align-self:flex-start;font-family:var(--mono);font-size:1.25cqw;padding:.5cqw 1.1cqw;border-radius:.6cqw;background:#f2b91f;color:#0b2447;font-weight:600;letter-spacing:.05em}
+.sl .badge.blue{background:#0b4da2}
+.sl .outbox{margin-top:auto;border-left:.4cqw solid #1d7552;padding:.8cqw 1.4cqw;font-size:1.7cqw;background:#e6f4ee;border-radius:0 .8cqw .8cqw 0}
+.sl .outbox b{color:#1d7552}
+.sl .claim{font-family:var(--display);font-size:3.9cqw;font-weight:800;line-height:1.13;letter-spacing:-.02em;max-width:26ch}
+.sl .verdict{border:1px solid #d5dde9;border-radius:1cqw;padding:1.8cqw 2.2cqw;background:#f3f6fb;display:flex;flex-direction:column;gap:.8cqw;opacity:0;transform:translateY(1cqw);transition:opacity .35s,transform .35s;margin-top:auto}
+.sl .verdict .tag{font-family:var(--mono);font-size:1.4cqw;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.sl .verdict p{font-size:1.9cqw;line-height:1.4}
+.sl .verdict small{font-size:1.3cqw;color:#51607a;font-family:var(--mono)}
+.stage.rev .verdict{opacity:1;transform:none}
+.sl .hint{font-size:1.2cqw;color:#6b7a93;font-family:var(--mono)}
+.stage.rev .hint{visibility:hidden}
+.sl .reform{display:flex;flex-direction:column;gap:1.05cqw}
+.sl .reform div{display:grid;grid-template-columns:1fr 1.3fr;gap:2cqw;font-size:1.7cqw;border-bottom:1px solid #e1e7f0;padding-bottom:1cqw;align-items:baseline}
+.sl .reform div i{font-style:normal;color:#8f6700;opacity:0;transition:opacity .35s}
+.stage.rev .reform div i{opacity:1}
+.sl .chartbox{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+.sl .chartbox svg{max-height:100%;width:auto;max-width:100%}
+.sl .note2{font-size:1.5cqw;color:#51607a}
+.sl .quote{font-family:var(--display);font-size:4.4cqw;font-weight:800;line-height:1.1;letter-spacing:-.02em;max-width:22ch}
+.sl .by{font-size:1.6cqw;color:#51607a;font-family:var(--mono)}
+.sl .numsg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2cqw;margin-top:2cqw}
+.sl .numsg div{border-top:.3cqw solid #8f6700;padding-top:1.2cqw}
+.sl .numsg b{display:block;font-family:var(--display);font-size:4.6cqw;font-weight:800;letter-spacing:-.03em;line-height:1}
+.sl .numsg span{font-size:1.55cqw;color:#3d4b63;display:block;margin-top:.8cqw;line-height:1.35}
+.sl.brk{justify-content:center}
+.sl.brk .bigclock{font-family:var(--mono);font-size:13cqw;font-weight:600;line-height:1;color:#8f6700}
+.sl .sema{display:flex;flex-direction:column;gap:1.4cqw;margin-top:1cqw}
+.sl .sema div{display:grid;grid-template-columns:2.2cqw 13cqw minmax(0,1fr);gap:1.6cqw;align-items:baseline;font-size:1.8cqw}
+.sl .sema i{width:2cqw;height:2cqw;border-radius:50%;display:block;transform:translateY(.3cqw)}
+.sl .sema b{font-family:var(--display);font-size:2.1cqw}
+.sl .sema span{color:#3d4b63}
+.sl .stg{display:grid;grid-template-columns:repeat(3,1fr);gap:2cqw;margin-top:1.5cqw}
+.sl .stg>div{border:1px solid #d5dde9;border-radius:1cqw;padding:2cqw;background:#f3f6fb;display:flex;flex-direction:column;gap:1cqw}
+.sl .stg span{font-family:var(--mono);font-size:1.2cqw;letter-spacing:.12em;text-transform:uppercase;color:#8f6700}
+.sl .stg h3{font-family:var(--display);font-size:2.5cqw;line-height:1.1}
+.sl .stg p{font-size:1.6cqw;color:#3d4b63;line-height:1.35}
+.sl .stg small{font-family:var(--mono);font-size:1.2cqw;color:#0b4da2}
+.sl .stg em{font-style:normal;font-size:1.35cqw;color:#1c2d4a;border-top:1px solid #d5dde9;padding-top:1cqw;margin-top:auto}
+.sl .readref{font-size:1.9cqw;line-height:1.45;border-left:.4cqw solid #8f6700;padding-left:1.6cqw;max-width:60ch}
+.sl .readref i{color:#3d4b63}
+.sl .rcols{display:grid;grid-template-columns:1fr 1fr;gap:3cqw;margin-top:1cqw}
+.sl .rcols h3{font-family:var(--mono);font-size:1.25cqw;letter-spacing:.12em;text-transform:uppercase;color:#0b4da2;margin-bottom:1cqw;font-weight:600}
+.sl .rcols p,.sl .rcols li{font-size:1.75cqw;line-height:1.4;color:#1c2d4a}
+.sl .rcols ol{margin:0;padding-left:2.2cqw;display:flex;flex-direction:column;gap:.8cqw}
+.sl .rtable{display:grid;grid-template-columns:auto 1fr auto;gap:.7cqw 2cqw;font-size:1.65cqw;align-items:baseline;margin-top:1cqw}
+.sl .rtable span{color:#3d4b63} .sl .rtable b{font-family:var(--mono);color:#8f6700;font-weight:600}
+.sl .simwrap{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:3cqw;font-size:1.7cqw}
+.sl .simwrap label{display:flex;flex-direction:column;gap:.5cqw;font-weight:600}
+.sl .simwrap label span.v{font-family:var(--mono);color:#0b4da2}
+.sl .simwrap input[type=range]{width:100%;accent-color:#0b4da2}
+.sl .simwrap .ins{display:flex;flex-direction:column;gap:2cqw}
+.sl .simwrap .outs{display:grid;grid-template-columns:1fr 1fr;gap:1.2cqw;align-content:start}
+.sl .simwrap .o{border:1px solid #d5dde9;border-radius:.8cqw;padding:1cqw 1.3cqw;background:#f3f6fb}
+.sl .simwrap .o b{font-family:var(--mono);font-size:2.6cqw;display:block}
+.sl .simwrap .o span{font-size:1.25cqw;color:#51607a}
+.sl .simwrap .gauge{height:1.1cqw;background:#f3f6fb;border:1px solid #d5dde9}
+.sl .simwrap .msg{font-size:1.5cqw;color:#3d4b63}
+.timerchip{position:absolute;top:2.4cqw;right:3cqw;font-family:var(--mono);font-size:2cqw;font-weight:600;padding:.5cqw 1.2cqw;border-radius:.7cqw;background:#f3f6fb;border:1px solid #d5dde9;color:#0b2447;z-index:3}
+.timerchip.run{border-color:#1d7552;color:#1d7552}
+.timerchip.over{border-color:#c0392b;color:#c0392b;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:.35}}
+.pagenum{position:absolute;bottom:2.2cqw;right:3cqw;font-family:var(--mono);font-size:1.1cqw;color:#8a97ad;z-index:3}
+.deckbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;padding:8px max(10px,env(safe-area-inset-right,0px)) 8px max(10px,env(safe-area-inset-left,0px));color:#3d4b63}
+.deckbar button{background:#f3f6fb;border:1px solid #d5dde9;color:#0b2447;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:600}
+.deckbar button:hover{border-color:#0b4da2}
+.deckbar .cnt{font-family:var(--mono);font-size:13px;min-width:70px;text-align:center}
+.deckbar .sep{width:1px;height:22px;background:#d5dde9;margin:0 4px}
+.notes{height:160px;overflow:auto;background:#ffffff;border-top:1px solid #d5dde9;color:#0b2447;padding:12px max(18px,env(safe-area-inset-right,0px)) 12px max(18px,env(safe-area-inset-left,0px));font-size:15px;line-height:1.55}
+.notes b{color:#8f6700}
+.navzone{position:absolute;top:0;bottom:0;width:16%;z-index:2;cursor:pointer}
+.navzone.l{left:0}.navzone.r{right:0}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+.sl{animation:slIn .5s cubic-bezier(.2,.7,.2,1)}
+.slwrap.back .sl{animation-name:slBack}
+@keyframes slIn{from{opacity:0;transform:translateX(2cqw)}to{opacity:1;transform:none}}
+@keyframes slBack{from{opacity:0;transform:translateX(-2cqw)}to{opacity:1;transform:none}}
+.sl .bridge{font-family:var(--display);font-style:italic;font-size:1.75cqw;line-height:1.35;color:#8f6700;max-width:62ch;opacity:.95;border-left:.3cqw solid #8f6700;padding-left:1.2cqw;margin-bottom:.4cqw}
+.sl.center .bridge{margin-bottom:1.2cqw}
+.sl h1,.sl h2,.sl .bigtext,.sl .claim,.sl .quote{font-family:var(--display)}
+.sl h1{font-weight:700;letter-spacing:-.01em}
+.sl h2{font-weight:700;letter-spacing:-.005em}
+.sl .bigtext,.sl .claim,.sl .quote{font-weight:600;letter-spacing:-.01em}
+.sl .bigtext em,.sl .quote em{font-style:italic}
+.rail{position:absolute;left:6cqw;bottom:2cqw;display:flex;gap:.2cqw;z-index:3;flex-wrap:nowrap;max-width:82cqw;overflow:hidden}
+.rail span{white-space:nowrap;font-family:var(--mono);font-size:.9cqw;letter-spacing:.06em;text-transform:uppercase;color:#8a97ad;padding:.25cqw .7cqw;border-radius:.4cqw;border:1px solid transparent}
+.rail span.on{color:#0b2447;background:#f2b91f;font-weight:600}
+.sl{padding-bottom:6.5cqw}
+.sl .stg{display:grid;grid-template-columns:repeat(3,1fr);gap:2cqw;margin-top:1cqw}
+.sl .stg>div{border:1px solid #d5dde9;border-radius:1cqw;padding:1.8cqw;background:#f3f6fb;display:flex;flex-direction:column;gap:1cqw}
+.sl .stg span{font-family:var(--mono);font-size:1.15cqw;letter-spacing:.12em;text-transform:uppercase;color:#8f6700}
+.sl .stg h3{font-family:var(--display);font-size:2.3cqw;line-height:1.1}
+.sl .stg p{font-size:1.4cqw;color:#3d4b63;line-height:1.35;margin-top:auto}
+.sl .flow{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.6cqw}
+.sl .flow li{display:grid;grid-template-columns:6.5cqw 1fr;gap:1cqw;font-size:1.35cqw;line-height:1.3;color:#0b2447;padding:.7cqw .9cqw;border-radius:.6cqw;background:#ffffff}
+.sl .flow li b{font-family:var(--mono);font-size:1.1cqw;color:#0b4da2;font-weight:600}
+.sl .flow li.rd{background:#f2b91f;color:#0b2447;font-weight:600}
+.sl .flow li.rd b{color:#0b2447}
+.sl .flow li.rd small{grid-column:2;font-weight:400;font-size:1.15cqw;line-height:1.3;color:#0b2447;opacity:.85}
+.sl .rit{display:flex;flex-direction:column;gap:1cqw;margin-top:1.5cqw}
+.sl .rrow{display:grid;grid-template-columns:17cqw 28cqw 7cqw 1fr;gap:1.4cqw;align-items:center}
+.sl .rrow b{font-family:var(--display);font-size:1.9cqw;font-weight:600}
+.sl .rrow .trk{height:1.8cqw;background:#eef2f8;border-radius:.5cqw;overflow:hidden}
+.sl .rrow i{display:block;height:100%;border-radius:.5cqw}
+.sl .rrow span{font-family:var(--mono);font-size:1.3cqw;color:#0b4da2}
+.sl .rrow small{font-size:1.4cqw;color:#3d4b63}
+.sl .r-cons{background:#c9a7f2;color:#24113f}.sl .r-din{background:#f2b91f;color:#0b2447}.sl .r-taller{background:#8fd9b6;color:#082a1e}.sl .r-plen{background:#cfe0f6;color:#0b2447}.sl .r-pausa{background:#dfe6f0;color:#51607a}
+.sl .rds{display:grid;grid-template-columns:repeat(3,1fr);gap:2cqw;margin-top:1cqw}
+.sl .rds>div{border-top:.35cqw solid #8f6700;padding-top:1.4cqw;display:flex;flex-direction:column;gap:.8cqw}
+.sl .rds span{font-family:var(--mono);font-size:1.1cqw;letter-spacing:.08em;text-transform:uppercase;color:#0b4da2}
+.sl .rds h3{font-family:var(--display);font-size:2.6cqw;line-height:1.05}
+.sl .rds p{font-family:var(--display);font-style:italic;font-size:1.6cqw;color:#0b2447;line-height:1.3}
+.sl .rds small{font-size:1.35cqw;color:#51607a;line-height:1.4}
+.sl .rw{display:flex;flex-direction:column;gap:.7cqw}
+.sl .rw div{display:grid;grid-template-columns:5cqw 1fr;font-size:1.7cqw;align-items:baseline;border-bottom:1px solid #e1e7f0;padding-bottom:.6cqw}
+.sl .rw b{font-family:var(--mono);color:#8f6700}
+.sl .simwrap{gap:2cqw;font-size:1.5cqw}
+.sl .simwrap .ins{gap:1.2cqw}
+.sl .simwrap .outs{gap:.8cqw}
+.sl .simwrap .o{padding:.6cqw 1cqw}
+.sl .simwrap .o b{font-size:2.1cqw}
+.sl .simwrap .msg{font-size:1.3cqw}
+.fbwrap{position:relative;z-index:4;display:flex;flex-direction:column;gap:.5cqw;margin-top:1.2cqw;width:100%;max-width:80cqw}
+.fblbl{font-family:var(--mono);font-size:1cqw;letter-spacing:.1em;text-transform:uppercase;color:#8f6700}
+.fb{min-height:5cqw;max-height:11cqw;overflow:auto;border:1.5px dashed #e3c76a;background:#fffbea;border-radius:.8cqw;padding:1cqw 1.3cqw;font-size:1.6cqw;line-height:1.4;color:#0b2447;outline:none;white-space:pre-wrap}
+.fb:focus{border-style:solid;border-color:#f2b91f;box-shadow:0 0 0 .3cqw rgba(242,185,31,.25)}
+.fb:empty::before{content:attr(data-ph);color:#8a97ad}
+.sl .verdict .fbwrap{margin-top:.4cqw}.sl .verdict .fb{min-height:3cqw;max-height:6cqw;font-size:1.4cqw;padding:.6cqw 1cqw}
+.sl .claim{font-size:3.3cqw!important}
+.sl .verdict{padding:1.3cqw 1.8cqw!important;gap:.5cqw!important}
+.sl .verdict p{font-size:1.65cqw!important}
+.sl .opts{position:relative;z-index:4}
+.sl .opt{cursor:pointer;position:relative;overflow:hidden;user-select:none}
+.sl .opt::after{content:"";position:absolute;left:0;bottom:0;height:.45cqw;width:var(--w,0%);background:#f2b91f;transition:width .25s}
+.sl .opt .vc{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:2cqw;color:#0b4da2;font-weight:600}
+.sl .opt:hover{border-color:#f2b91f}
+.notes .nx{margin-top:8px;color:#0b4da2;font-style:italic}
+
+.stage{box-shadow:0 10px 40px rgba(11,36,71,.18);border:1px solid #d5dde9}
+.sl .rrow .trk{background:#eef2f8}
+.sl .bigtext em,.sl .quote em{color:#8f6700}
+.sl.cover .bar{background:#f2b91f}
+.sl .numsg div{border-top-color:#f2b91f}
+.sl .rds>div{border-top-color:#f2b91f}
+.sl .bridge{border-left-color:#f2b91f}
+.sl .split>div.hi{border-color:#f2b91f;background:#fffaeb}
+</style>
+
+</head>
+<body>
+<header class="top"><div class="wrap"><div class="brand">La Sabana <span>·</span> MGDP</div><nav class="tabs" id="tabs" aria-label="Secciones"></nav></div></header>
+<main class="wrap" id="app"></main>
+
+<div id="deck" hidden>
+  <div class="stage-wrap"><div class="stage" id="stage"></div></div>
+  <div class="deckbar">
+    <button id="dPrev" aria-label="Anterior">←</button><span class="cnt" id="dCount"></span><button id="dNext" aria-label="Siguiente">→</button>
+    <span class="sep"></span>
+    <button id="dRev" title="R">Revelar</button><button id="dTimer" title="T">Cronómetro</button><button id="dNotes" title="N">Notas</button><button id="dFull" title="F">Pantalla completa</button>
+    <span class="sep"></span><button id="dClose" title="Esc">Salir</button>
+  </div>
+  <div class="notes" id="dNotesBox" hidden></div>
+</div>
+
+<script>
+/* ===== CASO ANCLA (empresa y datos ficticios) ===== */
+const PIPE=[['Requisición → publicación',4],['Filtro de hojas de vida',6],['Pruebas y entrevistas',9],['Oferta y aceptación',3],['Exámenes médicos y contrato',7],['Espera de cupo en formación',12],['Formación inicial',15],['Nesting (acompañamiento en piso)',10]];
+const SURV={weeks:[0,1,2,3,4,5,6,7,8,9,10,11,12,13],centro:[100,98,95,90,84,77,71,67,64,62,61,60,59,59],norte:[100,98,96,91,85,79,73,69,66,64,63,62,61,61],sur:[100,99,98,96,93,90,87,85,83,81,80,79,77,76]};
+const REASONS=[['Salario',38],['Horarios',21],['Carga y metas',17],['Trato del líder',9],['Estudios',8],['Otros',7]];
+const PISTA_D=[['Personas por supervisor','1 : 22','1 : 22','1 : 12'],['Horas de acompañamiento en piso (sem. 1–4)','2 h','3 h','14 h'],['Metas de productividad desde','Semana 2','Semana 2','Semana 5'],['Tutor asignado y activo','31%','35%','100%'],['Cambio de campaña antes de la semana 8','27%','24%','6%'],['Salario base frente al mercado','−8%','+2% (piloto +10%)','−8%']];
+const VERB=['Firmé contrato y me dijeron que me llamaban para la formación. Pasaron casi tres semanas y mientras tanto me salió otra oferta.','La formación fue buena, pero el primer día en piso fue otra cosa: sistemas distintos y nadie a quién preguntar.','Mi supervisora tenía 23 personas a cargo. La vi dos veces en un mes.','El sueldo es bajo para lo que te exigen, eso sí.','Desde la segunda semana ya me medían el tiempo de atención como a los antiguos.','Nadie me explicó cómo funcionaban los turnos rotativos hasta que ya estaba adentro.','En la entrevista me pintaron el trabajo como servicio al cliente, pero es 80% cobranza.','Me fui porque encontré algo que pagaba un poco más y quedaba más cerca de mi casa.','Los compañeros fueron lo mejor; uno de ellos me enseñó más que la formación.','Me pidieron los mismos documentos tres veces: en selección, en contratación y en formación.','Cuando tenía una llamada difícil levantaba la mano y nadie venía.','La plata no alcanza, pero la verdad me fui por el estrés de las metas.','Los exámenes médicos me los programaron para una semana después; perdí días sin saber si entraba.','En la formación éramos 25 y la instructora no daba abasto para que practicáramos en el simulador.','Si hubiera tenido a alguien al lado las primeras semanas, me habría quedado.','El turno de domingo no me lo dijeron en la entrevista.','Me sentí un número. Nadie en el piso sabía mi nombre.','En la encuesta de salida marqué “salario” porque era lo más fácil de marcar.','Los que entramos con la líder de la sede Sur teníamos acompañamiento diario; casi todos seguimos.','Me cambiaron de campaña en la semana cuatro y tuve que aprender todo otra vez.'];
+const POLICY=`ANDES CONTACT S.A.S. (empresa ficticia, uso académico)
+Política de Incorporación de Agentes · versión 3 (2024)
+
+1. Inicio oportuno. Todo agente contratado inicia su formación en un máximo de 5 días hábiles después de firmar contrato.
+2. Información completa. En la entrevista se informa la campaña, el tipo de gestión (servicio, ventas o cobranza), los turnos y los domingos programados.
+3. Documentos una sola vez. El candidato entrega su documentación una única vez; las áreas la comparten internamente.
+4. Formación práctica. La formación inicial dura 3 semanas, con al menos 40% del tiempo en simulador.
+5. Tutor en piso. Cada nuevo agente tiene un tutor asignado durante sus primeras 4 semanas en operación.
+6. Seguimiento del líder. El supervisor realiza una conversación 1:1 en la semana 1 y en la semana 4 en piso.
+7. Curva de aprendizaje. Las metas de productividad se aplican de forma progresiva a partir de la semana 5 en operación.
+8. Estabilidad. Durante las primeras 8 semanas, el agente permanece en la campaña para la que fue formado.`;
+
+/* ===== EVALUACIÓN, LECTURAS, ETAPAS ===== */
+const PARTS=[
+ ['El encargo del cliente y la pregunta operacional','Etapa 1 · S1–S2'],['Proceso actual (mapa)','Etapa 1 · S2'],['Cuello de botella','Etapa 2 · S3'],['Validación: evidencia y respuestas del cliente','Etapa 2 · S4'],['Proceso rediseñado','Etapa 3 · S5'],['Implementación y gestión del cambio','Etapa 3 · S5'],['Métricas e impacto esperado','Etapa 3 · S5']
+];
+const RUBRIC=[
+ ['Encargo y pregunta operacional',15,['Reformula el encargo del cliente como pregunta sobre un proceso, con costo y alcance claros, y cuestiona con argumentos la solución que pidió el cliente.','Pregunta operacional clara; discute poco la solución pedida.','Acepta la solución pedida o centra la pregunta en las personas y no en el proceso.','Problema difuso, sin pregunta.']],
+ ['Levantamiento del proceso actual',15,['Mapa completo: inicio y fin, actores, esperas, traspasos; los supuestos están explícitos.','Mapa claro con vacíos menores.','Mapa incompleto o sin esperas ni traspasos.','Lista de actividades sin flujo.']],
+ ['Diagnóstico y validación',20,['Cuello de botella sostenido con la información del caso, las respuestas del cliente y estudios evaluados; descarta explicaciones alternativas.','Cuello sostenido con el caso y alguna evidencia externa.','Diagnóstico plausible con poca evidencia.','Diagnóstico basado en opinión.']],
+ ['Rediseño e implementación',25,['Cambia el proceso (no solo agrega un programa) y actúa sobre el cuello; plan con responsables, recursos, riesgos y gestión del cambio.','Rediseño pertinente; plan con vacíos menores.','Propuesta genérica o poco conectada con el diagnóstico.','Lista de iniciativas sin diseño de proceso.']],
+ ['Métricas e impacto',15,['Línea base (real o estimada con supuestos), meta y plazo; indicadores de proceso, de resultado y de experiencia.','Métricas claras, falta un tipo de indicador.','Métricas sin línea base o sin meta.','Sin métricas.']],
+ ['Exposición y defensa',10,['Clara, en tiempo, responde las preguntas con argumentos del caso.','Clara, con respuestas parciales.','Excede el tiempo o responde con debilidad.','Desordenada o sin respuesta a las preguntas.']]
+];
+const READ=[
+ {au:'Hammer',para:'Para no automatizar lo que habría que eliminar.',tit:'Reengineering work: Don’t automate, obliterate',cuando:'Se entrega el viernes 6 · conversatorio el sábado 7, 8:00 a.m.',ref:'Hammer, M. (1990). Reengineering work: Don’t automate, obliterate. <i>Harvard Business Review, 68</i>(4), 104–112.',acceso:'Biblioteca de La Sabana (bases con Harvard Business Review) o Harvard Business Publishing Education.',link:'',por:'El texto fundacional del rediseño de procesos: automatizar un proceso mal diseñado solo lo vuelve más rápido.',qs:['¿Por qué, según Hammer, automatizar lo existente rara vez resuelve el problema?','En la empresa de tu equipo, ¿qué paso existe solo “porque siempre se hizo así”?'],din:'¿Automatizar o eliminar? Cada equipo trae un paso de su empresa; el grupo decide qué haría Hammer con él y si la solución que pidió el cliente “automatiza” o “elimina”.'},
+ {au:'Rousseau y Barends',para:'Para que el diagnóstico no sea una opinión.',tit:'Becoming an evidence-based HR practitioner',cuando:'Se entrega el viernes 13 · conversatorio el sábado 14, 8:00 a.m.',ref:'Rousseau, D. M., & Barends, E. G. R. (2011). Becoming an evidence-based HR practitioner. <i>Human Resource Management Journal, 21</i>(3), 221–235.',acceso:'Copia publicada por el Center for Evidence-Based Management (CEBMa).',link:'https://cebma-k8s-sw-zm-web-prd.s3.nl-ams.scw.cloud/assets/public/Uploads/Rousseau-Barends-HRMJ-2011.pdf',por:'Cómo un profesional de gestión humana valida un diagnóstico combinando datos, estudios, experiencia y grupos de interés.',qs:['¿Qué distingue a un profesional basado en evidencia de uno basado solo en la experiencia?','¿Qué fuente de evidencia le falta hoy al diagnóstico de tu equipo?'],din:'Semáforo del diagnóstico: cada equipo califica su hipótesis en las cuatro fuentes (verde, amarillo, rojo) y define qué preguntará al cliente.'},
+ {au:'Kotter',para:'Para que el rediseño no se quede en el papel.',tit:'Leading change: Why transformation efforts fail',cuando:'Se entrega el viernes 20 · conversatorio el sábado 21, 8:00 a.m.',ref:'Kotter, J. P. (1995). Leading change: Why transformation efforts fail. <i>Harvard Business Review, 73</i>(2), 59–67.',acceso:'Biblioteca de La Sabana (bases con Harvard Business Review) o Harvard Business Publishing Education.',link:'',por:'Un rediseño que no se implementa no existe: los ocho errores que hacen fracasar las transformaciones.',qs:['De los ocho errores, ¿cuál es más probable en la implementación de su rediseño?','¿Qué incluye su plan para evitarlo?'],din:'El error que nos amenaza: cada equipo responde en 1 minuto, justo antes de exponer.'}
+];
+const ETAPAS=[
+ {n:1,nombre:'Entender y levantar',ses:['s1','s2'],read:0,preg:'¿Qué proceso está produciendo el problema que el cliente describe?',prod:'Encargo reformulado y mapa del proceso actual.'},
+ {n:2,nombre:'Diagnosticar y validar',ses:['s3','s4'],read:1,preg:'¿Dónde está el cuello de botella y qué lo demuestra?',prod:'Hipótesis del cuello validada con el caso, el cliente y la literatura.'},
+ {n:3,nombre:'Rediseñar y convencer',ses:['s5','s6'],read:2,preg:'¿Cómo debe funcionar el proceso y cómo se implementa el cambio?',prod:'Proceso rediseñado y exposición final ante la dirección.'}
+];
+
+/* ===== EMPRESAS DE LOS EQUIPOS (ficticias) ===== */
+const CASES=[
+ {id:'cafe',nombre:'Cosechas del Quindío S.A.S.',ciudad:'Montenegro, Quindío',sector:'Café especial de exportación',tam:'180 colaboradores fijos y hasta 900 recolectores por cosecha',proceso:'Atracción y vinculación de personal de temporada',
+  contexto:'Exporta café especial con certificaciones de comercio justo y sostenibilidad. En cada cosecha multiplica por cinco su personal en pocas semanas. Los recolectores se vinculan a través de cuadrilleros que reúnen grupos de trabajadores de distintas regiones. Las fincas vecinas compiten por la misma gente.',
+  encargo:'“No conseguimos recolectores: la gente se va a las fincas que pagan más por kilo. Queremos una propuesta de esquema de pago para la próxima cosecha.” — Gerente general',
+  sabe:['Cerca de un tercio de quienes se comprometen con un cuadrillero no se presenta el primer día.','El pago por kilo está dentro del rango de la zona.','La última auditoría de certificación dejó observaciones sobre la afiliación a seguridad social al inicio de labores.','Los recolectores nuevos rinden bastante menos en sus primeros días que quienes vuelven de cosechas anteriores.'],
+  voces:[['Gerente de producción','El problema es la plata. Si pagamos más por kilo, llegan.'],['Cuadrillero','La gente quiere plata cada semana y saber dónde va a dormir. Eso lo preguntan antes que el precio.'],['Coordinadora de gestión humana','Me entero de quiénes llegaron cuando ya están en el lote. Los papeles me llegan después.']],
+  banco:[['Primer pago','19 días en promedio (pago quincenal y cierre de nómina). La finca vecina paga cada semana.'],['Recolectores que vuelven','35% vuelve de una cosecha a otra; en la finca vecina, cerca de 60%.'],['Registro histórico','No existe: cada cuadrillero tiene su lista en el celular.'],['Afiliación a riesgos laborales','Los documentos los recoge el cuadrillero en papel; la afiliación tarda de 3 a 5 días. Debe estar vigente desde el inicio de labores.'],['Alojamiento','Los cupos en campamento se asignan al llegar; no se informan antes del viaje.'],['Inducción','Charla de 2 horas el primer día, sin práctica en el lote.']],
+  detras:'El cuello está en la vinculación y el primer pago, no en la tarifa: incertidumbre antes de viajar, afiliación tardía (riesgo legal y de certificación) y ninguna memoria de buenos recolectores entre temporadas.'},
+ {id:'clinica',nombre:'Clínica Oriente Salud',ciudad:'Bucaramanga, Santander',sector:'Salud de mediana y alta complejidad',tam:'1.100 colaboradores; 380 en enfermería',proceso:'Incorporación y programación de turnos de enfermería',
+  contexto:'Clínica privada en crecimiento: abrió una nueva torre de hospitalización hace un año. Compite por personal de enfermería con otras clínicas de la ciudad y con ofertas para trabajar en el exterior. Cada jefe de servicio programa los turnos de su equipo.',
+  encargo:'“Las auxiliares jóvenes no tienen vocación: se van a los pocos meses. Queremos un programa de bienestar y reconocimiento para retenerlas.” — Directora de gestión humana',
+  sabe:['Más de un tercio de las auxiliares de enfermería nuevas se va antes de seis meses.','La inducción es institucional y dura dos días; no hay inducción por servicio.','La UCI retiene mejor que hospitalización.','El gasto en horas extra creció fuerte este año.'],
+  voces:[['Jefe de enfermería de hospitalización','No tengo tiempo de acompañar a nadie. Me paso el turno cubriendo huecos.'],['Auxiliar con cuatro meses','Me enteré el jueves de que trabajaba otra vez el domingo de noche.'],['Gerente financiero','Estamos pagando horas extra y personal temporal como nunca.']],
+  banco:[['Anticipación de turnos','Se publican con 3 a 5 días de anticipación, en Excel, cada jefe con su formato.'],['Asignación','Regla informal: los antiguos eligen primero; las nuevas reciben noches y fines de semana.'],['UCI','Tiene una enfermera referente que acompaña a cada persona nueva durante el primer mes.'],['Horas extra','Crecieron alrededor de 40% en el año; 18% de los turnos se cubren con extras o temporales.'],['Personal temporal','Cuesta cerca de 1,6 veces una auxiliar de planta.'],['Entrevistas de salida','La mayoría menciona “calidad de vida” y “horarios”.']],
+  detras:'La rotación se fabrica en la programación de turnos y en la falta de acompañamiento: las nuevas absorben los peores turnos con poca anticipación, y cada salida abre huecos que cubren otras nuevas. Es un círculo vicioso de proceso, no de vocación.'},
+ {id:'retail',nombre:'Mercados del Caribe S.A.S.',ciudad:'Barranquilla, con tiendas en Atlántico, Magdalena y La Guajira',sector:'Supermercados de proximidad',tam:'46 tiendas y 3.200 colaboradores',proceso:'Promoción interna a administrador de tienda',
+  contexto:'Cadena regional que planea abrir ocho tiendas en 2027. Su política es promover desde adentro: los administradores salen de jefes de sección y cajeros destacados. La decisión la toma cada gerente regional.',
+  encargo:'“Los mejores vendedores no funcionan como administradores. Queremos una prueba psicométrica para elegir mejor.” — Gerente de operaciones',
+  sabe:['Una parte importante de los administradores promovidos renuncia o pide volver a su cargo antes de un año.','Los administradores contratados afuera duran más, pero cuestan más y tardan en llegar.','Existe un programa de liderazgo anual en Barranquilla.','Las tiendas con administrador nuevo tienen más faltantes de inventario.'],
+  voces:[['Gerente regional','Elijo al que más vende en su sección. ¿A quién más voy a elegir?'],['Administradora que volvió a su cargo','Pasé de manejar 4 personas a 45 y nadie me enseñó a hacer un horario ni un pedido.'],['Gerente de gestión humana','Tenemos programa de liderazgo, pero los de La Guajira casi nunca pueden venir.']],
+  banco:[['Tasa de fracaso','Cerca de 40% renuncia o vuelve a su cargo antes de 12 meses.'],['Transición','El promovido asume la tienda una semana después de ser elegido; no hay preparación previa.'],['Criterios','No hay criterios escritos; 3 de cada 10 nombramientos vienen por recomendación directa.'],['Acompañamiento','No hay mentor. La evaluación a los 3 meses no se hace en la mayoría de los casos.'],['Externos','Cuestan alrededor de 30% más y tardan unos 70 días en llegar.'],['Programa de liderazgo','Tres días presenciales al año; no está conectado con la promoción.']],
+  detras:'El problema no es elegir mejor sino preparar la transición: no hay ruta de desarrollo antes del cargo ni acompañamiento después. Una prueba psicométrica optimizaría el filtro de un proceso que falla en otra etapa.'},
+ {id:'fintech',nombre:'Pagos Ceiba S.A.S.',ciudad:'Bogotá',sector:'Tecnología financiera (pagos digitales)',tam:'260 colaboradores; 140 en tecnología',proceso:'Gestión del desempeño',
+  contexto:'Empresa de crecimiento rápido con inversionistas exigentes. Evalúa una vez al año por competencias y objetivos, con un comité de calibración posterior. Aumentos y bonos salen de esa evaluación. Compite por talento técnico con empresas que contratan de forma remota desde el exterior.',
+  encargo:'“Necesitamos un nuevo software de desempeño. El actual es lento y nadie lo usa bien.” — Directora de talento',
+  sabe:['La rotación voluntaria de ingenieros con experiencia es alta y viene creciendo.','La mayoría de las evaluaciones se llenan en la última semana del plazo.','Los aumentos se comunican varios meses después de la evaluación.','En la encuesta de clima, la mayoría dice no saber qué debe hacer para crecer.'],
+  voces:[['Líder técnica','Escribo 18 evaluaciones en diciembre, de memoria.'],['Ingeniero que renunció','Me enteré de mi aumento en abril. Para entonces ya había aceptado otra oferta.'],['Directora de talento','La herramienta es lenta; con una mejor, esto se arregla.']],
+  banco:[['Duración del ciclo','Unos 4 meses desde la autoevaluación hasta la comunicación del aumento.'],['Conversaciones 1:1','Irregulares; no hay frecuencia definida.'],['Competencias','Las mismas 9 competencias para ventas, operaciones y tecnología.'],['Promociones','Se deciden en otro comité, sin usar la evaluación.'],['Rotación','28% anual en ingenieros con experiencia.'],['Uso del software','Solo en el periodo de evaluación; nadie entra el resto del año.']],
+  detras:'El cuello está en el diseño del ciclo, no en la herramienta: un proceso anual, lento y desconectado de las decisiones que importan. Un software nuevo automatizaría el mismo proceso (Hammer).'},
+ {id:'transporte',nombre:'Transcarga del Valle S.A.S.',ciudad:'Cali, con operación hacia Buenaventura',sector:'Transporte de carga por carretera',tam:'850 colaboradores; 600 conductores',proceso:'Selección y vinculación de conductores',
+  contexto:'Mueve carga entre el puerto de Buenaventura y el interior del país. El sector reporta escasez de conductores de tractocamión. Por el tipo de carga y de ruta, la empresa exige estudios de seguridad a todos los aspirantes.',
+  encargo:'“No hay conductores en el mercado. Queremos una campaña de atracción y un bono de enganche.” — Gerente general',
+  sabe:['Cubrir una vacante de conductor toma casi dos meses.','En promedio, más de 20 vehículos están parados por falta de conductor.','De cada diez aspirantes, pocos llegan a manejar para la empresa.','Un competidor de la región dice contratar en menos de dos semanas.'],
+  voces:[['Jefe de flota','Cada camión parado es plata perdida todos los días.'],['Analista de selección','Espero el estudio de seguridad y mientras tanto el conductor se va con otro.'],['Conductor recién vinculado','Fui tres veces a Cali para papeles y pruebas. Vivo en Tuluá.']],
+  banco:[['Secuencia','Hoja de vida → psicotécnica → prueba de manejo → estudio de seguridad → examen médico → inducción. Todo en serie.'],['Prueba de manejo','Solo los martes, en Cali: hay un único evaluador.'],['Estudio de seguridad','Lo hace un tercero, tarda unos 15 días y se pide al final.'],['Abandonos','Cerca de 40% de los abandonos ocurre esperando el estudio de seguridad.'],['Aspirantes','Llegan suficientes hojas de vida: el problema no es de volumen.'],['Vehículo parado','La empresa lo estima en más de un millón de pesos diarios (unos USD 300).']],
+  detras:'Cuello de botella clásico: etapas en serie, un evaluador único y el estudio de seguridad al final. Paralelizar y adelantar el estudio resuelve más que un bono de enganche.'},
+ {id:'textil',nombre:'Textiles del Aburrá S.A.S.',ciudad:'Itagüí, Antioquia',sector:'Confección y textiles',tam:'900 colaboradores en dos plantas y tres turnos',proceso:'Atención de solicitudes de los colaboradores',
+  contexto:'Fabrica prendas para marcas nacionales y de exportación. Cuatro analistas de gestión humana atienden permisos, certificados laborales, vacaciones e incapacidades. La oficina atiende de 8 a.m. a 5 p.m.',
+  encargo:'“Mi equipo está desbordado. Necesito que me ayuden a justificar dos analistas más.” — Jefe de gestión humana',
+  sabe:['Llegan cerca de 1.900 solicitudes al mes.','Las solicitudes entran por correo, WhatsApp y en persona.','Un certificado laboral tarda casi una semana.','Hay reclamos frecuentes por descuentos de nómina relacionados con incapacidades.'],
+  voces:[['Analista de gestión humana','Me paso el día buscando correos y persiguiendo firmas.'],['Operaria del turno de noche','Para pedir un certificado tengo que perder medio turno.'],['Gerente financiero','No apruebo más gente sin saber en qué se va el tiempo.']],
+  banco:[['Tipo de solicitudes','Cerca de 45% son certificados laborales con formato estándar.'],['Reprocesos','Alrededor de 35% se devuelve por un documento faltante.'],['Registro','No hay registro: nadie sabe cuántas solicitudes están pendientes.'],['Vacaciones','Requieren tres firmas en papel: supervisor, jefe de planta y gestión humana.'],['Incapacidades','Se entregan en papel en portería y llegan a gestión humana después del cierre de nómina.'],['Turno de noche','No tiene ningún canal de atención presencial.']],
+  detras:'No falta capacidad sino diseño: sin canal único, con reprocesos, aprobaciones en serie y trabajo estandarizable hecho a mano. Eliminar, simplificar y habilitar autoservicio libera más que dos analistas.'}
+];
+function caseTeaser(c){return `${c.nombre} (empresa ficticia) · ${c.ciudad}\nProceso: ${c.proceso}\nLo que pide el cliente: ${c.encargo}\n\nEl caso completo les llega hoy al cierre o esta noche.`;}
+function caseText(c){return `${c.nombre.toUpperCase()} (empresa ficticia, uso académico)\n${c.ciudad} · ${c.sector} · ${c.tam}\nProceso: ${c.proceso}\n\nCONTEXTO\n${c.contexto}\n\nEL ENCARGO\n${c.encargo}\n\nLO QUE SE SABE\n${c.sabe.map(s=>'- '+s).join('\n')}\n\nVOCES\n${c.voces.map(v=>'- '+v[0]+': “'+v[1]+'”').join('\n')}\n\nREGLA: el equipo puede hacer hasta 3 preguntas por etapa al cliente (el docente), por escrito.`;}
+
+/* ===== SESIONES ===== */
+const SES=[
+{id:'s1',n:1,fase:'Encargo',date:'2026-11-06',dia:'Viernes 6 de noviembre',hora:'2:00 – 6:00 p.m.',start:840,titulo:'Del problema de personas al problema de proceso',
+ pregunta:'¿Por qué iniciativas de gestión humana bien intencionadas no producen los resultados esperados?',
+ avance:'Equipos formados, empresa asignada y sospecha inicial. El caso completo llega al cierre o esta noche.',
+ prep:['Confirmar Zoom o Teams y permiso para crear salas.','Pedir la lista de estudiantes con cargo y empresa.','Tablero (Miro, FigJam o Mural) con un marco por sala, la plantilla de auditoría y columnas por proceso para formar equipos.','Encuesta del caso (4 opciones) y de los 3 mitos.','Decidir la asignación de empresas (sorteo o elección; máximo 2 equipos por empresa) y tener sus fichas listas para enviar (pestaña Empresas).','Conseguir el PDF de Hammer (1990) por la biblioteca para compartirlo al cierre.','Enviar a cada equipo su ficha completa al cierre o esta noche (a más tardar antes de las 8 a.m. del sábado), junto con Hammer.'],
+ guion:[[10,'plen','Bienvenida y check-in','En el chat, en cinco palabras: el proceso de gestión humana que hoy les quita el sueño. Lees varios, los agrupas y te presentas en 90 segundos.'],
+  [25,'plen','Cómo trabajaremos','El contrato del curso: tres etapas con su lectura eje, el ritmo de cada sesión, las partes de la exposición, la evaluación con rúbrica, las empresas y las reglas con el cliente. Cierras abriendo preguntas.'],
+  [20,'din','Caso de apertura: la decisión de los 3.400 millones','Votan qué aprobarían en Andes Contact; luego ven los pilotos: el aumento de salario casi no movió la rotación, el acompañamiento en piso sí.'],
+  [20,'din','Discusión: mito, evidencia o depende','Tres afirmaciones; votan, defienden su voto y recién revelas. Cierras preguntando qué fuentes de evidencia usó su organización en su última gran decisión.'],
+  [15,'pausa','Pausa',''],
+  [40,'taller','Auditoría de una decisión','Salas de 3. Cada quien pasa una decisión reciente de su organización por la guía: problema, supuesto, evidencia usada, qué faltó y qué proceso estaba detrás.'],
+  [15,'plen','Patrones','Cada sala comparte un patrón, no un caso. Los agrupas en el tablero.'],
+  [10,'din','Reformula en 60 segundos','Tres quejas típicas; el grupo las convierte en preguntas sobre un proceso.'],
+  [50,'taller','Equipos y empresa asignada','Formas equipos de 2 a 3 y asignas a cada uno una empresa, con solo el encargo del cliente (botón “Copiar encargo”). En salas: acuerdan cómo trabajarán, escriben su sospecha inicial y qué necesitarían saber. El caso completo lo envías al cierre o esta noche.'],
+  [15,'cons','Consultorio','Quince minutos solo para dudas y consultas: sobre el caso, la exposición, la forma de trabajo o la evaluación. Las preguntas al cliente se anotan aparte (cuentan para el límite de la etapa).'],
+  [20,'plen','Cierre: un minuto por equipo','Cada equipo dice su empresa, lo que pide el cliente y su primera sospecha. Entregas la lectura eje de la etapa 1 (Hammer).']],
+ claves:[['Primero el mapa, después el caso','Los primeros 35 minutos fijan cómo se trabaja y cómo se evalúa. Con eso claro, el grupo entra al caso sin ansiedad por la nota.'],['Un encargo con trampa','Cada empresa pide una solución concreta (más salario, un software, una prueba). Parte del trabajo es decidir si es la correcta: así trabaja un consultor.']],
+ recorte:'Si vas tarde, reduce “Reformula” a 2 quejas y la plenaria de patrones a 15 minutos. No recortes “Cómo trabajaremos” ni la formación de equipos.'},
+{id:'s2',n:2,fase:'Levantamiento',date:'2026-11-07',dia:'Sábado 7 de noviembre',hora:'8:00 a.m. – 12:00 m.',start:480,titulo:'Mapear el proceso actual',
+ pregunta:'¿Cómo se ve el proceso de punta a punta y dónde se está perdiendo valor?',read:0,
+ avance:'Diapositivas 1 y 2: el encargo con su pregunta operacional y el mapa del proceso actual.',
+ prep:['Marcos por sala con 5 carriles vacíos: Candidata, Reclutamiento, Contratación, Formación, Supervisor.','Plantilla SIPOC y carriles duplicable por equipo.'],
+ guion:[[20,'din','Conversatorio: lectura eje de la etapa 1','¿Automatizar o eliminar? Cada equipo trae un paso de su empresa que existe “porque siempre se hizo así” y discuten qué haría Hammer. ¿La solución que pidió su cliente automatiza o elimina?'],
+  [15,'expo','Levantar un proceso','SIPOC para fijar el alcance; diagrama de carriles para ver actores, esperas y traspasos.'],
+  [40,'din','Soy Camila','Narras los 66 días de una nueva agente de Andes Contact. En salas reconstruyen su recorrido en carriles y marcan esperas y traspasos.'],
+  [10,'plen','Galería y voto','Recorren los mapas de otras salas y votan con 3 puntos dónde se pierde más valor. Revelas que Camila renunció en la semana 5.'],
+  [15,'pausa','Pausa',''],
+  [15,'expo','Lo que vive la persona','Línea de visibilidad: lo que la persona vive frente a lo que pasa tras bambalinas. Curva emocional de Camila.'],
+  [70,'taller','Mapa del proceso actual (equipos)','Primero 15 minutos para la ficha del encargo con el caso completo que recibieron. Luego 30 minutos para el SIPOC y los carriles de su empresa; lo que no sepan va como supuesto explícito o como pregunta al cliente. Luego dos equipos se entrevistan, 10 minutos cada uno, con las 5 preguntas del consultor.'],
+  [25,'plen','Clínica de mapas','3 o 4 equipos comparten pantalla; el grupo revisa límites, actores, esperas e indicadores.'],
+  [15,'cons','Consultorio','Quince minutos solo para dudas y consultas: sobre el caso, la exposición, la forma de trabajo o la evaluación. Las preguntas al cliente se anotan aparte (cuentan para el límite de la etapa).'],
+  [15,'plen','Cierre','Avance: diapositiva “Proceso actual”. Recordatorio: hasta 3 preguntas por etapa al cliente, por escrito.']],
+ claves:[['Soy Camila','Reconstruir el proceso desde la experiencia de la persona, no desde el organigrama. El cierre (renunció en la semana 5) abre el diagnóstico.'],['Entrevista entre equipos','Explicar el proceso a alguien de otra industria expone los supuestos que nadie cuestiona dentro.']],
+ recorte:'Si vas tarde, la clínica puede bajar a 2 equipos. El taller de mapeo no se recorta.'},
+{id:'s3',n:3,fase:'Diagnóstico',date:'2026-11-13',dia:'Viernes 13 de noviembre',hora:'2:00 – 6:00 p.m.',start:840,titulo:'Encontrar el cuello de botella',
+ pregunta:'¿Cuál es el cuello de botella real del proceso y qué datos lo confirman o lo desmienten?',
+ avance:'Diapositiva 3: hipótesis del cuello de botella con 3 indicadores.',
+ prep:['Responder por escrito las preguntas de la etapa 1 de cada equipo (banco en la pestaña Empresas).','Pistas A–D listas para pegar en cada sala (pestaña Práctica).','Elegir 4–5 equipos para el tribunal de hipótesis.','Opcional: 5 minutos de tu Power BI con datos anonimizados.'],
+ guion:[[15,'din','¿Dónde está el cuello?','Votan con los tiempos por etapa de Andes Contact. Casi todos eligen la etapa más larga; revelas que el cuello está donde se forma la fila.'],
+  [20,'expo','Restricciones y desperdicios','La capacidad del sistema es la de su cuello. Ley de Little: personas en espera = llegadas por día × días de espera. Desperdicios típicos en gestión humana.'],
+  [10,'din','Simulador de capacidad','El grupo propone cambios a la formación de Andes Contact y ve cómo cambia la espera.'],
+  [45,'din','Detectives del caso','Rompecabezas: cada sala analiza una pista distinta; luego salas mixtas reconstruyen la historia y dictan su diagnóstico.'],
+  [15,'pausa','Pausa',''],
+  [20,'plen','Veredicto','Dos cuellos encadenados: capacidad de formación y acompañamiento en piso. El salario era la razón declarada, no el patrón observado.'],
+  [10,'expo','Indicadores que importan','De proceso, de resultado y de experiencia.'],
+  [60,'taller','Hipótesis del cuello (equipos)','Marcan en su mapa dónde se forma la fila, la sostienen con el caso y las respuestas del cliente, eligen 3 indicadores y redactan la hipótesis con la plantilla.'],
+  [20,'plen','Tribunal de hipótesis','4 o 5 equipos leen su hipótesis; el grupo tiene 3 minutos para buscar el dato que la desmentiría.'],
+  [15,'cons','Consultorio','Quince minutos solo para dudas y consultas: sobre el caso, la exposición, la forma de trabajo o la evaluación. Las preguntas al cliente se anotan aparte (cuentan para el límite de la etapa).'],
+  [10,'plen','Cierre y lectura 2','Avance: diapositiva “Cuello de botella”. Entregas la lectura eje de la etapa 2 (Rousseau y Barends) para el conversatorio de mañana.']],
+ claves:[['Detectives (rompecabezas)','Ronda 1 por pista, ronda 2 en salas mixtas. Si reasignar salas es engorroso, la ronda 2 va en plenaria con un vocero por pista.'],['Tribunal de hipótesis','El equipo no se defiende, solo toma nota. Entrena a buscar lo que desmiente, no solo lo que confirma.']],
+ recorte:'Si vas tarde, el simulador puede ser una demo tuya de 5 minutos. El taller de hipótesis no se recorta.'},
+{id:'s4',n:4,fase:'Validación',date:'2026-11-14',dia:'Sábado 14 de noviembre',hora:'8:00 a.m. – 12:00 m.',start:480,titulo:'Validar el diagnóstico',
+ pregunta:'¿Qué evidencia sostiene el cuello identificado y qué explicaciones alternativas quedan descartadas?',read:1,
+ avance:'Diapositiva 4: validación (respuestas del cliente, explicaciones descartadas y 3–5 estudios evaluados).',
+ prep:['Recordar el jueves que creen cuentas gratuitas (Claude o NotebookLM, Consensus o Elicit).','Tener la política y los 20 comentarios del caso listos para la demo.'],
+ guion:[[20,'din','Conversatorio: lectura eje de la etapa 2','Semáforo del diagnóstico: cada equipo califica su hipótesis en las cuatro fuentes de evidencia (verde, amarillo, rojo) y decide qué le falta.'],
+  [15,'din','Humano vs. máquina','Una sala codifica a mano 12 comentarios de salida; tú corres el mismo análisis con IA. Comparan qué vio cada uno.'],
+  [10,'expo','Reglas de uso','Nada de datos personales. Prompt de consultor: rol, contexto, tarea, formato y límites.'],
+  [50,'taller','Contraste con IA (equipos)','Le entregan a la IA su caso y su hipótesis; le piden tres explicaciones alternativas y el dato que distinguiría cada una. Con eso redactan sus preguntas de la etapa 2 al cliente.'],
+  [15,'pausa','Pausa',''],
+  [15,'expo','Evidencia científica','Cuatro preguntas antes de citar un estudio: diseño, contexto, tamaño del efecto y sesgos.'],
+  [10,'din','Cazador de alucinaciones','Pides en vivo a un chatbot sin búsqueda web 3 referencias; en parejas las verifican.'],
+  [60,'taller','Evidencia para su cuello (equipos)','Pregunta PICO, búsqueda en Consensus o Elicit, 3–5 estudios evaluados con su aplicabilidad.'],
+  [20,'plen','Lo que la evidencia nos cambió','Cada equipo: “Creíamos…, la evidencia dice…, en nuestro caso significa…”.'],
+  [15,'cons','Consultorio','Quince minutos solo para dudas y consultas: sobre el caso, la exposición, la forma de trabajo o la evaluación. Las preguntas al cliente se anotan aparte (cuentan para el límite de la etapa).'],
+  [10,'plen','Cierre','Avance: diapositiva “Validación”. Respondo las preguntas de la etapa 2 durante la semana.']],
+ claves:[['Humano vs. máquina','Busca el comentario 18 (“marqué salario porque era lo más fácil”): ¿lo vio la sala, lo destacó la IA?'],['Cazador de alucinaciones','No prepares el resultado. Si todas las referencias existen, verifica si dicen lo que el chatbot afirma.']],
+ recorte:'Si vas tarde, el cazador de alucinaciones puede ser una demo de 5 minutos. La búsqueda de evidencia no se recorta.'},
+{id:'s5',n:5,fase:'Rediseño',date:'2026-11-20',dia:'Viernes 20 de noviembre',hora:'2:00 – 6:00 p.m.',start:840,titulo:'Rediseñar el proceso',
+ pregunta:'¿Cómo debe funcionar el proceso para que produzca otros resultados, y qué decisiones no deben automatizarse?',
+ avance:'Diapositivas 5 a 7: proceso rediseñado, implementación y métricas.',
+ prep:['Asignar el jueves los roles del tribunal (fiscalía, defensa, voz de colaboradores, jurado).','Elegir 4 equipos para la clínica con rúbrica.','Publicar el orden de exposiciones del sábado.'],
+ guion:[[20,'din','Rediseño relámpago','En salas, 10 minutos para rediseñar la incorporación de Andes Contact sin presupuesto adicional. Comparan y muestras tu antes y después.'],
+  [10,'expo','Principios de rediseño','Eliminar, combinar, reordenar, simplificar; proteger el cuello; paralelizar; decidir donde está la información.'],
+  [30,'din','¿Automatizamos esta decisión?','Tribunal sobre una IA que descarta candidatos por “riesgo de renuncia”. Fiscalía, defensa y voz de los colaboradores; el jurado decide con condiciones y sale el semáforo de IA.'],
+  [5,'expo','Semáforo de IA','Qué automatizar en un proceso de personas y qué no.'],
+  [15,'pausa','Pausa',''],
+  [70,'taller','Proceso rediseñado (equipos)','Lienzo para su empresa: proceso futuro, qué cambia, responsables, recursos, quién gana y quién pierde, métricas con línea base, meta y plazo.'],
+  [15,'din','Pre-mortem','“Es junio de 2027 y el rediseño fracasó. ¿Por qué?”. Cada equipo ajusta su plan.'],
+  [30,'plen','Clínica con la rúbrica','3 equipos presentan su avance en 5 minutos; el grupo lo califica con la rúbrica final.'],
+  [20,'taller','Armado de la exposición','Cada equipo ordena sus 8 diapositivas con todo lo construido y reparte quién expone qué. Así nadie arma la exposición desde cero el viernes en la noche.'],
+  [15,'cons','Consultorio','Quince minutos solo para dudas y consultas: sobre el caso, la exposición, la forma de trabajo o la evaluación. Las preguntas al cliente se anotan aparte (cuentan para el límite de la etapa).'],
+  [10,'plen','Brief de la exposición y lectura eje de la etapa 3','Formato, orden de presentación y lectura de Kotter para el conversatorio del sábado.']],
+ claves:[['Rediseño relámpago','La restricción “sin presupuesto adicional” obliga a rediseñar el proceso en vez de agregar programas.'],['Clínica con la rúbrica','Que califiquen con la rúbrica real una semana antes hace que la entiendan y la usen para mejorar su caso.']],
+ recorte:'Si vas tarde, el tribunal puede bajar a 20 minutos (sin réplicas). El armado de la exposición y el consultorio no se recortan.'},
+{id:'s6',n:6,fase:'Comité',date:'2026-11-21',dia:'Sábado 21 de noviembre',hora:'8:00 a.m. – 12:00 m.',start:480,titulo:'Exposición final del caso',
+ pregunta:'¿El rediseño convence a una dirección exigente?',read:2,
+ avance:'Exposición final evaluada con la rúbrica.',
+ prep:['Recibir las diapositivas antes de las 7:00 a.m.','Rúbrica impresa o en hoja de cálculo por equipo.','Encuesta de evaluación del curso.'],
+ guion:[[20,'din','Conversatorio: lectura eje de la etapa 3','Cada equipo dice en 1 minuto qué error de Kotter amenaza su implementación y cómo lo evita.'],
+  [5,'plen','Reglas de la exposición','10 minutos de exposición y 5 de preguntas. Recordatorio de la rúbrica.'],
+  [80,'taller','Exposiciones, bloque 1','Evalúas con la rúbrica; los pares preguntan desde un rol de dirección (gerencia general, finanzas, colaboradores).'],
+  [15,'pausa','Pausa',''],
+  [70,'taller','Exposiciones, bloque 2','Mismo formato.'],
+  [20,'plen','Retroalimentación general','Lo que más convenció y lo que faltó con más frecuencia. Cinco hábitos de un gerente de personas con mirada de procesos.'],
+  [10,'cons','Consultorio final','Dudas sobre la nota, cuándo y cómo recibirán la retroalimentación escrita, y lo que quieran llevar a su organización.'],
+  [20,'plen','Cierre','Carta a mi yo de 90 días y encuesta de evaluación.']],
+ claves:[['Preguntas desde un rol','Asigna a cada estudiante un rol de dirección para las preguntas; así nadie se desconecta mientras exponen otros.'],['Tiempos','150 minutos alcanzan para 10 equipos de 15 minutos. Con más equipos: 8 minutos de exposición y 4 de preguntas.']],
+ recorte:'Si un equipo se excede, corta a los 10 minutos y pasa a preguntas: el tiempo es parte de la rúbrica.'}
+];
+
+/* ===== DIAPOSITIVAS ===== */
+const COURSE='Consultoría y Rediseño de Procesos en la Gestión de Personas';
+const DECKS={
+curso:[
+ {sec:'Curso',k:'cover',kick:'Universidad de La Sabana · Maestría en Gerencia y Desarrollo de Personas',title:'Cómo trabajaremos',sub:'Estructura, ritmo de las sesiones y evaluación del curso.'},
+ {sec:'Estructura',k:'etapas',br:'Son seis sesiones agrupadas en tres etapas. Cada etapa gira alrededor de una lectura.',title:'Tres etapas, una lectura eje por etapa',n:'Explica solo la primera columna; las otras funcionan igual.'},
+ {sec:'Dictado',k:'ritmo',br:'Cada sesión de cuatro horas tiene el mismo ritmo.',title:'Así serán nuestras cuatro horas'},
+ {sec:'Evaluación',k:'eval',br:'Todo termina en un solo producto, y esa es la única evaluación.',title:'Una sola nota: la exposición final'},
+ {sec:'Evaluación',k:'parts',br:'Cada sesión deja lista una parte de esa exposición.',title:'Las siete partes de la exposición'},
+ {sec:'Empresas',k:'empresas',br:'Trabajarán sobre una empresa colombiana ficticia que recibirán hoy.',title:'Su empresa y las reglas del juego'},
+ {sec:'Dudas',k:'big',br:'Ese es el mapa.',text:'¿Qué <em>dudas</em> tienen sobre cómo vamos a trabajar?',min:5}
+],
+s1:[
+ {sec:'Bienvenida',k:'cover',kick:'Etapa 1 · Entender y levantar · Sesión 1 · Viernes 6 de noviembre',title:'Del problema de personas al problema de proceso',sub:'¿Por qué iniciativas de gestión humana bien intencionadas no producen los resultados esperados?',n:'Pantalla fija mientras se conectan. A las 2:00 en punto, saludas sin prisa.'},
+ {sec:'Bienvenida',k:'big',br:'Bienvenidos. Antes de cualquier contenido, quiero escucharlos.',text:'En cinco palabras: ¿qué proceso de gestión humana <em>les quita hoy el sueño</em>?',sub:'Escríbanlo en el chat. Sin nombres de personas ni de empresas.',min:3,n:'Lee 6–8 respuestas en voz alta y agrúpalas: “selección aparece tres veces, incorporación dos…”.'},
+ {sec:'Bienvenida',k:'list',br:'Casi todo lo que escribieron es el síntoma de un proceso. De eso trata este curso, y por eso les cuento desde dónde lo miro.',title:'Desde dónde les hablo',items:[['Primero','Ingeniería Industrial y Gerencia de Operaciones: aprendí a ver las organizaciones como sistemas de procesos.'],['Después','Dirección de Personas y Desarrollo Organizacional: aprendí que esos procesos producen, sobre todo, experiencias humanas.'],['Hoy','Gestión académica y docencia en la Universidad Católica San Pablo, Arequipa.']],n:'Noventa segundos. No leas la diapositiva: cuéntala.'},
+ {sec:'Bienvenida',k:'big',br:'Por eso la idea que nos acompañará estas tres semanas es simple:',text:'Gerenciar personas también es <em>diseñar operaciones</em>.',sub:'No vamos a estudiar la gestión humana desde afuera. Vamos a trabajar como consultores dentro de una empresa.'},
+ {sec:'Cómo trabajaremos',k:'etapas',br:'Antes de empezar, el mapa completo. Son seis sesiones en tres etapas, y cada etapa gira alrededor de una lectura.',title:'Tres etapas, una lectura eje por etapa',n:'Señala una columna: el viernes trabajamos, la lectura queda para la noche, el sábado abrimos conversándola. No leas las tres columnas: basta con una.'},
+ {sec:'Cómo trabajaremos',k:'ritmo',br:'Cada sesión de cuatro horas tiene el mismo ritmo.',title:'Así serán nuestras cuatro horas',n:'Una sola idea: casi todo el tiempo trabajan ellos. Y siempre hay un consultorio para dudas.'},
+ {sec:'Cómo trabajaremos',k:'eval',br:'Todo lo que trabajen termina en un solo producto, y esa es la única evaluación.',title:'Una sola nota: la exposición final',n:'Cada sesión deja lista una parte de la exposición. La rúbrica completa la tendrán por escrito.'},
+ {sec:'Cómo trabajaremos',k:'empresas',br:'No trabajarán sobre su propia organización, sino sobre una empresa colombiana ficticia que recibirán hoy.',title:'Su empresa y las reglas del juego',n:'Cada caso trae contexto, voces y lo que pide el cliente; no todos los datos. Interpretar es parte del trabajo.'},
+ {sec:'Cómo trabajaremos',k:'big',br:'Ese es el mapa.',text:'¿Qué <em>dudas</em> tienen sobre cómo vamos a trabajar?',min:5,n:'Abre micrófonos. Resuelve dudas de equipos y evaluación. Luego pasa al caso con la frase de la siguiente diapositiva.'},
+ {sec:'Caso de apertura',k:'nums',br:'Empecemos como empieza toda consultoría: con un cliente que cree saber la respuesta.',kick:'Caso de práctica · empresa ficticia',title:'Andes Contact S.A.S., contact center en Bogotá',nums:[['1.400','agentes en tres sedes'],['41%','se va antes de 90 días (sede Centro)'],['18%','acepta la oferta y nunca llega a la formación'],['COP 4,8 M','cuesta reemplazar a un agente (≈ USD 1.500)']],n:'Aclara que es un caso construido para practicar en clase. Referencia: unos COP 3.200 por dólar.'},
+ {sec:'Caso de apertura',k:'poll',br:'La gerencia general tiene cuatro propuestas. Ustedes son el comité: decidan.',title:'¿Cuál aprueban?',opts:[['A','Subir el salario base 10%: ≈ COP 3.400 millones al año (unos USD 1,1 millones)'],['B','Programa de bienestar y marca empleadora'],['C','Cambiar al proveedor de reclutamiento'],['D','No decido todavía: necesito otra información']],min:3,n:'Votan. Dos personas por opción defienden su voto. Si eligen D, pregunta qué información exactamente y anótalo.'},
+ {sec:'Caso de apertura',k:'chart',br:'Antes de que el comité decidiera, dos sedes probaron caminos distintos. Esto pasó.',title:'Agentes que siguen en la empresa, semana a semana',chart:'survival',note:'Norte subió el salario 10%: pasó de 41% a 39% de salida. Sur no tocó el salario y estructuró el acompañamiento en piso: 24%.',n:'Deja 10 segundos de silencio. Pregunta: “¿Qué ven? ¿En qué semanas se van?”. Respuesta: entre la 3 y la 6, justo cuando salen de la formación al piso. Luego: “Norte subió el salario y casi no cambió. ¿Qué hizo Sur?”. Sur: líder con 12 personas, tutor activo y metas recién desde la semana 5.'},
+ {sec:'Caso de apertura',k:'split',br:'Si subir el salario casi no cambió nada, quizá la pregunta estaba mal planteada.',title:'Dos preguntas frente al mismo problema',a:{h:'Pregunta convencional',t:'¿Qué les pasa a las personas? ¿Por qué no se comprometen? ¿Cuánto más hay que pagarles?'},b:{h:'Pregunta del consultor',t:'¿Qué proceso está produciendo esta rotación, y dónde se forma su cuello de botella?'},hi:'b',q:'¿qué habría cambiado su voto?',n:'Pregunta abierta: ¿qué hubiera cambiado en su voto si la pregunta hubiera sido la segunda?'},
+ {sec:'Discusión',k:'myth',br:'Decidimos a menudo con lo que parece obvio. Tres afirmaciones; la primera, sobre cómo elegimos personas.',kick:'Mito, evidencia o depende · 1 de 3',claim:'Las entrevistas no estructuradas predicen bien el desempeño en el puesto.',tag:'Mito',verdict:'Predicen poco. Las entrevistas estructuradas, con preguntas y criterios definidos, tienen una validez bastante mayor.',src:'Sackett, Zhang, Berry y Lievens (2022), Journal of Applied Psychology',n:'Votan, dos personas defienden su voto y recién revelas (R).'},
+ {sec:'Discusión',k:'myth',br:'Segunda, sobre lo que contamos a los candidatos antes de contratarlos.',kick:'Mito, evidencia o depende · 2 de 3',claim:'Mostrar el trabajo tal como es antes de contratar reduce la rotación.',tag:'Evidencia',verdict:'Las vistas previas realistas tienen un efecto modesto pero consistente sobre la rotación temprana.',src:'Phillips (1998), Academy of Management Journal; Earnest, Allen y Landis (2011), Personnel Psychology'},
+ {sec:'Discusión',k:'myth',br:'Y la tercera nos devuelve a Andes Contact.',kick:'Mito, evidencia o depende · 3 de 3',claim:'Si en la encuesta de salida la mayoría marca “salario”, el salario es la causa de la rotación.',tag:'Depende',verdict:'Es una razón declarada, no una causa demostrada. Hay que contrastarla con el comportamiento observado.',src:'Principio de triangulación de fuentes'},
+ {sec:'Discusión',k:'list',br:'Lo que separa una opinión de un diagnóstico es de dónde sale la evidencia. Un consultor mira cuatro fuentes.',title:'Cuatro fuentes de evidencia',items:[['Organizacional','Los datos del propio proceso.'],['Grupos de interés','Lo que viven y dicen quienes pasan por él.'],['Científica','Lo que muestran los estudios rigurosos.'],['Experiencial','El juicio de profesionales con experiencia.']],n:'No expliques: pregunta. ¿Cuáles usó su organización en su última gran decisión de personas? Fuente: Barends, Rousseau y Briner (2014), CEBMa.'},
+ {sec:'Discusión',k:'quote',br:'Y cuando un resultado se repite año tras año, no es mala suerte:',text:'Todo sistema está perfectamente diseñado para obtener los resultados que obtiene.',by:'Frase atribuida a Paul Batalden',n:'Silencio de unos segundos. Luego anuncia la pausa.'},
+ {sec:'Pausa',k:'brk',min:15},
+ {sec:'Auditoría',k:'act',br:'Volvemos. Ahora lo aplicamos a ustedes: cada uno trae una decisión real de su organización.',kick:'Salas de 3',title:'Auditoría de una decisión',steps:['Elige una decisión reciente de gestión humana de tu organización','4 minutos para exponerla; los otros dos la auditan durante 8 con la guía','Roles que rotan: facilitador, escriba, abogado del diablo','La sala elige un patrón común para la plenaria'],min:40,n:'Avisa por difusión a los 10, 20 y 30 minutos. Visita 3–4 salas: escucha, deja una pregunta, sal.'},
+ {sec:'Auditoría',k:'list',br:'Esta es la guía para auditarla. También está en el tablero de cada sala.',title:'Seis preguntas para auditar una decisión',items:[['La decisión','¿Qué se decidió y quién decidió?'],['El problema','¿Qué buscaba resolver? ¿Estaba medido?'],['El supuesto','¿Qué tenía que ser cierto para que funcionara?'],['La evidencia','¿Qué fuentes se usaron? Verde, amarillo o rojo.'],['El faltante','¿Qué dato habría cambiado la decisión?'],['El proceso','¿Qué proceso estaba detrás del problema?']],cls:'tight'},
+ {sec:'Auditoría',k:'act',br:'Volvamos juntos. No me cuenten casos: cuéntenme qué se repite.',kick:'Plenaria',title:'Patrones, no casos',steps:['Cada sala comparte un patrón en un minuto','Lo agrupamos en el tablero','Buscamos qué se repite entre industrias'],min:15,n:'Patrones esperables: solución antes que problema, copiar al líder del sector, medir el resultado y no el proceso.'},
+ {sec:'Auditoría',k:'reform',br:'Esos patrones casi siempre empiezan con una queja mal formulada. Entrenemos el oído.',kick:'Reformula en 60 segundos',title:'De la queja a la pregunta sobre el proceso',items:[['“Los nuevos no se adaptan.”','¿Qué ocurre entre la firma del contrato y el día 30, y quién responde por cada paso?'],['“Los líderes no dan retroalimentación.”','¿En qué momento del ciclo debería ocurrir, con qué formato y qué lo impide?'],['“Nadie se postula a vacantes internas.”','¿Cómo circula la información de vacantes y qué aprobación frena la postulación?']],n:'Una queja a la vez, 60 segundos en el chat, lees 3–4 respuestas y al final R muestra las versiones.'},
+ {sec:'Equipos',k:'act',br:'Ya tienen la mirada. Ahora, su encargo. Formemos los equipos.',kick:'Equipos de 2 a 3',title:'Su empresa y su encargo',steps:['Formamos equipos y cada uno recibe una empresa con lo que pide su cliente','Acuerden cómo trabajarán: roles, canal y horarios','Con solo el encargo: ¿qué sospechan que está pasando?','¿Qué necesitarían saber? Anoten sus primeras preguntas','El caso completo les llega hoy al cierre o esta noche'],min:50,out:'Una sospecha inicial y las preguntas del equipo',n:'En clase entrega solo el encargo (botón “Copiar encargo” en la pestaña Empresas). Máximo 2 equipos por empresa. Envía las fichas completas al cierre o esta noche.'},
+ {sec:'Consultorio',k:'big',br:'Ya leyeron su caso y seguro aparecieron dudas. Este espacio es para eso.',kick:'Consultorio',text:'Sus <em>dudas y consultas</em>: sobre el caso, la exposición o la forma de trabajo.',sub:'Micrófono abierto o chat. Las preguntas al cliente van aparte y cuentan para el límite de la etapa.',min:15},
+ {sec:'Cierre',k:'act',br:'Resueltas las dudas, escuchemos a cada equipo de consultores.',kick:'Un minuto por equipo',title:'Nuestro encargo en tres frases',steps:['Nuestra empresa es…','El cliente nos pide…','Sospechamos que el problema está en…'],min:15,n:'Anota las sospechas: mañana las contrastamos con Hammer.'},
+ {sec:'Cierre',k:'read1',br:'Para mañana, una sola lectura. Es el eje de esta primera etapa.',kick:'Lectura eje de la etapa 1',idx:0,min:5},
+ {sec:'Cierre',k:'cover',kick:'Mañana · Sábado 7 · 8:00 a.m.',title:'Conversatorio y levantamiento del proceso actual',sub:'Gracias por esta primera tarde.'}
+],
+s2:[
+ {sec:'Conversatorio',k:'cover',kick:'Etapa 1 · Entender y levantar · Sesión 2 · Sábado 7 de noviembre',title:'Mapear el proceso actual',sub:'¿Cómo se ve el proceso de punta a punta y dónde se pierde valor?'},
+ {sec:'Conversatorio',k:'read1',br:'Buenos días. Empezamos donde quedamos: con Hammer y con su empresa en la cabeza.',kick:'Conversatorio · lectura eje de la etapa 1',idx:0,min:20,n:'Cada equipo comparte un paso de su empresa. Elige tres y discutan qué haría Hammer. Cierra preguntando si la solución que pidió su cliente automatiza o elimina.'},
+ {sec:'Conversatorio',k:'list',br:'De la lectura, tres ideas que usaremos hoy mismo.',title:'Antes de automatizar, rediseñar',items:[['Organizar por resultados','No por tareas ni por áreas.'],['Captar la información una vez','Y en la fuente.'],['Decidir donde se hace el trabajo','Con el control dentro del proceso.']]},
+ {sec:'Levantar',k:'list',br:'Pero para rediseñar, primero hay que ver el proceso. Dos herramientas, en este orden.',title:'Levantar un proceso',items:[['SIPOC','Proveedores, entradas, proceso, salidas y clientes. Fija el alcance.'],['Diagrama de carriles','Un carril por actor. Muestra los traspasos y las esperas que el organigrama esconde.']]},
+ {sec:'Soy Camila',k:'list',br:'Practiquemos con una historia. Les presento a Camila, nueva agente de Andes Contact.',title:'Los 66 días de Camila',items:[['Día 0','Se aprueba la requisición.'],['Día 10','Camila ve el aviso y postula.'],['Día 19','Pruebas y tres entrevistas.'],['Día 22','Recibe la oferta por WhatsApp.'],['Día 29','Exámenes médicos; vuelve a entregar sus documentos.'],['Día 41','Sigue esperando la formación. Le llega otra oferta.'],['Días 42–56','Formación con 25 compañeros; poco simulador.'],['Día 57','Primer día en piso. Supervisora con 23 personas. Metas desde la semana 2.']],cls:'tight',n:'Narra con calma, en primera persona si te sale natural.'},
+ {sec:'Soy Camila',k:'act',br:'Ahora reconstruyan su recorrido, carril por carril.',kick:'Salas de 4 a 5',title:'Dibujen el recorrido de Camila',steps:['Cinco carriles: Candidata, Reclutamiento, Contratación, Formación, Supervisor','Cada paso en el carril de quien lo ejecuta','Rojo para esperas, amarillo para traspasos','Un indicador posible por etapa'],min:25},
+ {sec:'Soy Camila',k:'act',br:'Veamos qué vieron las otras salas.',kick:'Galería',title:'¿Dónde se pierde más valor?',steps:['Recorran los mapas de las otras salas','Cada quien tiene 3 puntos para votar'],min:10},
+ {sec:'Soy Camila',k:'big',br:'Hay un dato que no les conté.',text:'Camila renunció en la <em>semana 5</em>. ¿En qué carril estaba la causa?',min:5},
+ {sec:'Pausa',k:'brk',min:15},
+ {sec:'Taller',k:'chart',br:'Volvemos con Camila, pero ahora desde lo que sintió.',kick:'Lo que vive la persona',title:'La curva emocional de Camila',chart:'journey',note:'Los momentos que definen la permanencia están en los valles: la espera sin noticias y las primeras semanas en piso.'},
+ {sec:'Taller',k:'act',br:'Con esa doble mirada, proceso y experiencia, vamos a su empresa.',kick:'Equipos',title:'El proceso actual de su empresa',steps:['15 min: ficha del encargo con el caso completo','30 min: SIPOC y carriles; supuestos explícitos','Luego dos equipos se entrevistan, 10 minutos cada uno','El equipo que entrevista señala los 2 vacíos mayores del mapa'],min:70,out:'Diapositiva 2: proceso actual'},
+ {sec:'Taller',k:'list',br:'Cuando les toque entrevistar al otro equipo, solo pueden usar estas cinco preguntas.',title:'Las cinco preguntas de levantamiento',items:[['Límites','¿Dónde empieza y dónde termina?'],['Manos','¿Quién toca el caso y cuándo pasa a otra persona?'],['Esperas','¿Dónde espera y por qué?'],['Reprocesos','¿Qué se hace dos veces?'],['Resultado','¿Qué número dice que salió bien?']]},
+ {sec:'Clínica',k:'act',br:'Miremos algunos mapas juntos.',kick:'Clínica',title:'Cuatro preguntas para cada mapa',steps:['¿Inicio y fin claros?','¿Están todos los actores?','¿Las esperas se ven?','¿Hay un indicador por etapa?'],min:25},
+ {sec:'Consultorio',k:'big',br:'Antes de cerrar la etapa, un espacio para sus dudas.',kick:'Consultorio',text:'Sus <em>dudas y consultas</em>: sobre el caso, la exposición o la forma de trabajo.',sub:'Micrófono abierto o chat. Las preguntas al cliente van aparte y cuentan para el límite de la etapa.',min:15},
+ {sec:'Cierre',k:'act',br:'Cerramos la primera etapa.',kick:'Cierre de la etapa 1',title:'Lo que ya tienen',steps:['El encargo reformulado y el mapa del proceso actual','El viernes empieza la etapa 2: diagnosticar y validar','Preguntas al cliente: hasta 3 por etapa, por escrito'],min:15}
+],
+s3:[
+ {sec:'Apertura',k:'cover',kick:'Etapa 2 · Diagnosticar y validar · Sesión 3 · Viernes 13 de noviembre',title:'Encontrar el cuello de botella',sub:'¿Cuál es el cuello real del proceso y qué lo confirma o lo desmiente?'},
+ {sec:'Apertura',k:'big',br:'Bienvenidos a la segunda etapa. Ya saben cómo es el proceso; ahora, dónde se rompe.',text:'Etapa 2: <em>diagnosticar y validar</em>.',sub:'Hoy buscamos el cuello de botella. Mañana lo ponemos a prueba con la evidencia.'},
+ {sec:'Caso',k:'chart',br:'Volvamos a Andes Contact. Estos son los días que toma cada etapa.',kick:'Votación',title:'¿Dónde está el cuello de botella?',chart:'pipeline',note:'Días promedio por etapa.',min:3,n:'La mayoría vota la barra más larga.'},
+ {sec:'Caso',k:'big',br:'La mayoría eligió la barra más larga. Miren de nuevo.',text:'La etapa más larga no es el cuello. El cuello está <em>donde se forma la fila</em>.',sub:'Doce días de espera antes de la formación: la formación no da abasto con lo que entra.'},
+ {sec:'Caso',k:'big',br:'Y esa fila tiene un tamaño que se puede calcular.',kick:'Ley de Little',text:'Personas en espera = llegadas por día × días de espera',sub:'3,5 contrataciones por día × 12 días ≈ 42 personas con contrato firmado esperando. Cualquiera puede recibir otra oferta.'},
+ {sec:'Caso',k:'list',br:'La espera es solo uno de los desperdicios que se esconden en gestión humana.',title:'Dónde se pierde valor sin que nadie lo vea',items:[['Esperas','Candidatos aceptados sin fecha de inicio.'],['Reprocesos','Documentos pedidos tres veces.'],['Sobreprocesamiento','Cinco entrevistas para un puesto operativo.'],['Talento no usado','Ideas de las personas que nadie recoge.']],n:'Pide a cada equipo un desperdicio de su empresa en el chat.'},
+ {sec:'Caso',k:'sim',br:'Juguemos con la capacidad de formación. Ustedes deciden los cambios.',kick:'Simulador · modelo didáctico',title:'¿Qué pasa si cambiamos la capacidad?',min:10},
+ {sec:'Detectives',k:'act',br:'Ya tienen las herramientas. Ahora investiguen el caso completo.',kick:'Rompecabezas',title:'Detectives del caso',steps:['Ronda 1 (20 min): cada sala analiza una pista','Ronda 2 (20 min): salas mixtas, con un experto de cada pista','Entregable: “El problema real es… porque…”'],min:45},
+ {sec:'Detectives',k:'list',br:'Cada sala recibe una pista distinta.',title:'Las pistas',items:[['Pista A','Tiempos promedio por etapa.'],['Pista B','Permanencia por sede.'],['Pista C','Razones declaradas en la encuesta de salida.'],['Pista D','Cómo opera el piso en cada sede.']]},
+ {sec:'Pausa',k:'brk',min:15},
+ {sec:'Veredicto',k:'split',br:'Escuchemos los veredictos. Casi todos llegan a la misma tensión.',title:'Lo que dicen frente a lo que hacen',a:{h:'Lo que dicen',t:'38% marca “salario” en la encuesta de salida.'},b:{h:'Lo que hacen',t:'La sede que subió el salario casi no cambió. La que acompañó en piso bajó la salida de 41% a 24%.'},hi:'b'},
+ {sec:'Veredicto',k:'big',br:'Si juntamos las pistas, la historia es otra.',text:'Dos cuellos encadenados: <em>capacidad de formación</em> y <em>acompañamiento en piso</em>.',sub:'Subir salarios costaría COP 3.400 millones al año (unos USD 1,1 millones) y atacaría un síntoma.'},
+ {sec:'Veredicto',k:'list',br:'Para que esto no vuelva a sorprendernos, hay que medir antes.',title:'Tres tipos de indicadores, en este orden',items:[['De proceso','Días de espera, % con tutor activo. Avisan antes.'],['De resultado','Rotación a 90 días, costo de reemplazo. Confirman después.'],['De experiencia','Cómo vive la persona cada momento clave.']]},
+ {sec:'Taller',k:'act',br:'Llevemos todo esto a su empresa.',kick:'Equipos',title:'La hipótesis del cuello de botella',steps:['Marquen en su mapa dónde se forma la fila','Sosténganla con el caso y las respuestas del cliente','Elijan 3 indicadores: de proceso, de resultado y de experiencia','Redacten la hipótesis con la estructura de la siguiente lámina'],min:60,out:'Diapositiva 3: cuello de botella'},
+ {sec:'Taller',k:'big',br:'Esta es la estructura para escribirla.',kick:'Estructura',text:'Creemos que <em>[resultado]</em> se explica principalmente por <em>[cuello]</em> en <em>[etapa]</em>, porque <em>[dato]</em>.',sub:'Si es cierto, deberíamos observar [evidencia]. Lo desmentiría encontrar [dato].'},
+ {sec:'Tribunal',k:'act',br:'Una hipótesis que nadie intentó derribar todavía no es un diagnóstico.',kick:'Tribunal de hipótesis',title:'¿Sobrevive su hipótesis?',steps:['El equipo la lee en 30 segundos','El grupo tiene 3 minutos para buscar el dato que la tumbaría','El equipo no se defiende: toma nota'],min:20},
+ {sec:'Consultorio',k:'big',br:'Después del tribunal seguro quedan preguntas. Este espacio es para eso.',kick:'Consultorio',text:'Sus <em>dudas y consultas</em>: sobre el caso, la exposición o la forma de trabajo.',sub:'Micrófono abierto o chat. Las preguntas al cliente van aparte y cuentan para el límite de la etapa.',min:15},
+ {sec:'Cierre',k:'read1',br:'Mañana la validamos. La lectura eje de esta etapa nos dice cómo.',kick:'Lectura eje de la etapa 2',idx:1,min:10}
+],
+s4:[
+ {sec:'Conversatorio',k:'cover',kick:'Etapa 2 · Diagnosticar y validar · Sesión 4 · Sábado 14 de noviembre',title:'Validar el diagnóstico',sub:'¿Qué evidencia sostiene el cuello y qué explicaciones alternativas quedan descartadas?'},
+ {sec:'Conversatorio',k:'read1',br:'Buenos días. Abrimos con Rousseau y Barends, y con la hipótesis de ayer sobre la mesa.',kick:'Conversatorio · lectura eje de la etapa 2',idx:1,min:20,n:'Semáforo en el tablero: cada equipo califica su hipótesis en las cuatro fuentes y anota qué le falta.'},
+ {sec:'Laboratorio',k:'act',br:'Una de las cuatro fuentes es lo que dicen las personas. Veamos qué tan bien la leemos.',kick:'Dinámica',title:'Humano frente a máquina',steps:['Una sala codifica a mano 12 comentarios de salida en 7 minutos','En paralelo, corro el mismo análisis con IA','Comparamos coincidencias, omisiones y exageraciones'],min:15,n:'Busca el comentario 18: “marqué salario porque era lo más fácil”.'},
+ {sec:'Laboratorio',k:'list',br:'La IA ayuda si se usa como asistente del consultor, no como oráculo.',title:'Cuatro reglas de uso',items:[['Datos','Nada personal ni confidencial.'],['Prompt','Rol, contexto, tarea, formato y límites: “dime lo que no puedes concluir”.'],['Verificación','Cada afirmación se comprueba en la fuente.'],['Decisión','La IA analiza; el consultor decide.']]},
+ {sec:'Taller',k:'act',br:'Úsenla para atacar su propia hipótesis.',kick:'Equipos',title:'Contraste con IA',steps:['Entreguen a la IA el caso y su hipótesis','Pídanle tres explicaciones alternativas y el dato que distinguiría cada una','Decidan cuáles descartan y con qué argumento','Redacten sus preguntas de la etapa 2 al cliente'],min:50},
+ {sec:'Pausa',k:'brk',min:15},
+ {sec:'Evidencia',k:'list',br:'Otra fuente es la científica. Antes de citar un estudio, cuatro preguntas.',title:'Antes de citar un estudio',items:[['Diseño','¿Qué tipo de estudio es? Un metaanálisis no pesa igual que un caso.'],['Contexto','¿Su muestra se parece a nuestra empresa?'],['Efecto','¿Qué tan grande es el cambio que encontró?'],['Sesgos','¿Quién lo financió? ¿Qué limitaciones reconoce?']]},
+ {sec:'Evidencia',k:'act',br:'Y una advertencia práctica antes de buscar.',kick:'Dinámica',title:'Cazador de alucinaciones',steps:['Pido en vivo a un chatbot sin búsqueda web tres referencias','En parejas, cinco minutos para verificarlas','¿Existe? ¿Dice lo que el chatbot afirma?'],min:10},
+ {sec:'Taller',k:'list',br:'Para buscar bien, primero hay que preguntar bien.',title:'La pregunta PICO',items:[['Población','¿En quiénes?'],['Intervención','¿Qué práctica?'],['Comparación','¿Frente a qué?'],['Resultado','¿Qué cambia?']]},
+ {sec:'Taller',k:'act',br:'Busquen evidencia para su cuello de botella.',kick:'Equipos',title:'Evidencia para su diagnóstico',steps:['Formulen su pregunta PICO','Busquen en Consensus o Elicit','Evalúen 3 a 5 estudios: diseño, contexto, efecto y aplicabilidad'],min:60,out:'Diapositiva 4: validación'},
+ {sec:'Plenaria',k:'big',br:'Volvamos juntos.',text:'Creíamos <em>___</em>. La evidencia dice <em>___</em>. En nuestro caso significa <em>___</em>.',min:20},
+ {sec:'Consultorio',k:'big',br:'Antes de cerrar la etapa, sus dudas y consultas.',kick:'Consultorio',text:'Sus <em>dudas y consultas</em>: sobre el caso, la exposición o la forma de trabajo.',sub:'Micrófono abierto o chat. Las preguntas al cliente van aparte y cuentan para el límite de la etapa.',min:15},
+ {sec:'Cierre',k:'act',br:'Cerramos la segunda etapa.',kick:'Cierre de la etapa 2',title:'Lo que ya tienen',steps:['Un cuello de botella identificado y validado','Respondo sus preguntas de la etapa 2 durante la semana','El viernes empieza la etapa 3: rediseñar y convencer'],min:10}
+],
+s5:[
+ {sec:'Apertura',k:'cover',kick:'Etapa 3 · Rediseñar y convencer · Sesión 5 · Viernes 20 de noviembre',title:'Rediseñar el proceso',sub:'¿Cómo debe funcionar el proceso para producir otros resultados?'},
+ {sec:'Apertura',k:'big',br:'Última etapa. Ya saben qué falla y por qué; ahora, cómo debería funcionar.',text:'Etapa 3: <em>rediseñar y convencer</em>.',sub:'Hoy rediseñamos. El sábado lo defienden ante la dirección.'},
+ {sec:'Rediseño',k:'act',br:'Calentemos con Andes Contact, con una restricción incómoda.',kick:'En salas',title:'Rediseño relámpago',steps:['Rediseñen la incorporación de Andes Contact','Restricción: sin presupuesto adicional','Diez minutos; luego comparamos'],min:20},
+ {sec:'Rediseño',k:'split',br:'Esta es una posibilidad. Compárenla con la suya.',title:'Antes y después',a:{h:'Antes',t:'Dos cohortes de 25 cada quince días. Doce días de espera sin contacto. Supervisor con 22 personas. Metas desde la semana 2.'},b:{h:'Después',t:'Cohortes semanales de 15. Preincorporación durante la espera. Tutor y líder con 12 personas en las primeras seis semanas. Metas desde la semana 5.'},hi:'b'},
+ {sec:'Rediseño',k:'list',br:'Detrás de ese rediseño hay principios que sirven para cualquier proceso.',title:'Principios de rediseño',items:[['ECRS','Eliminar, combinar, reordenar, simplificar. En ese orden.'],['Proteger el cuello','Que nunca espere ni haga trabajo innecesario.'],['Paralelizar','Lo que no depende entre sí, en simultáneo.'],['Decidir donde está la información','Quien ve el problema, con autoridad para resolverlo.']]},
+ {sec:'Tribunal',k:'big',br:'Uno de esos principios obliga a decidir qué automatizar. Andes Contact tiene una propuesta tentadora.',text:'Una IA que puntúa el <em>riesgo de renuncia</em> de cada candidato y descarta a los de riesgo alto.',sub:'Promete reducir la rotación temprana un 30%.'},
+ {sec:'Tribunal',k:'act',br:'Ustedes deciden si se implementa.',kick:'Tribunal',title:'¿Automatizamos esta decisión?',steps:['Fiscalía, defensa y voz de los colaboradores: seis minutos cada uno','Jurado: ocho minutos para decidir, con condiciones','Antecedentes: sesgo aprendido, variables sustitutas, Ley 1581 de 2012'],min:30,n:'Reuters reportó en 2018 que Amazon abandonó una herramienta experimental de selección porque penalizaba hojas de vida asociadas a mujeres. La dirección de residencia puede funcionar como sustituto del estrato.'},
+ {sec:'Tribunal',k:'sema',br:'De ese debate sale un criterio práctico para su rediseño.',title:'Qué automatizar en un proceso de personas',items:[['#1d7552','Verde','Sintetizar documentos, agendar, recordar, codificar comentarios.'],['#F2B91F','Amarillo','Priorizar o recomendar, con revisión humana y monitoreo por grupo.'],['#FF7A6B','Rojo','Decidir sola contratar, despedir, ascender o sancionar.']]},
+ {sec:'Pausa',k:'brk',min:15},
+ {sec:'Taller',k:'act',br:'Ahora sí: el rediseño de su empresa.',kick:'Equipos',title:'Lienzo de rediseño',steps:['Proceso futuro y qué cambia frente al actual','Responsables, recursos y quién gana o pierde con el cambio','Métricas: línea base, meta y plazo','Uso de IA, con su color en el semáforo'],min:70,out:'Diapositivas 5 a 7'},
+ {sec:'Pre-mortem',k:'big',br:'Antes de enamorarse de su propuesta, imaginemos que fracasó.',kick:'Pre-mortem · en equipos',text:'Es junio de 2027 y <em>su rediseño fracasó</em>. ¿Por qué?',sub:'Tres causas y un ajuste al plan para cada una.',min:15},
+ {sec:'Clínica',k:'act',br:'Probemos la rúbrica con algunos equipos, como si fuera el sábado.',kick:'Clínica con la rúbrica',title:'Tres equipos, cinco minutos cada uno',steps:['El equipo presenta su avance','El grupo lo califica con la rúbrica final','Una fortaleza y una mejora'],min:30},
+ {sec:'Armado',k:'act',br:'Con la rúbrica en mente, armen su exposición aquí y no el viernes a medianoche.',kick:'Equipos',title:'Armado de la exposición',steps:['Ordenen sus 8 diapositivas con todo lo construido en las cinco sesiones','Repartan quién expone cada parte','Anoten lo que falta y cómo lo cierran esta noche'],min:20,out:'Exposición completa en borrador'},
+ {sec:'Consultorio',k:'big',br:'Antes de cerrar, sus dudas sobre la exposición de mañana.',kick:'Consultorio',text:'Sus <em>dudas y consultas</em>: sobre el caso, la exposición o la forma de trabajo.',sub:'Micrófono abierto o chat. Las preguntas al cliente van aparte y cuentan para el límite de la etapa.',min:15},
+ 
+ {sec:'Cierre',k:'list',br:'El sábado presentan. Así será.',title:'La exposición final',items:[['Entrega','Diapositivas antes de las 7:00 a.m. del sábado.'],['Tiempo','Diez minutos de exposición y cinco de preguntas.'],['Preguntas','Desde un rol de dirección: gerencia general, finanzas, colaboradores.'],['Evaluación','La rúbrica que ya usaron hoy.']]},
+ {sec:'Cierre',k:'read1',br:'Y una última lectura, para no caer en los errores de siempre al implementar.',kick:'Lectura eje de la etapa 3',idx:2,min:5}
+],
+s6:[
+ {sec:'Conversatorio',k:'cover',kick:'Etapa 3 · Rediseñar y convencer · Sesión 6 · Sábado 21 de noviembre',title:'Exposición final del caso',sub:'¿El rediseño convence a una dirección exigente?'},
+ {sec:'Conversatorio',k:'read1',br:'Buenos días. Última lectura, último ajuste antes de exponer.',kick:'Conversatorio · lectura eje de la etapa 3',idx:2,min:20,n:'Cada equipo, un minuto: el error de Kotter que amenaza su implementación y cómo lo evita.'},
+ {sec:'Reglas',k:'eval',br:'Recordemos las reglas antes de empezar.',title:'Exposición final',n:'Asigna roles para preguntar: gerencia general, finanzas, voz de los colaboradores.'},
+ {sec:'Exposiciones',k:'act',br:'Comenzamos.',kick:'Bloque 1',title:'Exposiciones',steps:['Diez minutos de exposición','Cinco minutos de preguntas desde un rol de dirección'],min:80},
+ {sec:'Pausa',k:'brk',min:15},
+ {sec:'Exposiciones',k:'act',br:'Seguimos con el segundo bloque.',kick:'Bloque 2',title:'Exposiciones',steps:['Mismo formato'],min:70},
+ {sec:'Síntesis',k:'act',br:'Ya escuchamos a todos. ¿Qué aprendimos como grupo?',kick:'Plenaria',title:'Lo que convenció y lo que faltó',steps:['Lo que más convenció a la dirección','Lo que faltó con más frecuencia','Una pregunta que nadie respondió bien'],min:15},
+ {sec:'Síntesis',k:'list',br:'Si tuviera que resumir estas tres semanas en hábitos, serían estos.',title:'Cinco hábitos del gerente de personas con mirada de procesos',items:[['Proceso antes que programa','Pide el mapa antes de aprobar la iniciativa.'],['Busca la fila','Pregunta dónde espera el caso.'],['Declarado no es observado','Contrasta lo que la gente dice con lo que hace.'],['Evidencia antes que moda','Revisa qué dicen los estudios antes de copiar.'],['La IA analiza, tú decides','Nunca delegues una decisión sobre personas.']]},
+ {sec:'Síntesis',k:'quote',br:'Y volvemos a donde empezamos:',text:'Gerenciar personas también es diseñar operaciones.',by:'La idea de la primera tarde, tres semanas después'},
+ {sec:'Consultorio',k:'big',br:'Antes de despedirnos, sus preguntas: sobre la nota, la retroalimentación o lo que venga.',kick:'Consultorio',text:'Sus <em>dudas y consultas</em>: sobre el caso, la exposición o la forma de trabajo.',sub:'Micrófono abierto o chat. Las preguntas al cliente van aparte y cuentan para el límite de la etapa.',min:10},
+ {sec:'Cierre',k:'act',br:'Una última tarea, solo para ustedes.',kick:'Cierre',title:'Carta a mi yo de 90 días',steps:['¿Qué habrá cambiado en un proceso de mi organización?','¿Qué número lo demostrará?'],min:5},
+ {sec:'Cierre',k:'cover',kick:'Gracias',title:COURSE,sub:'Mg. Alexis Paúl Salinas Rojas · apsalinas@ucsp.edu.pe'}
+]};
+
+/* ===== MATERIALES ===== */
+const PROMPTS=[
+ ['Analista (voz del colaborador)','Actúa como analista de experiencia del colaborador. Te comparto comentarios de salida (anonimizados) de un proceso de [proceso].\n1) Agrúpalos en máximo 6 temas y define cada uno en una línea.\n2) Cuenta cuántos comentarios caen en cada tema.\n3) Cita textualmente 2 comentarios por tema.\n4) Indica en qué etapa del proceso ocurre cada tema.\nFormato: tabla.'],
+ ['Consultor escéptico','Ahora cuestiona tu análisis:\n- ¿Qué temas podrían estar sobrerrepresentados por cómo se recogieron los datos?\n- ¿Qué diferencia hay entre la razón declarada y el patrón que sugieren los comentarios?\n- ¿Qué datos pedirías para confirmar o desmentir la causa principal?\nDime explícitamente qué NO se puede concluir con estos datos.'],
+ ['Política frente a realidad','Compara el documento de política con los comentarios. Para cada punto de la política, indica si los comentarios muestran que se cumple, que no se cumple o que no hay información. Cita la fuente de cada afirmación. No infieras lo que no esté escrito.']
+];
+const TEMPLATES=[
+ ['Ficha del encargo (S1)','FICHA DEL ENCARGO\nEquipo:\nEmpresa asignada:\nProceso:            Empieza en:            Termina en:\nLo que pide el cliente:\nSíntoma (qué se ve y qué sabemos de él):\nPrimera intuición del equipo:\nPregunta operacional: ¿Qué en el proceso de ___ produce ___?\nPreguntas al cliente (máximo 3 en la etapa):'],
+ ['Auditoría de una decisión (S1)','AUDITORÍA DE UNA DECISIÓN\n1. La decisión: ¿qué se decidió y quién decidió?\n2. El problema: ¿qué buscaba resolver? ¿Estaba medido?\n3. El supuesto: ¿qué tenía que ser cierto?\n4. La evidencia (verde / amarillo / rojo): organizacional · grupos de interés · científica · experiencial\n5. El faltante: ¿qué dato habría cambiado la decisión?\n6. El proceso: ¿qué proceso estaba detrás?'],
+ ['Hipótesis del cuello (S3)','HIPÓTESIS\nCreemos que [resultado] se explica principalmente por [cuello] en [etapa], porque [dato].\nSi es cierto, deberíamos observar [evidencia].\nLo desmentiría encontrar [dato].\nLittle: llegadas por día ___ × días de espera ___ = personas en espera ___\nIndicadores: proceso ___ · resultado ___ · experiencia ___'],
+ ['Lienzo de rediseño (S5)','LIENZO DE REDISEÑO\nProceso actual → proceso futuro:\nPrincipio aplicado (ECRS, proteger el cuello, paralelizar…):\nResponsables y recursos:\nQuién gana y quién pierde con el cambio:\nRiesgos (pre-mortem) y mitigación:\nMétricas: línea base · meta · plazo\nUso de IA y color en el semáforo:']
+];
+
+/* ===== UTILIDADES ===== */
+const $=(s,el=document)=>el.querySelector(s);
+const fmtT=m=>{const h=Math.floor(m/60),mm=String(m%60).padStart(2,'0');if(h===12&&mm==='00')return'12:00 m.';return((h%12)||12)+':'+mm+' '+(h>=12?'p.m.':'a.m.');};
+const TYPE={expo:'Exposición',din:'Dinámica',taller:'Taller',pausa:'Pausa',plen:'Plenaria',cons:'Consultorio'};
+const TODAY=(()=>{try{return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Lima',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}catch(e){return new Date().toISOString().slice(0,10);}})();
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
+const escH=t=>t.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+function copyBox(title,text,id){return `<div class="copybox"><div class="bar"><b>${title}</b><button class="cbtn" data-copy="${id}">Copiar</button></div><pre id="${id}">${escH(text)}</pre></div>`;}
+async function copyText(text,btn,pre){try{await navigator.clipboard.writeText(text);btn.textContent='Copiado';btn.classList.add('done');setTimeout(()=>{btn.textContent='Copiar';btn.classList.remove('done')},1800);}catch(e){pre.hidden=false;const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selecciona y copia';}}
+
+/* ===== GRÁFICOS ===== */
+function survivalSVG(){
+  const W=640,H=340,x0=48,x1=620,y0=24,y1=262,xs=w=>x0+(x1-x0)*w/13,ys=v=>y1-(y1-y0)*(v-50)/50;let g='';
+  for(let v=50;v<=100;v+=10)g+=`<line x1="${x0}" x2="${x1}" y1="${ys(v)}" y2="${ys(v)}" stroke="var(--ch-grid)"/><text x="${x0-8}" y="${ys(v)+4}" text-anchor="end" font-size="12" fill="var(--ch-text)">${v}%</text>`;
+  for(let w=0;w<=13;w++)if(w%2===0||w===13)g+=`<text x="${xs(w)}" y="${y1+20}" text-anchor="middle" font-size="12" fill="var(--ch-text)">${w}</text>`;
+  g+=`<text x="${(x0+x1)/2}" y="${y1+40}" text-anchor="middle" font-size="12" fill="var(--ch-text)">Semanas desde el inicio de la formación</text>`;
+  const ln=(a,c,w)=>`<polyline fill="none" stroke="${c}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round" points="${a.map((v,i)=>xs(i)+','+ys(v)).join(' ')}"/><circle cx="${xs(13)}" cy="${ys(a[13])}" r="4.5" fill="${c}"/>`;
+  g+=ln(SURV.centro,'var(--ch-b)',2.5)+ln(SURV.norte,'var(--ch-c)',2.5)+ln(SURV.sur,'var(--ch-a)',3.5);
+  const lg=[['var(--ch-a)','Sur · acompañamiento · 76%',200],['var(--ch-c)','Norte · salario +10% · 61%',200],['var(--ch-b)','Centro · sin cambios · 59%',0]];let lx=x0;
+  lg.forEach(([c,t,step])=>{g+=`<rect x="${lx}" y="${H-12}" width="12" height="12" rx="2" fill="${c}"/><text x="${lx+18}" y="${H-2}" font-size="12.5" fill="var(--ch-text)">${t}</text>`;lx+=step;});
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Permanencia por sede">${g}</svg>`;
+}
+function barsSVG(rows,max,lx,unit,hiFn){
+  const W=640,rowH=32,H=rows.length*rowH+16,bx=lx+8,bw=W-bx-60;let g='';
+  rows.forEach(([n,d],i)=>{const y=8+i*rowH,hi=hiFn(n,i),w=bw*d/max;
+    g+=`<text x="${lx}" y="${y+19}" text-anchor="end" font-size="13" fill="var(--ch-text)"${hi?' font-weight="700"':''}>${n}</text><rect x="${bx}" y="${y+5}" width="${w}" height="20" rx="3" fill="${hi?'var(--ch-hi)':'var(--ch-c)'}" opacity="${hi?1:.75}"/><text x="${bx+w+8}" y="${y+19}" font-size="13" font-family="JetBrains Mono, monospace" fill="var(--ch-text)">${d}${unit}</text>`;});
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">${g}</svg>`;
+}
+const pipeHi=()=>barsSVG(PIPE,15,228,' d',n=>n.startsWith('Espera'));
+const pipePlain=()=>barsSVG(PIPE,15,228,' d',()=>false);
+const reasonsSVG=()=>barsSVG(REASONS,40,150,'%',(n,i)=>i===0);
+function journeySVG(){
+  const pts=[['Ve el aviso',1],['Entrevistas',0],['Oferta',2],['Exámenes y papeles',-1],['Espera sin noticias',-3],['Inicia formación',2],['Pocas prácticas',0],['Primer día en piso',-2],['Metas desde sem. 2',-3],['Un compañero ayuda',1]];
+  const W=660,H=300,x0=30,x1=630,ym=150,k=30,xs=i=>x0+(x1-x0)*i/(pts.length-1);
+  let g=`<line x1="${x0}" x2="${x1}" y1="${ym}" y2="${ym}" stroke="var(--ch-grid)" stroke-dasharray="4 4"/><polyline fill="none" stroke="var(--ch-c)" stroke-width="3" stroke-linejoin="round" points="${pts.map((p,i)=>xs(i)+','+(ym-p[1]*k)).join(' ')}"/>`;
+  pts.forEach((p,i)=>{const x=xs(i),y=ym-p[1]*k,low=p[1]<0;g+=`<circle cx="${x}" cy="${y}" r="6" fill="${low?'var(--ch-a)':'var(--ch-c)'}"/>`;
+    const w=p[0].split(' '),m=Math.ceil(w.length/2),l1=w.slice(0,m).join(' '),l2=w.slice(m).join(' '),ty=low?y+22:y-28,an=i===0?'start':(i===pts.length-1?'end':'middle');
+    g+=`<text x="${x}" y="${ty}" text-anchor="${an}" font-size="11.5" fill="var(--ch-text)">${l1}${l2?`<tspan x="${x}" dy="13">${l2}</tspan>`:''}</text>`;});
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Curva emocional">${g}</svg>`;
+}
+const CHARTS={survival:survivalSVG,pipeline:pipePlain,journey:journeySVG};
+
+/* ===== SIMULADOR ===== */
+function simHTML(p){return `<div class="ins">
+  <label for="${p}d">Contrataciones requeridas por mes <span class="v" id="${p}dv"></span><input type="range" id="${p}d" min="60" max="160" step="5" value="105"></label>
+  <label for="${p}c">Cohortes de formación cada quince días <span class="v" id="${p}cv"></span><input type="range" id="${p}c" min="1" max="4" step="1" value="2"></label>
+  <label for="${p}s">Cupo por cohorte <span class="v" id="${p}sv"></span><input type="range" id="${p}s" min="10" max="35" step="5" value="25"></label></div>
+  <div class="outs"><div class="o"><b id="${p}cap">–</b><span>capacidad de formación al mes</span></div><div class="o"><b id="${p}u">–</b><span>utilización</span></div>
+  <div class="o"><b id="${p}w">–</b><span>días de espera estimados</span></div><div class="o"><b id="${p}q">–</b><span>personas esperando (Little)</span></div>
+  <div class="o" style="grid-column:1/-1"><b id="${p}a">–</b><span>abandono estimado antes de iniciar</span></div><div class="gauge" id="${p}g"><i></i></div><p class="msg" id="${p}m"></p></div>`;}
+function simBind(p,root){const g=id=>root.querySelector('#'+p+id);const calc=()=>{const d=+g('d').value,c=+g('c').value,s=+g('s').value;g('dv').textContent=d;g('cv').textContent=c;g('sv').textContent=s;
+  const cap=c*s*(365/12/14),rho=d/cap;g('cap').textContent=Math.round(cap);g('u').textContent=Math.round(rho*100)+'%';const ga=g('g');ga.classList.remove('warn','bad');ga.querySelector('i').style.width=Math.min(100,rho*100)+'%';
+  if(rho>=1){g('w').textContent='∞';g('q').textContent='crece';g('a').textContent='> 60%';ga.classList.add('bad');g('m').textContent='Entra más gente de la que la formación puede atender: la fila crece cada mes.';return;}
+  const W=0.4*rho/(1-rho);g('w').textContent=W.toFixed(1);g('q').textContent=Math.round(d/30.4*W);g('a').textContent=Math.min(60,1.5*W).toFixed(0)+'%';
+  if(rho>0.9){ga.classList.add('warn');g('m').textContent='Zona crítica: cerca del 100% de utilización, cada pequeño aumento de demanda multiplica la espera.';}
+  else if(rho>0.8){ga.classList.add('warn');g('m').textContent='Utilización alta: la espera ya depende de la variabilidad de la demanda.';}
+  else g('m').textContent='Holgura suficiente: la espera se mantiene en pocos días.';};
+  ['d','c','s'].forEach(k=>g(k).addEventListener('input',calc));calc();}
+
+/* ===== VISTAS ===== */
+const ROUTES=['curso','s1','s2','s3','s4','s5','s6','empresas','caso','kit'];
+function tabs(cur){const t=[['curso','Curso','']].concat(SES.map(s=>[s.id,'S'+s.n,s.date.slice(8)+' nov'])).concat([['empresas','Empresas',''],['caso','Práctica',''],['kit','Materiales','']]);
+  $('#tabs').innerHTML=t.map(([id,l,d])=>{const s=SES.find(x=>x.id===id),td=s&&s.date===TODAY;return `<button class="tab" data-go="${id}"${id===cur?' aria-current="page"':''}>${td?'<span class="dot" aria-label="hoy"></span>':''}${l}${d?` <span class="d">${d}</span>`:''}</button>`;}).join('');}
+
+function rubricTable(){return `<div class="tbl-wrap"><table class="rub"><thead><tr><th>Criterio</th><th>5 · Sobresaliente</th><th>4 · Bueno</th><th>3 · Aceptable</th><th>2 · Insuficiente</th></tr></thead><tbody>${RUBRIC.map(([c,w,l])=>`<tr><td>${c}<span>${w}%</span></td>${l.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;}
+const etapaOf=id=>ETAPAS.find(e=>e.ses.includes(id));
+const readLink=r=>r.link?`<a href="${r.link}" target="_blank" rel="noopener">Abrir PDF (CEBMa)</a>`:`<span class="note">${r.acceso}</span>`;
+
+function viewCurso(){
+  const sb=s=>{const td=s.date===TODAY;return `<button class="sbtn${td?' today':''}" data-go="${s.id}"><span class="mono">${s.dia.split(' ')[0]} ${s.date.slice(8)} nov · ${s.hora}${td?' · hoy':''}</span><b>Sesión ${s.n} · ${s.titulo}</b></button>`;};
+  const stg=`<div class="tl">${ETAPAS.map(e=>{const r=READ[e.read],A=SES.find(x=>x.id===e.ses[0]),B=SES.find(x=>x.id===e.ses[1]);
+    const node=(s,d)=>`<button class="tl-node${s.date===TODAY?' today':''}" data-go="${s.id}"><span class="tl-d">${d} ${s.date.slice(8)}</span><span class="tl-t">S${s.n} · ${s.titulo}</span>${s.date===TODAY?'<span class="tl-hoy">Hoy</span>':''}</button>`;
+    return `<div class="tl-seg"><div class="tl-head"><span class="label">Etapa ${e.n}</span><b>${e.nombre}</b></div>
+      <div class="tl-track">${node(A,'Vie')}<div class="tl-read"><span>Lectura eje</span><b>${r.au} (${yr(r)})</b><small class="tl-para">${r.para}</small>${r.link?`<a href="${r.link}" target="_blank" rel="noopener">PDF</a>`:''}</div>${node(B,'Sáb')}</div>
+      <p class="tl-prod">${e.prod}</p></div>`;}).join('')}</div>
+    <p class="note">El viernes se trabaja y se entrega la lectura; el sábado abre con 20 minutos de conversatorio sobre ella.</p>`;
+  return `<section class="view">
+  <div class="hero"><span class="label">Universidad de La Sabana · Maestría en Gerencia y Desarrollo de Personas · Profesor visitante</span><h1>${COURSE}</h1>
+   <p class="thesis"><b>Gerenciar personas también es diseñar operaciones.</b> En equipos, los estudiantes actúan como consultores de una empresa colombiana: interpretan su problema, levantan el proceso, lo diagnostican, validan el diagnóstico y lo rediseñan.</p>
+   <div style="margin-top:18px"><button class="btn" data-present="curso">▶ Proyectar la estructura del curso</button></div><div class="pills"><span class="pill">3 etapas · 6 sesiones · 24 h</span><span class="pill">Viernes 2:00–6:00 p.m.</span><span class="pill">Sábados 8:00 a.m.–12:00 m.</span><span class="pill">Virtual · hora Colombia</span><span class="pill">Mg. Alexis Paúl Salinas Rojas</span></div></div>
+
+  <div class="block"><h2>1. La estructura</h2><p class="lead">Seis sesiones en tres etapas. Cada etapa tiene una lectura que la articula.</p>${stg}</div>
+
+  <div class="block"><h2>2. Cómo es una sesión de cuatro horas</h2><p class="lead">Más de 80% del tiempo trabajan los estudiantes. Siempre hay un consultorio para dudas.</p>
+   <div class="rit-page">${RITMO.map(([n,m,d,t])=>`<div class="rrow"><b>${n}</b><div class="trk"><i class="sw-${t}" style="width:${m}%"></i></div><span class="mono">${m} min</span><small>${d}</small></div>`).join('')}</div></div>
+
+  <div class="block"><h2>3. La evaluación</h2>
+   <div class="eval"><div style="display:flex;flex-direction:column;gap:10px"><span class="label">Única nota del curso</span><h3>Exposición final del caso de su empresa, evaluada con rúbrica</h3><p class="note">Los avances de cada sesión no se califican: se retroalimentan en clase y se convierten en las diapositivas de la exposición.</p></div>
+    <div class="facts"><div class="fact"><b>Cuándo</b><span>Sábado 21 de noviembre</span></div><div class="fact"><b>Quiénes</b><span>Equipos de 2 a 3, formados el viernes 6</span></div><div class="fact"><b>El caso</b><span>Una empresa colombiana ficticia asignada a cada equipo</span></div><div class="fact"><b>Formato</b><span>10 minutos de exposición + 5 de preguntas; máximo 8 diapositivas</span></div><div class="fact"><b>Entrega</b><span>Diapositivas antes de las 7:00 a.m. del sábado 21</span></div><div class="fact"><b>Escala</b><span>0,0 a 5,0, ponderada por la rúbrica</span></div></div></div>
+   <details class="prep"><summary>Ver las 7 partes de la exposición y la rúbrica completa</summary><div class="inner"><div class="tbl-wrap"><table><thead><tr><th>#</th><th>Parte de la exposición</th><th>Se construye en</th></tr></thead><tbody>${PARTS.map((p,i)=>`<tr><td class="num">${i+1}</td><td>${p[0]}</td><td class="num">${p[1]}</td></tr>`).join('')}</tbody></table></div>${rubricTable()}</div></details></div>
+
+  <div class="block"><h2>4. Las empresas</h2><p class="lead">Seis empresas colombianas ficticias. Traen contexto, voces y lo que pide el cliente, no todos los datos. Reglas: interpretar, preguntar al cliente (hasta 3 preguntas por etapa) y cuestionar el encargo.</p>
+   <div class="tbl-wrap"><table><thead><tr><th>Empresa</th><th>Ciudad</th><th>Proceso</th><th>Lo que pide el cliente</th></tr></thead><tbody>${CASES.map(c=>`<tr><td><b>${c.nombre}</b></td><td>${c.ciudad.split(',')[0]}</td><td>${c.proceso}</td><td class="note">${c.encargo.split('”')[0].replace('“','').split('. ').slice(-1)[0]}</td></tr>`).join('')}</tbody></table></div>
+   </div>
+  
+  <details class="prep"><summary>Solo docente · carga de trabajo por etapa</summary><div class="inner"><p class="lead">Casi todo el caso se construye en clase. Fuera de clase queda la lectura de cada etapa y cerrar lo avanzado: unas dos horas por semana, pensado para profesionales que trabajan.</p>
+   <div class="tbl-wrap"><table><thead><tr><th>Etapa</th><th>En clase (equipos)</th><th>Fuera de clase</th><th>Ventana</th></tr></thead><tbody>
+    <tr><td><b>1 · Entender y levantar</b></td><td>Ficha del encargo (50 min) y mapa del proceso actual (70 min)</td><td>Hammer: ~1 h · completar el mapa: ~1 h</td><td class="num">vie 6 → vie 13</td></tr>
+    <tr><td><b>2 · Diagnosticar y validar</b></td><td>Hipótesis (60 min), contraste con IA (50 min) y evidencia (60 min)</td><td>Rousseau y Barends: ~1,5 h · ordenar diapositivas 1–4: ~1 h</td><td class="num">vie 13 → vie 20</td></tr>
+    <tr><td><b>3 · Rediseñar y convencer</b></td><td>Lienzo (70 min), pre-mortem (15 min) y armado de la exposición (20 min)</td><td>Kotter: ~45 min · pulir y ensayar: ~1 h</td><td class="num">vie 20 → sáb 21</td></tr>
+   </tbody></table></div>
+   <p class="note">La noche más exigente es la del viernes 20. Por eso la sesión 5 reserva 20 minutos para armar la exposición en clase: nadie empieza desde cero esa noche.</p></div></details>
+  </section>`;}
+
+function viewSesion(s){
+  let t=s.start;const rows=s.guion.map(([m,ty,ti,de])=>{const a=t;t+=m;return `<div class="row${ty==='pausa'?' pausa':''}"><div class="time">${fmtT(a)}<small>${m} min</small></div><div><h3>${ti} <span class="chip t-${ty}">${TYPE[ty]}</span></h3>${de?`<p>${de}</p>`:''}</div></div>`;}).join('');
+  const ribbon=s.guion.map(([m,ty,ti])=>`<div class="t-${ty}" style="flex:${m}" title="${ti} · ${m} min">${m>=40?ti.split(':')[0].split('(')[0]:''}</div>`).join('');
+  const prep=s.prep.map((p,i)=>{const k=`prep-${s.id}-${i}`;return `<label class="check" for="${k}"><input type="checkbox" id="${k}" data-store="${k}"${store(k)==='1'?' checked':''}>${p}</label>`;}).join('');
+  const e=etapaOf(s.id),r=READ[e.read],sat=s.id===e.ses[1],td=s.date===TODAY;
+  const rbox=sat?`<div class="box rd"><span class="label">Al inicio: conversatorio de la lectura eje</span><p>${r.ref}</p><p class="note">${r.din}</p></div>`
+                :`<div class="box rd"><span class="label">Al cierre: entregas la lectura eje de la etapa ${e.n}</span><p>${r.ref}</p>${readLink(r)}</div>`;
+  return `<section class="view">
+   <div class="s-head">
+    <div class="s-title"><span class="label">Etapa ${e.n} · ${e.nombre} · Sesión ${s.n} de 6 · ${s.dia} · ${s.hora}${td?' · <span style="color:var(--signal)">Hoy</span>':''}</span><h1>${s.titulo}</h1><p class="q">${s.pregunta}</p><button class="btn" data-present="${s.id}">▶ Presentar (${DECKS[s.id].length} diapositivas)</button></div>
+    <div class="s-side"><div class="box ok"><span class="label">Avance para la exposición final</span><p>${s.avance}</p></div>${rbox}</div>
+   </div>
+   <div class="block"><h2>Guion</h2><div class="ribbon" aria-hidden="true">${ribbon}</div><div class="legend">${Object.entries(TYPE).map(([k,v])=>`<span><i class="sw-${k}"></i>${v}</span>`).join('')}</div><div class="guion">${rows}</div>
+    <p class="cut"><b>Si el tiempo se aprieta:</b> ${s.recorte}</p></div>
+   <div class="block"><h2>Dos claves de la sesión</h2><div class="grid2">${s.claves.map(([a,b])=>`<div class="card"><h3>${a}</h3><p class="muted">${b}</p></div>`).join('')}</div></div>
+   <details class="prep"><summary>Preparación (${s.prep.length})</summary><div class="inner">${prep}</div></details>
+  </section>`;}
+
+function viewEmpresas(){
+  return `<section class="view">
+  <div class="block"><h2>Empresas de los equipos</h2><p class="lead">Ficticias y adaptadas a la realidad colombiana. Hoy en clase envía solo el encargo; la ficha completa, al cierre o esta noche. El banco de respuestas es solo para ti: úsalo para contestar las preguntas al cliente (hasta 3 por etapa).</p></div>
+  ${CASES.map(c=>`<article class="case">
+    <div class="case-h"><div><span class="label">${c.ciudad} · ${c.sector}</span><h3>${c.nombre}</h3><p class="note">${c.tam} · <b>Proceso:</b> ${c.proceso}</p></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="cbtn" data-copyteaser="${c.id}">Copiar encargo (hoy en clase)</button><button class="cbtn" data-copycase="${c.id}">Copiar ficha completa</button></div></div>
+    <p>${c.contexto}</p>
+    <blockquote>${c.encargo}</blockquote>
+    <div class="grid2"><div><span class="label">Lo que se sabe</span><ul>${c.sabe.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+     <div><span class="label">Voces</span><ul>${c.voces.map(v=>`<li><b>${v[0]}:</b> “${v[1]}”</li>`).join('')}</ul></div></div>
+    <details><summary>Solo docente · banco de respuestas y lo que hay detrás</summary><div class="tbl-wrap"><table><tbody>${c.banco.map(b=>`<tr><td><b>${b[0]}</b></td><td>${b[1]}</td></tr>`).join('')}</tbody></table></div><p class="behind"><b>Lo que hay detrás:</b> ${c.detras}</p></details>
+    <pre id="teaser-${c.id}" hidden>${escH(caseTeaser(c))}</pre>
+    <pre id="case-${c.id}" hidden>${escH(caseText(c))}</pre>
+  </article>`).join('')}
+  </section>`;}
+
+function viewCaso(){
+  const pd=PISTA_D.map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td><td class="num">${r[3]}</td></tr>`).join('');
+  const pA='PISTA A · Días promedio por etapa\n'+PIPE.map(([n,d])=>`- ${n}: ${d}`).join('\n')+'\nTotal: 66 días. ~105 contrataciones por mes. Formación: 2 cohortes de 25 cada quince días.';
+  const pB='PISTA B · % de agentes que siguen, por semana desde el inicio de la formación\nSemana: '+SURV.weeks.join(' | ')+'\nCentro (sin cambios): '+SURV.centro.join(' | ')+'\nNorte (salario +10%): '+SURV.norte.join(' | ')+'\nSur (acompañamiento estructurado): '+SURV.sur.join(' | ');
+  const pC='PISTA C · Razón principal declarada en la encuesta de salida (n = 412)\n'+REASONS.map(([n,v])=>`- ${n}: ${v}%`).join('\n');
+  const pD='PISTA D · Operación del piso (Centro | Norte | Sur)\n'+PISTA_D.map(r=>`- ${r[0]}: ${r[1]} | ${r[2]} | ${r[3]}`).join('\n');
+  return `<section class="view">
+   <div class="hero"><span class="label">Caso de práctica en clase · empresa y datos ficticios, uso académico</span><h1>Andes Contact S.A.S.</h1><p class="thesis">Contact center de Bogotá con 1.400 agentes en tres sedes. La gerencia quiere subir el salario base 10% para frenar la rotación temprana. Dos sedes probaron caminos distintos antes de decidir.</p></div>
+   <div class="nums"><div class="numc"><b>41%</b><span>se va antes de 90 días (Centro)</span></div><div class="numc"><b>18%</b><span>acepta y nunca llega a la formación</span></div><div class="numc"><b>COP 4,8 M</b><span>costo de reemplazar a un agente (≈ USD 1.500)</span></div><div class="numc"><b>COP 3.400 M</b><span>costo anual de subir 10% el salario (≈ USD 1,1 millones)</span></div></div>
+   <div class="grid2">
+    <div class="card"><span class="label">Pista A</span><h3>Tiempos por etapa</h3>${pipeHi()}<p class="note">Resaltado: la respuesta de la sesión 3 (en las diapositivas aparece sin resaltar).</p></div>
+    <div class="card"><span class="label">Pista B</span><h3>Permanencia por sede</h3>${survivalSVG()}</div>
+    <div class="card"><span class="label">Pista C</span><h3>Razón declarada de salida</h3>${reasonsSVG()}</div>
+    <div class="card"><span class="label">Pista D</span><h3>Operación del piso</h3><div class="tbl-wrap"><table><thead><tr><th>Indicador</th><th>Centro</th><th>Norte</th><th>Sur</th></tr></thead><tbody>${pd}</tbody></table></div></div>
+   </div>
+   <div class="block"><h2>Simulador de capacidad</h2><p class="lead">Modelo didáctico simplificado. Con los valores actuales reproduce los 12 días de espera del caso.</p><div class="card"><div class="sim">${simHTML('sp')}</div></div></div>
+   <div class="block"><h2>Para pegar en las salas</h2><div class="grid2">${copyBox('Pista A',pA,'cA')}${copyBox('Pista B',pB,'cB')}${copyBox('Pista C',pC,'cC')}${copyBox('Pista D',pD,'cD')}${copyBox('Política de incorporación (S4)',POLICY,'cP')}${copyBox('20 comentarios de salida (S4)',VERB.map((v,i)=>String(i+1).padStart(2,'0')+'. '+v).join('\n'),'cV')}</div></div>
+  </section>`;}
+
+function viewKit(){return `<section class="view">
+  <div class="block"><h2>Plantillas</h2><p class="lead">Texto plano para pegar en el chat, el tablero o un documento compartido.</p><div class="grid2">${TEMPLATES.map(([t,p],i)=>copyBox(t,p,'t'+i)).join('')}</div></div>
+  <div class="block"><h2>Prompts (sesión 4)</h2><div class="grid2">${PROMPTS.map(([t,p],i)=>copyBox(t,p,'p'+i)).join('')}</div></div>
+  <div class="block"><h2>Atajos del modo presentación</h2><div class="tbl-wrap"><table><tbody><tr><td class="num">← → Espacio</td><td>Anterior y siguiente (o toca los bordes)</td></tr><tr><td class="num">R</td><td>Revelar respuesta</td></tr><tr><td class="num">T</td><td>Cronómetro de la dinámica</td></tr><tr><td class="num">N</td><td>Tus notas</td></tr><tr><td class="num">F</td><td>Pantalla completa</td></tr><tr><td class="num">Esc</td><td>Salir</td></tr></tbody></table></div></div>
+ </section>`;}
+
+function route(){let h=(location.hash||'').slice(1);if(!ROUTES.includes(h)){const t=SES.find(s=>s.date===TODAY);h=t?t.id:'curso';}
+  tabs(h);const app=$('#app');
+  if(h==='curso')app.innerHTML=viewCurso();else if(h==='caso'){app.innerHTML=viewCaso();simBind('sp',app);}else if(h==='kit')app.innerHTML=viewKit();else if(h==='empresas')app.innerHTML=viewEmpresas();else app.innerHTML=viewSesion(SES.find(s=>s.id===h));
+  window.scrollTo(0,0);}
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){location.hash=g.dataset.go;return;}
+  const p=e.target.closest('[data-present]');if(p){openDeck(p.dataset.present);return;}
+  const ct=e.target.closest('[data-copyteaser]');if(ct){const pre=document.getElementById('teaser-'+ct.dataset.copyteaser);copyText(pre.textContent,ct,pre);return;}
+  const cc=e.target.closest('[data-copycase]');if(cc){const pre=document.getElementById('case-'+cc.dataset.copycase);copyText(pre.textContent,cc,pre);return;}
+  const c=e.target.closest('[data-copy]');if(c){const pre=document.getElementById(c.dataset.copy);copyText(pre.textContent,c,pre);}});
+document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.store;if(k)store(k,e.target.checked?'1':'0');});
+window.addEventListener('hashchange',route);
+
+/* ===== MODO PRESENTACIÓN ===== */
+const deck=$('#deck'),stage=$('#stage');let D={id:null,i:0,timer:null,left:0,run:false};
+const RITMO=[['Apertura',20,'Dinámica o conversatorio','din'],['Caso y discusión',40,'Se discute, no se expone','din'],['Pausa',15,'','pausa'],['Taller en equipos',95,'Avanzan su empresa','taller'],['Plenaria',35,'Lo que se repite','plen'],['Consultorio',15,'Sus dudas','cons'],['Cierre',20,'Siguiente paso','plen']];
+const itemsHTML=(items,cls)=>`<ol class="items ${cls||''}">${items.map((it,i)=>`<li data-n="${String(i+1).padStart(2,'0')}"><span>${Array.isArray(it)?`<b>${it[0]}.</b> <span class="t">${it[1]}</span>`:it}</span></li>`).join('')}</ol>`;
+const yr=r=>r.ref.match(/\((\d{4})\)/)[1];
+const fbKey=()=>`fb-${D.id}-${D.i}`;
+const escT=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+function fbBox(lbl,ph){return `<div class="fbwrap"><span class="fblbl">${lbl}</span><div class="fb" contenteditable="true" spellcheck="false" data-fb="${fbKey()}" data-ph="${ph}">${escT(store(fbKey()))}</div></div>`;}
+function votes(){try{return JSON.parse(store('poll-'+D.id+'-'+D.i)||'{}')}catch(e){return {}}}
+function slideHTML(s){const k=s.kick?`<div class="kick">${s.kick}</div>`:'',br=s.br?`<p class="bridge">${s.br}</p>`:'';
+ switch(s.k){
+  case 'cover':return `<div class="sl cover"><div class="bar"></div>${k}<h1>${s.title}</h1>${s.sub?`<p class="sub">${s.sub}</p>`:''}<div class="foot">Universidad de La Sabana · Maestría en Gerencia y Desarrollo de Personas<br>${COURSE}</div></div>`;
+  case 'big':return `<div class="sl center">${br}${s.min?`<span class="badge">${s.min} min</span>`:''}${k}<p class="bigtext">${s.text}</p>${s.sub?`<p class="sub">${s.sub}</p>`:''}${s.min?fbBox('En vivo · lo que dice el grupo y tu complemento','Escribe aquí las ideas del grupo y lo que quieras agregar…'):''}</div>`;
+  case 'list':return `<div class="sl${s.cls&&s.cls.includes('tight')?' tight':''}">${br}${k}<h2>${s.title}</h2>${itemsHTML(s.items,s.cls&&s.cls.includes('two')?'two':'')}</div>`;
+  case 'split':return `<div class="sl">${br}${k}<h2>${s.title}</h2><div class="split"><div class="${s.hi==='a'?'hi':''}"><h3>${s.a.h}</h3><p>${s.a.t}</p></div><div class="${s.hi==='b'?'hi':''}"><h3>${s.b.h}</h3><p>${s.b.t}</p></div></div>${s.q?fbBox('En vivo · '+s.q,'Escribe aquí lo que responde el grupo…'):''}</div>`;
+  case 'poll':{const v=votes(),mx=Math.max(1,...s.opts.map(([l])=>v[l]||0));return `<div class="sl">${br}<span class="badge">Encuesta · clic suma un voto, Mayús + clic resta</span><h2>${s.title}</h2><div class="opts">${s.opts.map(([l,t])=>`<div class="opt" data-vote="${l}" style="--w:${Math.round((v[l]||0)/mx*100)}%"><b>${l}</b><span>${t}</span><em class="vc">${v[l]||0}</em></div>`).join('')}</div>${fbBox('En vivo · por qué votaron así','Escribe los argumentos que den…')}</div>`;}
+  case 'act':return `<div class="sl">${br}<span class="badge">${s.kick} · ${s.min} min</span><h2>${s.title}</h2>${itemsHTML(s.steps)}${s.out?`<div class="outbox"><b>Avance:</b> ${s.out}</div>`:''}</div>`;
+  case 'myth':return `<div class="sl">${br}${k}<p class="claim">“${s.claim}”</p><p class="hint">¿Mito, evidencia o depende? · R para revelar</p><div class="verdict"><span class="tag" style="color:${s.tag==='Mito'?'#c0392b':(s.tag==='Evidencia'?'#1d7552':'#8f6700')}">${s.tag}</span><p>${s.verdict}</p><small>${s.src}</small>${fbBox('Tu complemento','Agrega un ejemplo o lo que dijo el grupo…')}</div></div>`;
+  case 'reform':return `<div class="sl tight">${br}${k}<h2>${s.title}</h2><div class="reform">${s.items.map(([a,b])=>`<div><span>${a}</span><i>${b}</i></div>`).join('')}</div><p class="hint">R para revelar</p></div>`;
+  case 'chart':return `<div class="sl">${br}${k}<h2>${s.title}</h2><div class="chartbox">${CHARTS[s.chart]()}</div>${s.note?`<p class="note2">${s.note}</p>`:''}</div>`;
+  case 'nums':return `<div class="sl center">${br}${k}<h2>${s.title}</h2><div class="numsg">${s.nums.map(([a,b])=>`<div><b>${a}</b><span>${b}</span></div>`).join('')}</div></div>`;
+  case 'quote':return `<div class="sl center">${br}<p class="quote">“${s.text}”</p><p class="by">${s.by}</p></div>`;
+  case 'brk':return `<div class="sl brk"><div class="kick">Pausa</div><div class="bigclock" id="bigclock">${s.min}:00</div><p class="sub">Pulsa T para iniciar el reloj. Al volver, retomamos donde quedamos.</p></div>`;
+  case 'sema':return `<div class="sl">${br}<h2>${s.title}</h2><div class="sema">${s.items.map(([c,a,b])=>`<div><i style="background:${c}"></i><b>${a}</b><span>${b}</span></div>`).join('')}</div></div>`;
+  case 'sim':return `<div class="sl">${br}${k}<h2>${s.title}</h2><div class="simwrap sim">${simHTML('sd')}</div></div>`;
+  case 'etapas':return `<div class="sl">${br}<h2>${s.title}</h2><div class="stg">${ETAPAS.map(e=>{const r=READ[e.read],a=SES.find(q=>q.id===e.ses[0]),b=SES.find(q=>q.id===e.ses[1]);return `<div><span>Etapa ${e.n}</span><h3>${e.nombre}</h3><ol class="flow"><li><b>Vie ${a.date.slice(8)}</b>Sesión ${a.n} · ${a.titulo}</li><li class="rd"><b>Lectura</b>${r.au} (${yr(r)})<small>${r.para}</small></li><li><b>Sáb ${b.date.slice(8)}</b>Conversatorio + Sesión ${b.n}</li></ol></div>`;}).join('')}</div></div>`;
+  case 'ritmo':return `<div class="sl">${br}<h2>${s.title}</h2><div class="rit">${RITMO.map(([n,m,d,t])=>`<div class="rrow"><b>${n}</b><div class="trk"><i class="r-${t}" style="width:${m}%"></i></div><span>${m} min</span><small>${d}</small></div>`).join('')}</div><p class="sub" style="margin-top:1.5cqw">Más de 80% del tiempo trabajan ustedes.</p></div>`;
+  case 'reads':return `<div class="sl">${br}<h2>${s.title}</h2><div class="rds">${READ.map((r,i)=>`<div><span>Etapa ${i+1} · conversatorio el sábado ${SES.find(q=>q.id===ETAPAS[i].ses[1]).date.slice(8)}</span><h3>${r.au} (${yr(r)})</h3><p>${r.tit}</p><small>${r.por}</small></div>`).join('')}</div><p class="sub" style="margin-top:1.5cqw">Se entrega el viernes que abre la etapa · 20 minutos de conversatorio al inicio del sábado · sin control de lectura.</p></div>`;
+  case 'parts':return `<div class="sl tight">${br}<h2>${s.title}</h2><ol class="items">${PARTS.map((p,i)=>`<li data-n="${String(i+1).padStart(2,'0')}"><span><b>${p[0]}</b> <span class="t" style="font-family:var(--mono);font-size:1.3cqw;color:#0b4da2">· ${p[1]}</span></span></li>`).join('')}</ol></div>`;
+  case 'eval':return `<div class="sl">${br}<h2>${s.title}</h2><div class="rcols"><div><h3>Qué presentan</h3><ol><li>Sábado 21, en equipos de 2 a 3</li><li>10 minutos de exposición y 5 de preguntas</li><li>Máximo 8 diapositivas</li><li>Nota de 0,0 a 5,0; los avances no se califican</li></ol></div><div><h3>Rúbrica</h3><div class="rw">${RUBRIC.map(([c,w])=>`<div><b>${w}%</b><span>${c}</span></div>`).join('')}</div></div></div></div>`;
+  case 'empresas':return `<div class="sl">${br}<h2>${s.title}</h2><div class="rcols"><div><h3>Seis empresas</h3><div class="rw">${CASES.map(c=>`<div style="grid-template-columns:1fr"><span><b style="color:#0b2447;font-family:var(--body)">${c.nombre.replace(' S.A.S.','')}</b> · ${c.ciudad.split(',')[0]}</span></div>`).join('')}</div></div><div><h3>Tres reglas</h3><ol><li><b>Interpretar:</b> lo que falte se pregunta o se declara como supuesto.</li><li><b>Preguntar al cliente:</b> hasta 3 preguntas por etapa, por escrito.</li><li><b>Cuestionar el encargo:</b> el cliente pide una solución; ustedes deciden si es la correcta.</li></ol></div></div></div>`;
+  case 'read1':{const r=READ[s.idx];return `<div class="sl">${br}<span class="badge">${s.kick} · ${s.min} min</span><p class="readref">${r.ref}</p><p class="sub" style="font-size:1.7cqw;color:#0b2447"><b>Para qué:</b> ${r.para}</p><div class="rcols"><div><h3>Preguntas guía</h3><ol>${r.qs.map(q=>`<li>${q}</li>`).join('')}</ol></div><div><h3>Conversatorio</h3><p>${r.din}</p></div></div></div>`;}
+ }return '';}
+const fmtClock=sec=>{const n=sec<0;sec=Math.abs(sec);return(n?'−':'')+Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');};
+function paintTimer(){const c=$('#timerchip'),b=$('#bigclock');if(c){c.textContent=fmtClock(D.left);c.classList.toggle('run',D.run&&D.left>=0);c.classList.toggle('over',D.left<0);}if(b)b.textContent=fmtClock(D.left);}
+function stopTimer(){clearInterval(D.timer);D.timer=null;D.run=false;}
+function toggleTimer(){const s=DECKS[D.id][D.i];if(!s.min)return;if(D.run)stopTimer();else{D.run=true;D.timer=setInterval(()=>{D.left--;paintTimer();},1000);}paintTimer();}
+function railHTML(L,cur){const secs=[...new Set(L.map(x=>x.sec))];return `<div class="rail">${secs.map(x=>`<span class="${x===cur?'on':''}">${x}</span>`).join('')}</div>`;}
+function render(dir){const L=DECKS[D.id],s=L[D.i],nx=L[D.i+1];stopTimer();stage.classList.remove('rev');
+  stage.innerHTML=`<div class="navzone l" data-nav="-1"></div><div class="navzone r" data-nav="1"></div><div class="slwrap ${dir<0?'back':''}">${slideHTML(s)}</div>${s.min&&s.k!=='brk'?'<div class="timerchip" id="timerchip"></div>':''}${s.k!=='cover'?railHTML(L,s.sec):''}<div class="pagenum">${D.id==='curso'?'Curso':'S'+D.id.slice(1)} · ${D.i+1}/${L.length}</div>`;
+  D.left=(s.min||0)*60;paintTimer();$('#dCount').textContent=`${D.i+1} / ${L.length}`;
+  $('#dNotesBox').innerHTML=`<b>Diapositiva ${D.i+1} · ${s.sec}.</b> ${s.n||''}${nx&&nx.br?`<div class="nx">Para pasar a la siguiente: «${nx.br}»</div>`:''}`;
+  $('#dRev').hidden=!(s.k==='myth'||s.k==='reform');$('#dTimer').hidden=!s.min;
+  if(s.k==='sim')simBind('sd',stage);store('deck-'+D.id,String(D.i));
+  stage.querySelectorAll('[data-fb]').forEach(el=>el.addEventListener('input',()=>store(el.dataset.fb,el.innerText)));
+  stage.querySelectorAll('[data-vote]').forEach(el=>el.addEventListener('click',ev=>{ev.stopPropagation();const v=votes(),l=el.dataset.vote;v[l]=Math.max(0,(v[l]||0)+(ev.shiftKey?-1:1));store('poll-'+D.id+'-'+D.i,JSON.stringify(v));
+    const mx=Math.max(1,...Object.values(v));stage.querySelectorAll('[data-vote]').forEach(o=>{const n=v[o.dataset.vote]||0;o.querySelector('.vc').textContent=n;o.style.setProperty('--w',Math.round(n/mx*100)+'%');});}));}
+function go(n){const L=DECKS[D.id].length,j=Math.max(0,Math.min(L-1,D.i+n));if(j===D.i)return;D.i=j;render(n);}
+function openDeck(id){D.id=id;const v=parseInt(store('deck-'+id)||'0',10);D.i=isNaN(v)?0:Math.min(v,DECKS[id].length-1);deck.hidden=false;document.body.style.overflow='hidden';render(1);}
+function closeDeck(){stopTimer();deck.hidden=true;document.body.style.overflow='';if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});}
+function toggleNotes(){const b=$('#dNotesBox');b.hidden=!b.hidden;deck.classList.toggle('notes-open',!b.hidden);}
+function toggleFull(){try{if(document.fullscreenElement)document.exitFullscreen();else deck.requestFullscreen().catch(()=>{});}catch(e){}}
+stage.addEventListener('click',e=>{const z=e.target.closest('[data-nav]');if(z)go(+z.dataset.nav);});
+$('#dPrev').onclick=()=>go(-1);$('#dNext').onclick=()=>go(1);$('#dRev').onclick=()=>stage.classList.toggle('rev');$('#dTimer').onclick=toggleTimer;$('#dNotes').onclick=toggleNotes;$('#dFull').onclick=toggleFull;$('#dClose').onclick=closeDeck;
+document.addEventListener('keydown',e=>{if(deck.hidden)return;if(e.target.matches('input,textarea,[contenteditable]')){if(e.key==='Escape')e.target.blur();return;}
+  const k=e.key.toLowerCase();if(k==='arrowright'||k===' '||k==='pagedown'){e.preventDefault();go(1);}else if(k==='arrowleft'||k==='pageup'){e.preventDefault();go(-1);}
+  else if(k==='r')stage.classList.toggle('rev');else if(k==='t')toggleTimer();else if(k==='n')toggleNotes();else if(k==='f')toggleFull();else if(k==='escape')closeDeck();else if(k==='home'){D.i=0;render(-1);}});
+let tx=null;stage.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+stage.addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)go(dx<0?1:-1);tx=null;});
+route();
+</script>
+
+</body>
+</html>
