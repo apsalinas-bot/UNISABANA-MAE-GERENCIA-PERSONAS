@@ -419,12 +419,32 @@ details.prep .inner{padding:0 16px 14px;display:flex;flex-direction:column;gap:8
 .sl .verdict .fbwrap{margin-top:.4cqw}.sl .verdict .fb{min-height:3cqw;max-height:6cqw;font-size:1.4cqw;padding:.6cqw 1cqw}
 .sl .claim{font-size:3.3cqw!important}
 .sl .verdict{padding:1.3cqw 1.8cqw!important;gap:.5cqw!important}
-.sl .verdict p{font-size:1.65cqw!important}
+.sl .verdict p{font-size:1.55cqw!important;line-height:1.35!important}
+.sl .verdict{margin-bottom:1cqw}
 .sl .opts{position:relative;z-index:4}
 .sl .opt{cursor:pointer;position:relative;overflow:hidden;user-select:none}
 .sl .opt::after{content:"";position:absolute;left:0;bottom:0;height:.45cqw;width:var(--w,0%);background:#f2b91f;transition:width .25s}
 .sl .opt .vc{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:2cqw;color:#0b4da2;font-weight:600}
 .sl .opt:hover{border-color:#f2b91f}
+.sl.stgsl{gap:1.2cqw}
+.sl h2.wide{max-width:none}
+.sl .stg{gap:1.6cqw!important;margin-top:.4cqw!important}
+.sl .stg>div{padding:1.4cqw 1.5cqw!important;gap:.8cqw!important}
+.sl .stg h3{font-size:2.1cqw!important}
+.sl .flow{gap:.5cqw!important}
+.sl .flow li{padding:.6cqw .8cqw!important;font-size:1.3cqw!important;align-items:baseline}
+.sl .flow li.rd{row-gap:.4cqw}
+.sl .flow li.rd .rt{font-weight:700;font-family:var(--body)}
+.sl .flow li.rd small{grid-column:2;font-family:var(--body)!important;font-size:1.2cqw!important;line-height:1.3;opacity:.9}
+.sl .rbtn{grid-column:2;justify-self:start;position:relative;z-index:5;display:inline-block;font-family:var(--body);font-size:1.2cqw;font-weight:700;color:#ffffff;background:#0b2447;border-radius:.6cqw;padding:.45cqw 1cqw;text-decoration:none;margin-top:.2cqw}
+.sl .rbtn:hover{background:#0b4da2}
+.sl .rbtn.inline{font-size:1.25cqw;vertical-align:middle;margin-left:.6cqw}
+.sl .stg .flow li.rd .rt{font-family:var(--body);text-transform:none;letter-spacing:0;color:#0b2447;font-size:1.35cqw;font-weight:700}
+.sl .opts{gap:1cqw!important}
+.sl .opts div{padding:1cqw 1.6cqw!important;font-size:1.75cqw!important}
+.sl .opts~.fbwrap .fb{min-height:3.2cqw;max-height:7cqw}
+.sl .verdict .fb{min-height:2.6cqw!important}
+.sl .hint{margin:0}
 .notes .nx{margin-top:8px;color:#0b4da2;font-style:italic}
 
 .stage{box-shadow:0 10px 40px rgba(11,36,71,.18);border:1px solid #d5dde9}
@@ -986,13 +1006,13 @@ function slideHTML(s){const k=s.kick?`<div class="kick">${s.kick}</div>`:'',br=s
   case 'brk':return `<div class="sl brk"><div class="kick">Pausa</div><div class="bigclock" id="bigclock">${s.min}:00</div><p class="sub">Pulsa T para iniciar el reloj. Al volver, retomamos donde quedamos.</p></div>`;
   case 'sema':return `<div class="sl">${br}<h2>${s.title}</h2><div class="sema">${s.items.map(([c,a,b])=>`<div><i style="background:${c}"></i><b>${a}</b><span>${b}</span></div>`).join('')}</div></div>`;
   case 'sim':return `<div class="sl">${br}${k}<h2>${s.title}</h2><div class="simwrap sim">${simHTML('sd')}</div></div>`;
-  case 'etapas':return `<div class="sl">${br}<h2>${s.title}</h2><div class="stg">${ETAPAS.map(e=>{const r=READ[e.read],a=SES.find(q=>q.id===e.ses[0]),b=SES.find(q=>q.id===e.ses[1]);return `<div><span>Etapa ${e.n}</span><h3>${e.nombre}</h3><ol class="flow"><li><b>Vie ${a.date.slice(8)}</b>Sesión ${a.n} · ${a.titulo}</li><li class="rd"><b>Lectura</b>${r.au} (${yr(r)})<small>${r.para}</small></li><li><b>Sáb ${b.date.slice(8)}</b>Conversatorio + Sesión ${b.n}</li></ol></div>`;}).join('')}</div></div>`;
+  case 'etapas':return `<div class="sl stgsl">${br}<h2 class="wide">${s.title}</h2><div class="stg">${ETAPAS.map(e=>{const r=READ[e.read],a=SES.find(q=>q.id===e.ses[0]),b=SES.find(q=>q.id===e.ses[1]);return `<div><span>Etapa ${e.n}</span><h3>${e.nombre}</h3><ol class="flow"><li><b>Vie ${a.date.slice(8)}</b>Sesión ${a.n} · ${a.fase}</li><li class="rd"><b>Lectura</b><span class="rt">${r.au} (${yr(r)})</span><small>${r.para}</small><a class="rbtn" href="${r.link}" target="_blank" rel="noopener">${r.lab.startsWith('PDF')?'Abrir PDF':'Abrir lectura'} ↗</a></li><li><b>Sáb ${b.date.slice(8)}</b>Conversatorio + Sesión ${b.n} · ${b.fase}</li></ol></div>`;}).join('')}</div></div>`;
   case 'ritmo':return `<div class="sl">${br}<h2>${s.title}</h2><div class="rit">${RITMO.map(([n,m,d,t])=>`<div class="rrow"><b>${n}</b><div class="trk"><i class="r-${t}" style="width:${m}%"></i></div><span>${m} min</span><small>${d}</small></div>`).join('')}</div><p class="sub" style="margin-top:1.5cqw">Más de 80% del tiempo trabajan ustedes.</p></div>`;
   case 'reads':return `<div class="sl">${br}<h2>${s.title}</h2><div class="rds">${READ.map((r,i)=>`<div><span>Etapa ${i+1} · conversatorio el sábado ${SES.find(q=>q.id===ETAPAS[i].ses[1]).date.slice(8)}</span><h3>${r.au} (${yr(r)})</h3><p>${r.tit}</p><small>${r.por}</small></div>`).join('')}</div><p class="sub" style="margin-top:1.5cqw">Se entrega el viernes que abre la etapa · 20 minutos de conversatorio al inicio del sábado · sin control de lectura.</p></div>`;
   case 'parts':return `<div class="sl tight">${br}<h2>${s.title}</h2><ol class="items">${PARTS.map((p,i)=>`<li data-n="${String(i+1).padStart(2,'0')}"><span><b>${p[0]}</b> <span class="t" style="font-family:var(--mono);font-size:1.3cqw;color:#0b4da2">· ${p[1]}</span></span></li>`).join('')}</ol></div>`;
   case 'eval':return `<div class="sl">${br}<h2>${s.title}</h2><div class="rcols"><div><h3>Qué presentan</h3><ol><li>Sábado 21, en equipos de 2 a 3</li><li>10 minutos de exposición y 5 de preguntas</li><li>Máximo 8 diapositivas</li><li>Nota de 0,0 a 5,0; los avances no se califican</li></ol></div><div><h3>Rúbrica</h3><div class="rw">${RUBRIC.map(([c,w])=>`<div><b>${w}%</b><span>${c}</span></div>`).join('')}</div></div></div></div>`;
   case 'empresas':return `<div class="sl">${br}<h2>${s.title}</h2><div class="rcols"><div><h3>Seis empresas</h3><div class="rw">${CASES.map(c=>`<div style="grid-template-columns:1fr"><span><b style="color:#0b2447;font-family:var(--body)">${c.nombre.replace(' S.A.S.','')}</b> · ${c.ciudad.split(',')[0]}</span></div>`).join('')}</div></div><div><h3>Tres reglas</h3><ol><li><b>Interpretar:</b> lo que falte se pregunta o se declara como supuesto.</li><li><b>Preguntar al cliente:</b> hasta 3 preguntas por etapa, por escrito.</li><li><b>Cuestionar el encargo:</b> el cliente pide una solución; ustedes deciden si es la correcta.</li></ol></div></div></div>`;
-  case 'read1':{const r=READ[s.idx];return `<div class="sl">${br}<span class="badge">${s.kick} · ${s.min} min</span><p class="readref"><a class="refa" href="${r.link}" target="_blank" rel="noopener">${r.ref}</a></p><p class="sub" style="font-size:1.7cqw;color:#0b2447"><b>Para qué:</b> ${r.para}</p><div class="rcols"><div><h3>Preguntas guía</h3><ol>${r.qs.map(q=>`<li>${q}</li>`).join('')}</ol></div><div><h3>Conversatorio</h3><p>${r.din}</p></div></div></div>`;}
+  case 'read1':{const r=READ[s.idx];return `<div class="sl">${br}<span class="badge">${s.kick} · ${s.min} min</span><p class="readref"><a class="refa" href="${r.link}" target="_blank" rel="noopener">${r.ref}</a> <a class="rbtn inline" href="${r.link}" target="_blank" rel="noopener">${r.lab.startsWith('PDF')?'Abrir PDF':'Abrir lectura'} ↗</a></p><p class="sub" style="font-size:1.7cqw;color:#0b2447"><b>Para qué:</b> ${r.para}</p><div class="rcols"><div><h3>Preguntas guía</h3><ol>${r.qs.map(q=>`<li>${q}</li>`).join('')}</ol></div><div><h3>Conversatorio</h3><p>${r.din}</p></div></div></div>`;}
  }return '';}
 const fmtClock=sec=>{const n=sec<0;sec=Math.abs(sec);return(n?'−':'')+Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');};
 function paintTimer(){const c=$('#timerchip'),b=$('#bigclock');if(c){c.textContent=fmtClock(D.left);c.classList.toggle('run',D.run&&D.left>=0);c.classList.toggle('over',D.left<0);}if(b)b.textContent=fmtClock(D.left);}
