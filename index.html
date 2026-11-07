@@ -161,6 +161,26 @@ section.view{display:flex;flex-direction:column;gap:34px}
 .case details{border:1px dashed var(--line);border-radius:10px;padding:10px 14px}
 .case details summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--muted)}
 .case details[open] summary{margin-bottom:10px}
+.cli{display:flex;flex-wrap:wrap;gap:10px 28px;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--bg)}
+.cli>div{display:flex;flex-direction:column;gap:1px;font-size:14px}
+.cli b{font-family:var(--display);font-size:16px}
+.cli span:not(.label){color:var(--muted);font-size:13px}
+.case blockquote .who{display:block;font-family:var(--body);font-weight:400;font-size:13px;color:var(--muted);margin-top:4px}
+.ruta{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:6px}
+.ruta>div{border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:4px;font-size:13px;background:var(--surface)}
+.ruta b{font-family:var(--mono);font-size:12px;color:var(--accent)}
+@media (max-width:760px){.ruta{grid-template-columns:minmax(0,1fr)}}
+.guia{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.gstep{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.gstep .gn{font-family:var(--display);font-size:26px;font-weight:700;color:var(--gold,#f2b91f);line-height:1}
+.gstep .gh{display:flex;flex-direction:column;gap:2px}
+.gstep .gh b{font-family:var(--display);font-size:16px;line-height:1.2}
+.gstep .gh .mono{font-size:12px;color:var(--accent)}
+.gstep .gq{font-size:14px;font-weight:600}
+.gstep .gok{font-size:13px;color:var(--muted);border-top:1px dashed var(--line);padding-top:6px;margin-top:2px}
+.gstep .gok::before{content:"Se ve así: ";font-weight:600;color:var(--ok)}
+@media (max-width:900px){.guia{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.guia{grid-template-columns:minmax(0,1fr)}}
 .case .behind{margin-top:10px;font-size:14px}
 .case .behind b{color:var(--signal)}
 .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
@@ -461,6 +481,17 @@ details.prep .inner{padding:0 16px 14px;display:flex;flex-direction:column;gap:8
 .sl.paso .verdict p{font-size:1.5cqw!important}
 .sl.paso .bridge{margin-bottom:0}
 .sl.paso .fb{min-height:4cqw;max-height:7cqw}
+.sl .cgrid{display:grid;grid-template-columns:1fr 1.6fr;gap:3cqw;margin-top:.6cqw}
+.sl .cgrid h3{font-family:var(--mono);font-size:1.1cqw;letter-spacing:.12em;text-transform:uppercase;color:#0b4da2;margin:0 0 .4cqw}
+.sl .cgrid p{font-size:1.7cqw;line-height:1.4;color:#1c2d4a;margin:0 0 1.2cqw}
+.sl .ask{margin-top:auto;border-left:.4cqw solid #f2b91f;background:#fffaeb;padding:1.2cqw 1.6cqw;border-radius:0 .8cqw .8cqw 0;font-family:var(--display);font-size:2.1cqw;font-weight:600;color:#0b2447;line-height:1.3}
+.sl .ask span{display:block;font-family:var(--mono);font-size:1.05cqw;letter-spacing:.12em;text-transform:uppercase;color:#8f6700;font-weight:600;margin-bottom:.4cqw}
+.sl .gsl{display:flex;flex-direction:column;gap:.9cqw;margin-top:.4cqw}
+.sl .gsl>div{display:grid;grid-template-columns:3cqw 22cqw 7cqw minmax(0,1fr);gap:1.2cqw;align-items:baseline;border-bottom:1px solid #e1e7f0;padding-bottom:.8cqw}
+.sl .gsl .n{font-family:var(--display);font-size:2.4cqw;font-weight:700;color:#f2b91f;line-height:1}
+.sl .gsl b{font-family:var(--display);font-size:2cqw;color:#0b2447}
+.sl .gsl em{font-style:normal;font-family:var(--mono);font-size:1.2cqw;color:#0b4da2}
+.sl .gsl .q{font-size:1.75cqw;color:#1c2d4a}
 .notes .nx{margin-top:8px;color:#0b4da2;font-style:italic}
 
 .stage{box-shadow:0 10px 40px rgba(11,36,71,.18);border:1px solid #d5dde9}
@@ -532,52 +563,49 @@ const ETAPAS=[
 ];
 
 /* ===== EMPRESAS DE LOS EQUIPOS (ficticias) ===== */
-const CASES=[
- {id:'cafe',nombre:'Cosechas del Quindío S.A.S.',ciudad:'Montenegro, Quindío',sector:'Café especial de exportación',tam:'180 colaboradores fijos y hasta 900 recolectores por cosecha',proceso:'Atracción y vinculación de personal de temporada',
-  contexto:'Exporta café especial con certificaciones de comercio justo y sostenibilidad. En cada cosecha multiplica por cinco su personal en pocas semanas. Los recolectores se vinculan a través de cuadrilleros que reúnen grupos de trabajadores de distintas regiones. Las fincas vecinas compiten por la misma gente.',
-  encargo:'“No conseguimos recolectores: la gente se va a las fincas que pagan más por kilo. Queremos una propuesta de esquema de pago para la próxima cosecha.” — Gerente general',
-  sabe:['Cerca de un tercio de quienes se comprometen con un cuadrillero no se presenta el primer día.','El pago por kilo está dentro del rango de la zona.','La última auditoría de certificación dejó observaciones sobre la afiliación a seguridad social al inicio de labores.','Los recolectores nuevos rinden bastante menos en sus primeros días que quienes vuelven de cosechas anteriores.'],
-  voces:[['Gerente de producción','El problema es la plata. Si pagamos más por kilo, llegan.'],['Cuadrillero','La gente quiere plata cada semana y saber dónde va a dormir. Eso lo preguntan antes que el precio.'],['Coordinadora de gestión humana','Me entero de quiénes llegaron cuando ya están en el lote. Los papeles me llegan después.']],
-  banco:[['Primer pago','19 días en promedio (pago quincenal y cierre de nómina). La finca vecina paga cada semana.'],['Recolectores que vuelven','35% vuelve de una cosecha a otra; en la finca vecina, cerca de 60%.'],['Registro histórico','No existe: cada cuadrillero tiene su lista en el celular.'],['Afiliación a riesgos laborales','Los documentos los recoge el cuadrillero en papel; la afiliación tarda de 3 a 5 días. Debe estar vigente desde el inicio de labores.'],['Alojamiento','Los cupos en campamento se asignan al llegar; no se informan antes del viaje.'],['Inducción','Charla de 2 horas el primer día, sin práctica en el lote.']],
-  detras:'El cuello está en la vinculación y el primer pago, no en la tarifa: incertidumbre antes de viajar, afiliación tardía (riesgo legal y de certificación) y ninguna memoria de buenos recolectores entre temporadas.'},
- {id:'clinica',nombre:'Clínica Oriente Salud',ciudad:'Bucaramanga, Santander',sector:'Salud de mediana y alta complejidad',tam:'1.100 colaboradores; 380 en enfermería',proceso:'Incorporación y programación de turnos de enfermería',
-  contexto:'Clínica privada en crecimiento: abrió una nueva torre de hospitalización hace un año. Compite por personal de enfermería con otras clínicas de la ciudad y con ofertas para trabajar en el exterior. Cada jefe de servicio programa los turnos de su equipo.',
-  encargo:'“Las auxiliares jóvenes no tienen vocación: se van a los pocos meses. Queremos un programa de bienestar y reconocimiento para retenerlas.” — Directora de gestión humana',
-  sabe:['Más de un tercio de las auxiliares de enfermería nuevas se va antes de seis meses.','La inducción es institucional y dura dos días; no hay inducción por servicio.','La UCI retiene mejor que hospitalización.','El gasto en horas extra creció fuerte este año.'],
-  voces:[['Jefe de enfermería de hospitalización','No tengo tiempo de acompañar a nadie. Me paso el turno cubriendo huecos.'],['Auxiliar con cuatro meses','Me enteré el jueves de que trabajaba otra vez el domingo de noche.'],['Gerente financiero','Estamos pagando horas extra y personal temporal como nunca.']],
-  banco:[['Anticipación de turnos','Se publican con 3 a 5 días de anticipación, en Excel, cada jefe con su formato.'],['Asignación','Regla informal: los antiguos eligen primero; las nuevas reciben noches y fines de semana.'],['UCI','Tiene una enfermera referente que acompaña a cada persona nueva durante el primer mes.'],['Horas extra','Crecieron alrededor de 40% en el año; 18% de los turnos se cubren con extras o temporales.'],['Personal temporal','Cuesta cerca de 1,6 veces una auxiliar de planta.'],['Entrevistas de salida','La mayoría menciona “calidad de vida” y “horarios”.']],
-  detras:'La rotación se fabrica en la programación de turnos y en la falta de acompañamiento: las nuevas absorben los peores turnos con poca anticipación, y cada salida abre huecos que cubren otras nuevas. Es un círculo vicioso de proceso, no de vocación.'},
- {id:'retail',nombre:'Mercados del Caribe S.A.S.',ciudad:'Barranquilla, con tiendas en Atlántico, Magdalena y La Guajira',sector:'Supermercados de proximidad',tam:'46 tiendas y 3.200 colaboradores',proceso:'Promoción interna a administrador de tienda',
-  contexto:'Cadena regional que planea abrir ocho tiendas en 2027. Su política es promover desde adentro: los administradores salen de jefes de sección y cajeros destacados. La decisión la toma cada gerente regional.',
-  encargo:'“Los mejores vendedores no funcionan como administradores. Queremos una prueba psicométrica para elegir mejor.” — Gerente de operaciones',
-  sabe:['Una parte importante de los administradores promovidos renuncia o pide volver a su cargo antes de un año.','Los administradores contratados afuera duran más, pero cuestan más y tardan en llegar.','Existe un programa de liderazgo anual en Barranquilla.','Las tiendas con administrador nuevo tienen más faltantes de inventario.'],
-  voces:[['Gerente regional','Elijo al que más vende en su sección. ¿A quién más voy a elegir?'],['Administradora que volvió a su cargo','Pasé de manejar 4 personas a 45 y nadie me enseñó a hacer un horario ni un pedido.'],['Gerente de gestión humana','Tenemos programa de liderazgo, pero los de La Guajira casi nunca pueden venir.']],
-  banco:[['Tasa de fracaso','Cerca de 40% renuncia o vuelve a su cargo antes de 12 meses.'],['Transición','El promovido asume la tienda una semana después de ser elegido; no hay preparación previa.'],['Criterios','No hay criterios escritos; 3 de cada 10 nombramientos vienen por recomendación directa.'],['Acompañamiento','No hay mentor. La evaluación a los 3 meses no se hace en la mayoría de los casos.'],['Externos','Cuestan alrededor de 30% más y tardan unos 70 días en llegar.'],['Programa de liderazgo','Tres días presenciales al año; no está conectado con la promoción.']],
-  detras:'El problema no es elegir mejor sino preparar la transición: no hay ruta de desarrollo antes del cargo ni acompañamiento después. Una prueba psicométrica optimizaría el filtro de un proceso que falla en otra etapa.'},
- {id:'fintech',nombre:'Pagos Ceiba S.A.S.',ciudad:'Bogotá',sector:'Tecnología financiera (pagos digitales)',tam:'260 colaboradores; 140 en tecnología',proceso:'Gestión del desempeño',
-  contexto:'Empresa de crecimiento rápido con inversionistas exigentes. Evalúa una vez al año por competencias y objetivos, con un comité de calibración posterior. Aumentos y bonos salen de esa evaluación. Compite por talento técnico con empresas que contratan de forma remota desde el exterior.',
-  encargo:'“Necesitamos un nuevo software de desempeño. El actual es lento y nadie lo usa bien.” — Directora de talento',
-  sabe:['La rotación voluntaria de ingenieros con experiencia es alta y viene creciendo.','La mayoría de las evaluaciones se llenan en la última semana del plazo.','Los aumentos se comunican varios meses después de la evaluación.','En la encuesta de clima, la mayoría dice no saber qué debe hacer para crecer.'],
-  voces:[['Líder técnica','Escribo 18 evaluaciones en diciembre, de memoria.'],['Ingeniero que renunció','Me enteré de mi aumento en abril. Para entonces ya había aceptado otra oferta.'],['Directora de talento','La herramienta es lenta; con una mejor, esto se arregla.']],
-  banco:[['Duración del ciclo','Unos 4 meses desde la autoevaluación hasta la comunicación del aumento.'],['Conversaciones 1:1','Irregulares; no hay frecuencia definida.'],['Competencias','Las mismas 9 competencias para ventas, operaciones y tecnología.'],['Promociones','Se deciden en otro comité, sin usar la evaluación.'],['Rotación','28% anual en ingenieros con experiencia.'],['Uso del software','Solo en el periodo de evaluación; nadie entra el resto del año.']],
-  detras:'El cuello está en el diseño del ciclo, no en la herramienta: un proceso anual, lento y desconectado de las decisiones que importan. Un software nuevo automatizaría el mismo proceso (Hammer).'},
- {id:'transporte',nombre:'Transcarga del Valle S.A.S.',ciudad:'Cali, con operación hacia Buenaventura',sector:'Transporte de carga por carretera',tam:'850 colaboradores; 600 conductores',proceso:'Selección y vinculación de conductores',
-  contexto:'Mueve carga entre el puerto de Buenaventura y el interior del país. El sector reporta escasez de conductores de tractocamión. Por el tipo de carga y de ruta, la empresa exige estudios de seguridad a todos los aspirantes.',
-  encargo:'“No hay conductores en el mercado. Queremos una campaña de atracción y un bono de enganche.” — Gerente general',
-  sabe:['Cubrir una vacante de conductor toma casi dos meses.','En promedio, más de 20 vehículos están parados por falta de conductor.','De cada diez aspirantes, pocos llegan a manejar para la empresa.','Un competidor de la región dice contratar en menos de dos semanas.'],
-  voces:[['Jefe de flota','Cada camión parado es plata perdida todos los días.'],['Analista de selección','Espero el estudio de seguridad y mientras tanto el conductor se va con otro.'],['Conductor recién vinculado','Fui tres veces a Cali para papeles y pruebas. Vivo en Tuluá.']],
-  banco:[['Secuencia','Hoja de vida → psicotécnica → prueba de manejo → estudio de seguridad → examen médico → inducción. Todo en serie.'],['Prueba de manejo','Solo los martes, en Cali: hay un único evaluador.'],['Estudio de seguridad','Lo hace un tercero, tarda unos 15 días y se pide al final.'],['Abandonos','Cerca de 40% de los abandonos ocurre esperando el estudio de seguridad.'],['Aspirantes','Llegan suficientes hojas de vida: el problema no es de volumen.'],['Vehículo parado','La empresa lo estima en más de un millón de pesos diarios (unos USD 300).']],
-  detras:'Cuello de botella clásico: etapas en serie, un evaluador único y el estudio de seguridad al final. Paralelizar y adelantar el estudio resuelve más que un bono de enganche.'},
- {id:'textil',nombre:'Textiles del Aburrá S.A.S.',ciudad:'Itagüí, Antioquia',sector:'Confección y textiles',tam:'900 colaboradores en dos plantas y tres turnos',proceso:'Atención de solicitudes de los colaboradores',
-  contexto:'Fabrica prendas para marcas nacionales y de exportación. Cuatro analistas de gestión humana atienden permisos, certificados laborales, vacaciones e incapacidades. La oficina atiende de 8 a.m. a 5 p.m.',
-  encargo:'“Mi equipo está desbordado. Necesito que me ayuden a justificar dos analistas más.” — Jefe de gestión humana',
-  sabe:['Llegan cerca de 1.900 solicitudes al mes.','Las solicitudes entran por correo, WhatsApp y en persona.','Un certificado laboral tarda casi una semana.','Hay reclamos frecuentes por descuentos de nómina relacionados con incapacidades.'],
-  voces:[['Analista de gestión humana','Me paso el día buscando correos y persiguiendo firmas.'],['Operaria del turno de noche','Para pedir un certificado tengo que perder medio turno.'],['Gerente financiero','No apruebo más gente sin saber en qué se va el tiempo.']],
-  banco:[['Tipo de solicitudes','Cerca de 45% son certificados laborales con formato estándar.'],['Reprocesos','Alrededor de 35% se devuelve por un documento faltante.'],['Registro','No hay registro: nadie sabe cuántas solicitudes están pendientes.'],['Vacaciones','Requieren tres firmas en papel: supervisor, jefe de planta y gestión humana.'],['Incapacidades','Se entregan en papel en portería y llegan a gestión humana después del cierre de nómina.'],['Turno de noche','No tiene ningún canal de atención presencial.']],
-  detras:'No falta capacidad sino diseño: sin canal único, con reprocesos, aprobaciones en serie y trabajo estandarizable hecho a mano. Eliminar, simplificar y habilitar autoservicio libera más que dos analistas.'}
+const GUIA_INTRO='Trabajan como consultores: el cliente les pide una solución; ustedes descubren si es la correcta y le proponen un proceso que funcione. Lo construyen en cinco pasos, uno por sesión.';
+const GUIA=[
+ ['Entender el encargo','S2','¿Qué pide el cliente y qué problema hay detrás?','Una pregunta del tipo “¿qué en el proceso de ___ produce ___?”.'],
+ ['Ver el proceso','S2','¿Cómo funciona hoy, paso a paso?','Un dibujo simple: los pasos, quién hace cada uno, dónde se espera y dónde cambia de manos.'],
+ ['Encontrar dónde se frena','S3','¿En qué punto se pierden las personas o el tiempo?','Una hipótesis clara, sostenida con un dato del caso.'],
+ ['Comprobarlo','S4','¿Es verdad? ¿Qué dicen el cliente y los estudios?','Las respuestas del cliente, 3 a 5 estudios y otras explicaciones descartadas.'],
+ ['Rediseñar y convencer','S5–S6','¿Cómo debería funcionar y cómo se implementa?','El proceso nuevo, quién hace qué, cómo se mide y cómo evitar que se caiga. Se lo presentan al cliente.']
 ];
-function caseTeaser(c){return `${c.nombre} (empresa ficticia) · ${c.ciudad}\nProceso: ${c.proceso}\nLo que pide el cliente: ${c.encargo}\n\nEl caso completo les llega hoy al cierre o esta noche.`;}
-function caseText(c){return `${c.nombre.toUpperCase()} (empresa ficticia, uso académico)\n${c.ciudad} · ${c.sector} · ${c.tam}\nProceso: ${c.proceso}\n\nCONTEXTO\n${c.contexto}\n\nEL ENCARGO\n${c.encargo}\n\nLO QUE SE SABE\n${c.sabe.map(s=>'- '+s).join('\n')}\n\nVOCES\n${c.voces.map(v=>'- '+v[0]+': “'+v[1]+'”').join('\n')}\n\nREGLA: el equipo puede hacer hasta 3 preguntas por etapa al cliente (el docente), por escrito.`;}
+const GUIA_CIERRE='Cada paso es una o dos diapositivas de su exposición final. Si siguen la ruta, el sábado 21 ya tienen la presentación armada.';
+const CASES=[
+ {id:'esp',equipo:'Consultora del equipo de Leidy Moscoso',adaptado:true,nombre:'Servicios Públicos de San Isidro E.S.P.',ciudad:'San Isidro del Monte, Cundinamarca',sector:'Empresa municipal de acueducto, alcantarillado y aseo',tam:'85 colaboradores · 7 jefes de área',
+  cliente:['Marcela Rincón','Presidenta de la Junta Directiva'],
+  proceso:'Relevo de gerente y despliegue de sus decisiones',
+  contexto:'En tres años han pasado tres gerentes generales. Cada uno llegó con su propio plan. Los jefes de área llevan, en promedio, más de 20 años en la empresa. Las nuevas políticas se aprueban, pero no se aplican.',
+  encargo:'“Los jefes de área se resisten a todo. Necesitamos un programa de liderazgo y gestión del cambio para ellos.”',
+  sabe:['3 gerentes en 3 años.','Los jefes de área llevan más de 20 años en la empresa.','De cada diez políticas nuevas, pocas se aplican.','No hay un procedimiento de entrega entre un gerente y el siguiente.'],
+  voces:[['Jefe de operaciones','Ya vi pasar tres planes. Espero a ver si este dura.'],['Último gerente','Llegué y no había ni un informe de entrega. Reconstruí todo hablando con los jefes.'],['Profesional de talento humano','Las directrices llegan por correo. Nadie revisa si se aplicaron.']],
+  ruta:[['S2 · Mapear','Desde que sale un gerente hasta que una decisión del nuevo se aplica en el terreno.'],['S3 · Cuello','¿Dónde se frena: en la entrega del cargo, en cómo bajan las decisiones o en el seguimiento?'],['S4 · Validar','¿Es resistencia de las personas o falta de proceso? ¿Qué dice la evidencia?'],['S5 · Rediseñar','Un relevo y un despliegue que no dependan de quién sea el gerente.'],['S6 · Presentar','A la Junta Directiva, con Kotter en la cabeza.']],
+  banco:[['Entrega del cargo','No existe. El gerente nuevo recibe el cargo en un día, sin informe.'],['Interinidad','La Junta tarda unos 45 días en nombrar; mientras tanto hay un encargado.'],['Cómo bajan las decisiones','Por correo o en el comité mensual, sin responsable ni fecha.'],['Seguimiento','No hay. Nadie mide si una política se aplicó.'],['Participación de los jefes','No participan al formular; se enteran cuando la decisión ya está tomada.'],['Plan anterior','Cerca de 40% de sus acciones se abandonaron cuando cambió el gerente.']],
+  detras:'La “resistencia” es aprendida: los jefes vieron morir tres planes. El problema no está en ellos, sino en que no existe un proceso de relevo ni de despliegue. Cada gerente nuevo vuelve a empezar y las decisiones bajan sin dueño ni seguimiento. Los jefes son la memoria de la empresa: el rediseño debería sumarlos como coalición (Kotter), no capacitarlos como problema.'},
+ {id:'transporte',equipo:'LCJJ S.A.S.',nombre:'Transcarga del Valle S.A.S.',ciudad:'Cali, con operación hacia Buenaventura',sector:'Transporte de carga por carretera',tam:'850 colaboradores · 600 conductores',
+  cliente:['Andrés Cuéllar','Gerente general'],
+  proceso:'Selección y vinculación de conductores',
+  contexto:'Mueve carga entre el puerto de Buenaventura y el interior del país. El sector dice que faltan conductores de tractocamión. Por el tipo de carga, la empresa exige un estudio de seguridad a todos los aspirantes.',
+  encargo:'“No hay conductores en el mercado. Queremos una campaña de atracción y un bono de enganche.”',
+  sabe:['Cubrir una vacante de conductor toma casi dos meses.','Más de 20 camiones están parados por falta de conductor.','De cada diez aspirantes, pocos llegan a manejar para la empresa.','Un competidor de la región dice contratar en menos de dos semanas.'],
+  voces:[['Jefe de flota','Cada camión parado es plata perdida todos los días.'],['Analista de selección','Espero el estudio de seguridad y mientras tanto el conductor se va con otro.'],['Conductor recién vinculado','Fui tres veces a Cali para papeles y pruebas. Vivo en Tuluá.']],
+  ruta:[['S2 · Mapear','Desde que llega la hoja de vida hasta que el conductor sale a su primer viaje.'],['S3 · Cuello','¿Dónde se acumulan los aspirantes esperando?'],['S4 · Validar','¿Faltan conductores en el mercado o se pierden dentro del proceso?'],['S5 · Rediseñar','Un proceso más corto, sin bajar los controles de seguridad.'],['S6 · Presentar','Al gerente general, con el costo de no hacer nada.']],
+  banco:[['Secuencia','Hoja de vida → prueba psicotécnica → prueba de manejo → estudio de seguridad → examen médico → inducción. Todo en serie.'],['Prueba de manejo','Solo los martes, en Cali, con un único evaluador.'],['Estudio de seguridad','Lo hace un tercero, tarda unos 15 días y se pide al final.'],['Abandonos','Cerca de 40% de los abandonos ocurre esperando el estudio de seguridad.'],['Aspirantes','Llegan suficientes hojas de vida: el problema no es de volumen.'],['Camión parado','La empresa lo estima en más de un millón de pesos diarios (unos USD 300).']],
+  detras:'Cuello de botella clásico: etapas en serie, un solo evaluador y el estudio de seguridad al final. Hacer pasos en paralelo, adelantar el estudio y llevar las pruebas a donde viven los conductores resuelve más que un bono de enganche.'},
+ {id:'clinica',equipo:'Tercer equipo (por asignar)',nombre:'Clínica Oriente Salud',ciudad:'Bucaramanga, Santander',sector:'Salud de mediana y alta complejidad',tam:'1.100 colaboradores · 380 en enfermería',
+  cliente:['Patricia Lozano','Directora de gestión humana'],
+  proceso:'Incorporación de auxiliares de enfermería y asignación de turnos',
+  contexto:'Clínica privada en crecimiento: abrió una nueva torre de hospitalización hace un año. Compite por personal de enfermería con otras clínicas y con ofertas para trabajar en el exterior. Cada jefe de servicio arma los turnos de su equipo.',
+  encargo:'“Las auxiliares jóvenes no tienen vocación: se van a los pocos meses. Queremos un programa de bienestar y reconocimiento.”',
+  sabe:['Más de un tercio de las auxiliares nuevas se va antes de seis meses.','La inducción dura dos días y es igual para todos los servicios.','En la UCI se quedan más que en hospitalización.','El gasto en horas extra creció fuerte este año.'],
+  voces:[['Jefe de enfermería de hospitalización','No tengo tiempo de acompañar a nadie. Me paso el turno cubriendo huecos.'],['Auxiliar con cuatro meses','Me enteré el jueves de que trabajaba otra vez el domingo de noche.'],['Gerente financiero','Estamos pagando horas extra y personal temporal como nunca.']],
+  ruta:[['S2 · Mapear','Desde que la auxiliar firma contrato hasta que cumple seis meses.'],['S3 · Cuello','¿Dónde se fabrica la renuncia: en la inducción, en el acompañamiento o en los turnos?'],['S4 · Validar','¿Falta de vocación o un proceso que las empuja a irse?'],['S5 · Rediseñar','Una incorporación y una asignación de turnos que las retengan.'],['S6 · Presentar','A la directora de gestión humana y al gerente financiero.']],
+  banco:[['Anticipación de turnos','Se publican con 3 a 5 días de anticipación, en Excel, cada jefe con su formato.'],['Asignación','Regla informal: las antiguas eligen primero; las nuevas reciben noches y fines de semana.'],['UCI','Tiene una enfermera referente que acompaña a cada persona nueva durante el primer mes.'],['Horas extra','Crecieron alrededor de 40% en el año; 18% de los turnos se cubren con extras o temporales.'],['Personal temporal','Cuesta cerca de 1,6 veces una auxiliar de planta.'],['Entrevistas de salida','La mayoría menciona “calidad de vida” y “horarios”.']],
+  detras:'La rotación se fabrica en la asignación de turnos y en la falta de acompañamiento: las nuevas reciben los peores turnos con poca anticipación y cada salida abre huecos que cubren otras nuevas. Es un círculo vicioso de proceso, no de vocación. La UCI ya muestra la solución.'}
+];
+function caseTeaser(c){return `${c.nombre} (empresa ficticia) · ${c.ciudad}\nCliente: ${c.cliente[0]}, ${c.cliente[1]}\nProceso: ${c.proceso}\nLo que pide el cliente: ${c.encargo}\n\nEl caso completo les llega en la sesión 2, después del break.`;}
+function caseText(c){return `${c.nombre.toUpperCase()} (empresa ficticia, uso académico)\n${c.ciudad} · ${c.sector} · ${c.tam}\n\nCLIENTE: ${c.cliente[0]}, ${c.cliente[1]}\nPROCESO: ${c.proceso}\n\nLA SITUACIÓN\n${c.contexto}\n\nLO QUE PIDE EL CLIENTE\n${c.encargo}\n\nLO QUE SE SABE\n${c.sabe.map(s=>'- '+s).join('\n')}\n\nVOCES\n${c.voces.map(v=>'- '+v[0]+': “'+v[1]+'”').join('\n')}\n\nLA RUTA DEL CASO\n${c.ruta.map(r=>'- '+r[0]+': '+r[1]).join('\n')}\n\nCÓMO DESARROLLAR SU CASO\n${GUIA_INTRO}\n${GUIA.map((g,i)=>(i+1)+'. '+g[0]+' ('+g[1]+'): '+g[2]+' Se ve así: '+g[3]).join('\n')}\n${GUIA_CIERRE}\n\nREGLA: hasta 3 preguntas por etapa al cliente (el docente), por escrito. Lo que no sepan, se pregunta o se declara como supuesto.`;}
 
 /* ===== SESIONES ===== */
 const SES=[
@@ -601,13 +629,13 @@ const SES=[
 {id:'s2',n:2,fase:'Levantamiento',date:'2026-11-07',dia:'Sábado 7 de noviembre',hora:'8:00 a.m. – 12:00 m.',start:480,titulo:'Mapear el proceso actual',
  pregunta:'¿Cómo se ve el proceso de punta a punta y dónde se está perdiendo valor?',read:0,
  avance:'Diapositivas 1 y 2: el encargo con su pregunta operacional y el mapa del proceso actual.',
- prep:['Marcos por sala con 5 carriles vacíos: Candidata, Reclutamiento, Contratación, Formación, Supervisor.','Plantilla SIPOC y carriles duplicable por equipo.','Las 6 fichas completas listas para enviar después del break (botón “Copiar ficha completa”, pestaña Empresas).','Plan B del conversatorio si no recibieron a Hammer: las tres ideas de la lámina 3.'],
+ prep:['Marcos por sala con 5 carriles vacíos: Candidata, Reclutamiento, Contratación, Formación, Supervisor.','Plantilla SIPOC y carriles duplicable por equipo.','Las 3 fichas completas listas para enviar después del break (botón “Copiar ficha completa”, pestaña Empresas).','Plan B del conversatorio si no recibieron a Hammer: las tres ideas de la lámina 3.'],
  guion:[[20,'din','Conversatorio: lectura eje de la etapa 1','Si no recibieron la lectura, presentas tú en 5 minutos las tres ideas de Hammer. Luego cada quien comparte un paso de su organización que exista “porque siempre se hizo así” y discuten qué haría Hammer.'],
   [5,'expo','Cómo se ve un proceso','Solo un ejemplo para que lo vean, no para volverse expertos: el proceso de Camila de punta a punta, en una lámina.'],
   [55,'din','Resolvamos juntos el caso de Camila','En plenaria y paso a paso. Narras sus 66 días y el grupo responde en el chat cuatro preguntas: dónde espera, cuántas veces cambia de manos, dónde la pierden y qué cambiarían primero. Después de cada respuesta revelas lo que muestra el caso (R).'],
   [10,'plen','Revelación','Camila renunció en la semana 5. Muestras su curva emocional y cierras: “Estas mismas cuatro preguntas las harán hoy con su empresa”.'],
   [30,'pausa','Pausa',''],
-  [25,'plen','Presentación de los casos','Presentas las seis empresas (un minuto cada una) y las reglas con el cliente. Envías a cada equipo su ficha completa por el chat (pestaña Empresas).'],
+  [25,'plen','Presentación de los casos','Presentas los tres casos (dos minutos cada uno) y las reglas con el cliente. Envías a cada equipo su ficha completa por el chat (pestaña Empresas).'],
   [20,'taller','Lectura del caso y ficha del encargo','En salas: leen su caso, llenan la ficha del encargo y redactan su pregunta operacional.'],
   [45,'taller','Mapa del proceso actual de su empresa','Las mismas preguntas que con Camila: pasos en orden y quién los hace, dónde espera, cuántas veces cambia de manos y dónde se pierde a la persona. Lo que no sepan va como supuesto explícito o como pregunta al cliente.'],
   [15,'cons','Consultorio','Quince minutos solo para dudas y consultas: sobre el caso, la exposición, la forma de trabajo o la evaluación. Las preguntas al cliente se anotan aparte (cuentan para el límite de la etapa).'],
@@ -692,6 +720,7 @@ curso:[
  {sec:'Evaluación',k:'eval',br:'Todo termina en un solo producto, y esa es la única evaluación.',title:'Una sola nota: la exposición final'},
  {sec:'Evaluación',k:'parts',br:'Cada sesión deja lista una parte de esa exposición.',title:'Las siete partes de la exposición'},
  {sec:'Empresas',k:'empresas',br:'Trabajarán sobre una empresa colombiana ficticia que recibirán hoy.',title:'Su empresa y las reglas del juego'},
+ {sec:'Empresas',k:'guia',br:'Y el trabajo se desarrolla en cinco pasos, uno por sesión.',title:'Cómo desarrollar su caso'},
  {sec:'Dudas',k:'big',br:'Ese es el mapa.',text:'¿Qué <em>dudas</em> tienen sobre cómo vamos a trabajar?',min:5}
 ],
 s1:[
@@ -737,7 +766,11 @@ s2:[
  {sec:'Camila',k:'big',br:'Hay un dato que no les conté.',text:'Camila renunció en la <em>semana 5</em>. La causa no estaba en ella: estaba en el proceso.',min:5},
  {sec:'Camila',k:'chart',br:'Y así lo vivió ella.',kick:'Lo que vive la persona',title:'La curva emocional de Camila',chart:'journey',note:'Los momentos que definen si alguien se queda están en los valles: la espera sin noticias y las primeras semanas en piso.',n:'Cierra: “Estas mismas cuatro preguntas las harán hoy con su empresa”. Anuncia el break.'},
  {sec:'Pausa',k:'brk',min:30},
- {sec:'Los casos',k:'empresas',br:'Volvemos. Ya practicaron con Camila; ahora, su encargo real.',title:'Seis empresas, seis encargos',n:'Un minuto por empresa: ciudad, proceso y lo que pide el cliente. Luego envía a cada equipo su ficha completa por el chat (botón “Copiar ficha completa”).'},
+ {sec:'Los casos',k:'empresas',br:'Volvemos. Ya practicaron con Camila; ahora, su encargo real.',title:'Tres empresas, tres encargos',n:'Dos minutos por empresa: el cliente, el proceso y lo que pide. Di que uno de los casos está adaptado con la experiencia de un equipo. Luego envía a cada equipo su ficha completa por el chat (botón “Copiar ficha completa”).'},
+ {sec:'Los casos',k:'caso1',ci:0,br:'El primero está adaptado con la experiencia de uno de sus equipos.'},
+ {sec:'Los casos',k:'caso1',ci:1,br:'El segundo, una empresa de transporte de carga.'},
+ {sec:'Los casos',k:'caso1',ci:2,br:'Y el tercero, una clínica.'},
+ {sec:'Los casos',k:'guia',br:'Sea cual sea su caso, el trabajo se desarrolla igual: cinco pasos, uno por sesión.',title:'Cómo desarrollar su caso',n:'Lee solo las preguntas, en voz alta. Cierra: “Hoy hacemos los pasos 1 y 2”. El detalle está en su ficha.'},
  {sec:'Los casos',k:'act',br:'Les acabo de enviar su ficha completa. Primero, entiendan el encargo.',kick:'Equipos',title:'Lean su caso y llenen la ficha del encargo',steps:['Lean la ficha completa de su empresa','Llenen la ficha del encargo (pestaña Materiales)','Redacten su pregunta operacional: ¿qué en el proceso de ___ produce ___?'],min:20,out:'Diapositiva 1: el encargo y la pregunta operacional'},
  {sec:'Taller',k:'act',br:'Con el encargo claro, hagan con su empresa lo mismo que hicimos con Camila.',kick:'Equipos',title:'El proceso actual de su empresa',steps:['Dibujen los pasos en orden y quién hace cada uno','¿Dónde espera el caso? ¿Cuántas veces cambia de manos?','¿En qué momentos se pierde a la persona?','Lo que no sepan: supuesto explícito o pregunta al cliente'],min:45,out:'Diapositiva 2: proceso actual'},
  {sec:'Consultorio',k:'big',br:'Seguro aparecieron dudas con el caso. Este espacio es para eso.',kick:'Consultorio',text:'Sus <em>dudas y consultas</em>: sobre el caso, la exposición o la forma de trabajo.',sub:'Micrófono abierto o chat. Las preguntas al cliente van aparte y cuentan para el límite de la etapa.',min:15},
@@ -917,8 +950,10 @@ function viewCurso(){
     <div class="facts"><div class="fact"><b>Cuándo</b><span>Sábado 21 de noviembre</span></div><div class="fact"><b>Quiénes</b><span>Equipos de 2 a 3, formados el viernes 6</span></div><div class="fact"><b>El caso</b><span>Una empresa colombiana ficticia asignada a cada equipo</span></div><div class="fact"><b>Formato</b><span>10 minutos de exposición + 5 de preguntas; máximo 8 diapositivas</span></div><div class="fact"><b>Entrega</b><span>Diapositivas antes de las 7:00 a.m. del sábado 21</span></div><div class="fact"><b>Escala</b><span>0,0 a 5,0, ponderada por la rúbrica</span></div></div></div>
    <details class="prep"><summary>Ver las 7 partes de la exposición y la rúbrica completa</summary><div class="inner"><div class="tbl-wrap"><table><thead><tr><th>#</th><th>Parte de la exposición</th><th>Se construye en</th></tr></thead><tbody>${PARTS.map((p,i)=>`<tr><td class="num">${i+1}</td><td>${p[0]}</td><td class="num">${p[1]}</td></tr>`).join('')}</tbody></table></div>${rubricTable()}</div></details></div>
 
-  <div class="block"><h2>4. Las empresas</h2><p class="lead">Seis empresas colombianas ficticias. Traen contexto, voces y lo que pide el cliente, no todos los datos. Reglas: interpretar, preguntar al cliente (hasta 3 preguntas por etapa) y cuestionar el encargo.</p>
-   <div class="tbl-wrap"><table><thead><tr><th>Empresa</th><th>Ciudad</th><th>Proceso</th><th>Lo que pide el cliente</th></tr></thead><tbody>${CASES.map(c=>`<tr><td><b>${c.nombre}</b></td><td>${c.ciudad.split(',')[0]}</td><td>${c.proceso}</td><td class="note">${c.encargo.split('”')[0].replace('“','').split('. ').slice(-1)[0]}</td></tr>`).join('')}</tbody></table></div>
+  <div class="block"><h2>4. Cómo desarrollar su caso</h2><p class="lead">${GUIA_INTRO}</p>${guiaHTML()}<p class="note">${GUIA_CIERRE}</p></div>
+
+  <div class="block"><h2>5. Los casos</h2><p class="lead">Tres empresas colombianas ficticias, una de ellas adaptada con la experiencia de un equipo. Reglas: interpretar, preguntar al cliente (hasta 3 preguntas por etapa) y cuestionar lo que pide.</p>
+   <div class="tbl-wrap"><table><thead><tr><th>Empresa</th><th>Cliente</th><th>Proceso</th><th>Lo que pide el cliente</th></tr></thead><tbody>${CASES.map(c=>`<tr><td><b>${c.nombre}</b><br><span class="note">${c.ciudad.split(',')[0]}</span></td><td>${c.cliente[0]}<br><span class="note">${c.cliente[1]}</span></td><td>${c.proceso}</td><td class="note">${c.encargo.replace(/[“”]/g,'')}</td></tr>`).join('')}</tbody></table></div>
    </div>
   
   <details class="prep"><summary>Solo docente · carga de trabajo por etapa</summary><div class="inner"><p class="lead">Casi todo el caso se construye en clase. Fuera de clase queda la lectura de cada etapa y cerrar lo avanzado: unas dos horas por semana, pensado para profesionales que trabajan.</p>
@@ -948,16 +983,20 @@ function viewSesion(s){
    <details class="prep"><summary>Preparación (${s.prep.length})</summary><div class="inner">${prep}</div></details>
   </section>`;}
 
+function guiaHTML(){return `<div class="guia">${GUIA.map((g,i)=>`<div class="gstep"><span class="gn">${i+1}</span><div><div class="gh"><b>${g[0]}</b><span class="mono">${g[1]}</span></div><p class="gq">${g[2]}</p><p class="gok">${g[3]}</p></div></div>`).join('')}</div>`;}
 function viewEmpresas(){
   return `<section class="view">
-  <div class="block"><h2>Empresas de los equipos</h2><p class="lead">Ficticias y adaptadas a la realidad colombiana. La ficha completa se entrega en la sesión 2, después del break. El banco de respuestas es solo para ti: úsalo para contestar las preguntas al cliente (hasta 3 por etapa).</p></div>
+  <div class="block"><h2>Los tres casos</h2><p class="lead">Empresas colombianas ficticias. Cada una trae un cliente, una situación y una solución que el cliente ya decidió pedir.</p></div>
+  <div class="block"><h2>Cómo desarrollar su caso</h2><p class="lead">${GUIA_INTRO}</p>${guiaHTML()}<p class="note">${GUIA_CIERRE}</p></div>
   ${CASES.map(c=>`<article class="case">
-    <div class="case-h"><div><span class="label">${c.ciudad} · ${c.sector}</span><h3>${c.nombre}</h3><p class="note">${c.tam} · <b>Proceso:</b> ${c.proceso}</p></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="cbtn" data-copyteaser="${c.id}">Copiar encargo (hoy en clase)</button><button class="cbtn" data-copycase="${c.id}">Copiar ficha completa</button></div></div>
+    <div class="case-h"><div><span class="label">${c.ciudad} · ${c.sector}${c.adaptado?' · adaptado con el equipo':''}</span><h3>${c.nombre}</h3><p class="note">${c.tam} · <b>Equipo:</b> ${c.equipo}</p></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="cbtn" data-copyteaser="${c.id}">Copiar resumen</button><button class="cbtn" data-copycase="${c.id}">Copiar ficha completa</button></div></div>
+    <div class="cli"><div><span class="label">Cliente</span><b>${c.cliente[0]}</b><span>${c.cliente[1]}</span></div><div><span class="label">Proceso</span><b>${c.proceso}</b></div></div>
     <p>${c.contexto}</p>
-    <blockquote>${c.encargo}</blockquote>
+    <blockquote>${c.encargo}<span class="who">— ${c.cliente[0]}, ${c.cliente[1].toLowerCase()}</span></blockquote>
     <div class="grid2"><div><span class="label">Lo que se sabe</span><ul>${c.sabe.map(x=>`<li>${x}</li>`).join('')}</ul></div>
      <div><span class="label">Voces</span><ul>${c.voces.map(v=>`<li><b>${v[0]}:</b> “${v[1]}”</li>`).join('')}</ul></div></div>
-    <details><summary>Solo docente · banco de respuestas y lo que hay detrás</summary><div class="tbl-wrap"><table><tbody>${c.banco.map(b=>`<tr><td><b>${b[0]}</b></td><td>${b[1]}</td></tr>`).join('')}</tbody></table></div><p class="behind"><b>Lo que hay detrás:</b> ${c.detras}</p></details>
+    <div><span class="label">La ruta del caso</span><div class="ruta">${c.ruta.map(r=>`<div><b>${r[0]}</b><span>${r[1]}</span></div>`).join('')}</div></div>
+    <details><summary>Solo docente · respuestas para el cliente y lo que hay detrás</summary><div class="tbl-wrap"><table><tbody>${c.banco.map(b=>`<tr><td><b>${b[0]}</b></td><td>${b[1]}</td></tr>`).join('')}</tbody></table></div><p class="behind"><b>Lo que hay detrás:</b> ${c.detras}</p></details>
     <pre id="teaser-${c.id}" hidden>${escH(caseTeaser(c))}</pre>
     <pre id="case-${c.id}" hidden>${escH(caseText(c))}</pre>
   </article>`).join('')}
@@ -1031,7 +1070,9 @@ function slideHTML(s){const k=s.kick?`<div class="kick">${s.kick}</div>`:'',br=s
   case 'reads':return `<div class="sl">${br}<h2>${s.title}</h2><div class="rds">${READ.map((r,i)=>`<div><span>Etapa ${i+1} · conversatorio el sábado ${SES.find(q=>q.id===ETAPAS[i].ses[1]).date.slice(8)}</span><h3>${r.au} (${yr(r)})</h3><p>${r.tit}</p><small>${r.por}</small></div>`).join('')}</div><p class="sub" style="margin-top:1.5cqw">Se entrega el viernes que abre la etapa · 20 minutos de conversatorio al inicio del sábado · sin control de lectura.</p></div>`;
   case 'parts':return `<div class="sl tight">${br}<h2>${s.title}</h2><ol class="items">${PARTS.map((p,i)=>`<li data-n="${String(i+1).padStart(2,'0')}"><span><b>${p[0]}</b> <span class="t" style="font-family:var(--mono);font-size:1.3cqw;color:#0b4da2">· ${p[1]}</span></span></li>`).join('')}</ol></div>`;
   case 'eval':return `<div class="sl">${br}<h2>${s.title}</h2><div class="rcols"><div><h3>Qué presentan</h3><ol><li>Sábado 21, en equipos de 2 a 3</li><li>10 minutos de exposición y 5 de preguntas</li><li>Máximo 8 diapositivas</li><li>Nota de 0,0 a 5,0; los avances no se califican</li></ol></div><div><h3>Rúbrica</h3><div class="rw">${RUBRIC.map(([c,w])=>`<div><b>${w}%</b><span>${c}</span></div>`).join('')}</div></div></div></div>`;
-  case 'empresas':return `<div class="sl">${br}<h2>${s.title}</h2><div class="rcols"><div><h3>Seis empresas</h3><div class="rw">${CASES.map(c=>`<div style="grid-template-columns:1fr"><span><b style="color:#0b2447;font-family:var(--body)">${c.nombre.replace(' S.A.S.','')}</b> · ${c.ciudad.split(',')[0]}</span></div>`).join('')}</div></div><div><h3>Tres reglas</h3><ol><li><b>Interpretar:</b> lo que falte se pregunta o se declara como supuesto.</li><li><b>Preguntar al cliente:</b> hasta 3 preguntas por etapa, por escrito.</li><li><b>Cuestionar el encargo:</b> el cliente pide una solución; ustedes deciden si es la correcta.</li></ol></div></div></div>`;
+  case 'empresas':return `<div class="sl">${br}<h2>${s.title}</h2><div class="rcols"><div><h3>Tres casos</h3><div class="rw">${CASES.map(c=>`<div style="grid-template-columns:1fr"><span><b style="color:#0b2447;font-family:var(--body)">${c.nombre.replace(' S.A.S.','')}</b><br>${c.proceso}</span></div>`).join('')}</div></div><div><h3>Tres reglas</h3><ol><li><b>Interpretar:</b> lo que falte se pregunta o se declara como supuesto.</li><li><b>Preguntar al cliente:</b> hasta 3 preguntas por etapa, por escrito.</li><li><b>Cuestionar el encargo:</b> el cliente pide una solución; ustedes deciden si es la correcta.</li></ol></div></div></div>`;
+  case 'guia':return `<div class="sl tight">${br}<h2 class="wide">${s.title}</h2><div class="gsl">${GUIA.map((g,i)=>`<div><span class="n">${i+1}</span><b>${g[0]}</b><em>${g[1]}</em><span class="q">${g[2]}</span></div>`).join('')}</div><p class="sub" style="font-size:1.55cqw;margin-top:auto">${GUIA_CIERRE}</p></div>`;
+  case 'caso1':{const c=CASES[s.ci];return `<div class="sl">${br}<div class="kick">${c.ciudad} · ${c.sector}</div><h2 class="wide">${c.nombre}</h2><div class="cgrid"><div><h3>Cliente</h3><p><b>${c.cliente[0]}</b><br>${c.cliente[1]}</p><h3>Proceso</h3><p>${c.proceso}</p></div><div><h3>La situación</h3><p>${c.contexto}</p></div></div><div class="ask"><span>Lo que pide el cliente</span>${c.encargo}</div></div>`;}
   case 'paso':return `<div class="sl paso">${br}${s.tl?`<div class="ptl">${[['Día 0','buscan a alguien'],['Día 10','se postula'],['Día 19','entrevistas'],['Día 22','le dicen que quedó'],['Día 29','exámenes y papeles'],['Día 41','sigue esperando'],['Días 42–56','capacitación'],['Día 57','empieza a trabajar']].map(([d,t])=>`<span><b>${d}</b>${t}</span>`).join('')}</div>`:''}<span class="badge">${s.kick} · ${s.min} min</span><p class="claim">${s.q}</p><p class="hint">${s.h||'Respondan en el chat'} · respondan en el chat · R para revelar</p>${fbBox('Lo que dice el grupo','Escribe aquí lo que responden…')}<div class="verdict"><span class="tag" style="color:#0b4da2">Respuesta</span><p>${s.a}</p>${s.c?`<p class="crit"><b>Criterio:</b> ${s.c}</p>`:''}</div></div>`;
   case 'read1':{const r=READ[s.idx];return `<div class="sl">${br}<span class="badge">${s.kick} · ${s.min} min</span><p class="readref"><a class="refa" href="${r.link}" target="_blank" rel="noopener">${r.ref}</a> <a class="rbtn inline" href="${r.link}" target="_blank" rel="noopener">${r.lab.startsWith('PDF')?'Abrir PDF':'Abrir lectura'} ↗</a></p><p class="sub" style="font-size:1.7cqw;color:#0b2447"><b>Para qué:</b> ${r.para}</p><div class="rcols"><div><h3>Preguntas guía</h3><ol>${r.qs.map(q=>`<li>${q}</li>`).join('')}</ol></div><div><h3>Conversatorio</h3><p>${r.din}</p></div></div></div>`;}
  }return '';}
