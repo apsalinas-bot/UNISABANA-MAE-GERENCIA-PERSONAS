@@ -504,6 +504,32 @@ details.prep .inner{padding:0 16px 14px;display:flex;flex-direction:column;gap:8
 .sl .rds>div{border-top-color:#f2b91f}
 .sl .bridge{border-left-color:#f2b91f}
 .sl .split>div.hi{border-color:#f2b91f;background:#fffaeb}
+
+/* ===== sesiones 4–6: consultoría, prompts y pesos ===== */
+:root{--cnsl:#0e7c86;--cnsl-soft:#dff3f4}
+.t-cnsl{background:var(--cnsl-soft);color:var(--cnsl)} .sw-cnsl{background:var(--cnsl)}
+.sl .r-cnsl{background:#9fd8dc;color:#06363a}.sl .r-expo{background:#cfe0f6;color:#0b2447}
+.sl .badge.cn{background:#0e7c86;color:#ffffff}
+.sl .spg{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:2.6cqw;margin-top:.4cqw;min-height:0}
+.sl .spg ol.items{font-size:1.55cqw;gap:.75cqw}
+.sl .spside{display:flex;flex-direction:column;gap:1.3cqw}
+.sl .spside .tool{border:1px solid #d5dde9;border-radius:1cqw;padding:1.4cqw 1.6cqw;background:#f3f6fb;display:flex;flex-direction:column;gap:.7cqw;position:relative;z-index:5}
+.sl .spside .tool span{font-family:var(--mono);font-size:1.05cqw;letter-spacing:.1em;text-transform:uppercase;color:#0e7c86}
+.sl .spside .tool b{font-family:var(--display);font-size:2.1cqw;line-height:1.1}
+.sl .spside .tool .rbtn{grid-column:auto;align-self:flex-start;font-size:1.3cqw;padding:.55cqw 1.2cqw}
+.sl .spside .listo{border-left:.4cqw solid #1d7552;background:#e6f4ee;padding:1cqw 1.3cqw;border-radius:0 .8cqw .8cqw 0;font-size:1.35cqw;line-height:1.32;color:#0b2447}
+.sl .spside .listo b{display:block;font-family:var(--mono);font-size:1.05cqw;letter-spacing:.1em;text-transform:uppercase;color:#1d7552;margin-bottom:.3cqw}
+.sl .pbox{flex:1;min-height:0;margin:0;overflow:hidden;border:1px solid #d5dde9;background:#f8fafd;border-radius:1cqw;padding:1.3cqw 1.8cqw;font-family:var(--mono);font-size:1.16cqw;line-height:1.5;white-space:pre-wrap;color:#1c2d4a;-webkit-mask-image:linear-gradient(#000 78%,transparent);mask-image:linear-gradient(#000 78%,transparent)}
+.sl .pact{display:flex;gap:1.4cqw;align-items:center;position:relative;z-index:5}
+.sl .pact .rbtn{grid-column:auto;font-size:1.45cqw;padding:.7cqw 1.6cqw;border:0;cursor:pointer;margin:0}
+.sl .pact small{font-size:1.25cqw;color:#51607a}
+.sl .pesos{display:flex;flex-direction:column;gap:1.3cqw;margin-top:1cqw}
+.sl .prow{display:grid;grid-template-columns:24cqw repeat(3,minmax(0,1fr));gap:2cqw;align-items:center;border-bottom:1px solid #e1e7f0;padding-bottom:1cqw}
+.sl .prow b{font-family:var(--display);font-size:1.9cqw;line-height:1.15}
+.sl .pcell{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.3cqw .8cqw;align-items:center}
+.sl .pcell span{grid-column:1/-1;font-family:var(--mono);font-size:1.05cqw;letter-spacing:.08em;text-transform:uppercase;color:#51607a}
+.sl .ptrk{height:1.4cqw;background:#eef2f8;border-radius:.4cqw;overflow:hidden}.sl .ptrk i{display:block;height:100%;background:#f2b91f}
+.sl .pcell em{font-style:normal;font-family:var(--mono);font-size:1.7cqw;color:#0b2447;font-weight:600}
 </style>
 
 </head>
@@ -660,51 +686,48 @@ const SES=[
  recorte:'Si vas tarde, el simulador puede ser una demo tuya de 5 minutos. La clínica de mapas y el taller de hipótesis no se recortan.'},
 {id:'s4',n:4,fase:'Validación',date:'2026-11-14',dia:'Sábado 14 de noviembre',hora:'8:00 a.m. – 12:00 m.',start:480,titulo:'Validar el diagnóstico',
  pregunta:'¿Qué evidencia sostiene el cuello identificado y qué explicaciones alternativas quedan descartadas?',read:1,
- avance:'Diapositiva 4: validación (explicaciones descartadas y 3–5 estudios evaluados).',
- prep:['Recordar el jueves que creen cuentas gratuitas (Claude o NotebookLM, Consensus o Elicit).','Tener la política y los 20 comentarios del caso listos para la demo.'],
- guion:[[20,'din','Conversatorio: lectura eje de la etapa 2','Semáforo del diagnóstico: cada equipo califica su hipótesis en las cuatro fuentes de evidencia (verde, amarillo, rojo) y decide qué le falta.'],
-  [15,'din','Humano vs. máquina','Una sala codifica a mano 12 comentarios de salida; tú corres el mismo análisis con IA. Comparan qué vio cada uno.'],
-  [10,'expo','Reglas de uso','Nada de datos personales. Prompt de consultor: rol, contexto, tarea, formato y límites.'],
-  [50,'taller','Contraste con IA (equipos)','Le entregan a la IA su caso y su hipótesis; le piden tres explicaciones alternativas y el dato que distinguiría cada una. Con eso anotan lo que les falta para revisarlo conmigo.'],
+ avance:'Diapositiva 4: Ishikawa del cuello, explicaciones descartadas y 3 a 5 estudios evaluados.',tools:['ishikawa','validador'],
+ prep:['Entrar al Ishikawa asistido con tu correo antes de las 8:00 y probar “Sugerir causas”.','Tener listos los dos prompts de la dinámica: se copian desde la diapositiva (botón “Copiar”) o desde Materiales, y se pegan en el chat.','Al iniciar la consultoría, pegar en el chat el enlace del Ishikawa y el del Validador (por si un equipo quiere revisar su etapa 1).','Si el botón de Claude no está configurado, los equipos usan “Copiar prompt” con su propia cuenta de IA.'],
+ guion:[[20,'din','Conversatorio: lectura eje de la etapa 2','Semáforo del diagnóstico: cada equipo califica su hipótesis en las cuatro fuentes de evidencia y anota qué le falta.'],
+  [15,'expo','Avance teórico: validar un diagnóstico','Validar es intentar desmentir. Tres movimientos: abrir las causas (Ishikawa), profundizar (cinco porqués) y triangular y descartar.'],
+  [25,'din','Dinámica guiada: ustedes frente a la máquina','En salas, cada equipo corre dos prompts con los 20 comentarios de salida de Andes Contact y verifica lo que concluye la IA. Revelas lo que debían encontrar.'],
+  [60,'cnsl','Consultoría 1: Ishikawa del cuello','Con el Ishikawa asistido: seis espinas, fuente de evidencia por causa, máximo tres causas raíz con cinco porqués y explicaciones alternativas descartadas.'],
   [15,'pausa','Pausa',''],
-  [15,'expo','Evidencia científica','Cuatro preguntas antes de citar un estudio: diseño, contexto, tamaño del efecto y sesgos.'],
-  [10,'din','Cazador de alucinaciones','Pides en vivo a un chatbot sin búsqueda web 3 referencias; en parejas las verifican.'],
-  [60,'taller','Evidencia para su cuello (equipos)','Pregunta PICO, búsqueda en Consensus o Elicit, 3–5 estudios evaluados con su aplicabilidad.'],
-  [20,'plen','Comentarios entre consultoras','Espacio abierto: quien quiera comparte “creíamos…, la evidencia dice…”. Las otras consultoras comentan o sugieren.'],
+  [70,'cnsl','Consultoría 2: evidencia científica','Pregunta PICO, búsqueda en Consensus, Elicit o Google Scholar y 3 a 5 estudios evaluados con las cuatro preguntas.'],
   [15,'cons','Consultorio','Quince minutos solo para dudas y consultas: sobre el caso, la exposición, la forma de trabajo o la evaluación.'],
-  [10,'plen','Cierre','Avance: diapositiva “Validación”. Respondo las preguntas de la etapa 2 durante la semana.']],
- claves:[['Humano vs. máquina','Busca el comentario 18 (“marqué salario porque era lo más fácil”): ¿lo vio la sala, lo destacó la IA?'],['Cazador de alucinaciones','No prepares el resultado. Si todas las referencias existen, verifica si dicen lo que el chatbot afirma.']],
- recorte:'Si vas tarde, el cazador de alucinaciones puede ser una demo de 5 minutos. La búsqueda de evidencia no se recorta.'},
+  [20,'plen','Comentarios entre consultoras y cierre','Ronda “Creíamos…, la evidencia dice…”. Avance: diapositiva 4. El viernes empieza el rediseño: traer el Ishikawa terminado.']],
+ claves:[['La dinámica la hacen ellos','Tú solo pegas los dos prompts en el chat. Busca en la plenaria si alguien vio el comentario 18 (“marqué salario porque era lo más fácil”) y si la IA citó bien.'],['Consultoría con herramienta','El Ishikawa asistido sugiere causas de su caso y dibuja el diagrama listo para la diapositiva. Tu papel en las salas: preguntar “¿qué dato desmentiría esta causa?”.']],
+ recorte:'Si vas tarde, la revelación de la dinámica baja a 5 minutos. Las dos consultorías no se recortan: son el avance de la diapositiva 4.'},
 {id:'s5',n:5,fase:'Rediseño',date:'2026-11-20',dia:'Viernes 20 de noviembre',hora:'2:00 – 6:00 p.m.',start:840,titulo:'Rediseñar el proceso',
- pregunta:'¿Cómo debe funcionar el proceso para que produzca otros resultados, y qué decisiones no deben automatizarse?',
- avance:'Diapositivas 5 a 7: proceso rediseñado, implementación y métricas.',
- prep:['Asignar el jueves los roles del tribunal (fiscalía, defensa, voz de colaboradores, jurado).','Elegir 4 equipos para la clínica con rúbrica.','Publicar el orden de exposiciones del sábado.'],
- guion:[[20,'din','Rediseño relámpago','En salas, 10 minutos para rediseñar la incorporación de Andes Contact sin presupuesto adicional. Comparan y muestras tu antes y después.'],
-  [10,'expo','Principios de rediseño','Eliminar, combinar, reordenar, simplificar; proteger el cuello; paralelizar; decidir donde está la información.'],
-  [30,'din','¿Automatizamos esta decisión?','Tribunal sobre una IA que descarta candidatos por “riesgo de renuncia”. Fiscalía, defensa y voz de los colaboradores; el jurado decide con condiciones y sale el semáforo de IA.'],
-  [5,'expo','Semáforo de IA','Qué automatizar en un proceso de personas y qué no.'],
+ pregunta:'¿Cómo debe funcionar el proceso para producir otros resultados, y qué mejoras se pueden implementar de verdad?',
+ avance:'Diapositivas 5 a 7: proceso rediseñado, mejoras priorizadas con la matriz de restricciones, implementación y métricas.',tools:['matriz','ishikawa'],
+ prep:['Confirmar los pesos del cliente (inversión, tiempo, personas) en la matriz y en la lámina “Los pesos de cada cliente”: deben ser los mismos.','Probar el modo práctica de la matriz (Andes Contact).','Pedir el jueves que traigan su Ishikawa terminado: la matriz importa sus causas raíz.','Publicar el orden de exposiciones del sábado.'],
+ guion:[[20,'expo','Avance teórico: rediseñar y priorizar','Antes y después de Andes Contact, principios de rediseño, semáforo de IA y cómo se lee la matriz de restricciones. Revelas los pesos de cada cliente.'],
+  [20,'din','Dinámica guiada: matriz relámpago','En salas, cada equipo valora seis mejoras de Andes Contact en la matriz (modo práctica). Revelas dónde quedó el salario +10%.'],
+  [55,'cnsl','Consultoría 1: el proceso futuro','De cada causa raíz, una o dos mejoras que cambien el proceso (ECRS); dibujan el antes y el después.'],
   [15,'pausa','Pausa',''],
-  [70,'taller','Proceso rediseñado (equipos)','Lienzo para su empresa: proceso futuro, qué cambia, responsables, recursos, quién gana y quién pierde, métricas con línea base, meta y plazo.'],
-  [15,'din','Pre-mortem','“Es junio de 2027 y el rediseño fracasó. ¿Por qué?”. Cada equipo ajusta su plan.'],
-  [30,'plen','Comentarios entre consultoras con la rúbrica','Repasamos juntos la rúbrica final. Quien quiera comparte una duda o un avance, y las otras consultoras sugieren qué reforzar antes del sábado.'],
-  [20,'taller','Armado de la exposición','Cada equipo ordena sus 8 diapositivas con todo lo construido y reparte quién expone qué. Así nadie arma la exposición desde cero el viernes en la noche.'],
+  [45,'cnsl','Consultoría 2: matriz de restricciones de su caso','Importan sus causas, valoran sus mejoras en inversión, tiempo y personas con los pesos de su cliente y deciden qué aplica ya, qué va por fases y qué se posterga.'],
+  [40,'cnsl','Consultoría 3: implementación y métricas','Hoja de ruta por fases, responsables, quién gana y quién pierde, tres métricas con línea base, meta y plazo, y pre-mortem.'],
+  [20,'cnsl','Armado de la exposición','Ordenan sus 8 diapositivas con todo lo construido y reparten quién expone qué.'],
   [15,'cons','Consultorio','Quince minutos solo para dudas y consultas: sobre el caso, la exposición, la forma de trabajo o la evaluación.'],
-  [10,'plen','Brief de la exposición y lectura eje de la etapa 3','Formato, orden de presentación y lectura de Kotter para el conversatorio del sábado.']],
- claves:[['Rediseño relámpago','La restricción “sin presupuesto adicional” obliga a rediseñar el proceso en vez de agregar programas.'],['Clínica con la rúbrica','Que califiquen con la rúbrica real una semana antes hace que la entiendan y la usen para mejorar su caso.']],
- recorte:'Si vas tarde, el tribunal puede bajar a 20 minutos (sin réplicas). El armado de la exposición y el consultorio no se recortan.'},
+  [10,'plen','Cierre y lectura eje de la etapa 3','Formato de la exposición, orden de presentación y Kotter para el conversatorio del sábado.']],
+ claves:[['Matriz relámpago','El salario +10% sale con restricción muy alta y no ataca el cuello; la preincorporación y las metas progresivas salen con restricción baja. Es la conclusión de las sesiones 1 a 3, ahora con números.'],['Los pesos los pone el cliente','Revélalos como cliente: cambian el orden de las mejoras. Si un equipo discute un peso, que lo argumente como lo haría ante su cliente.']],
+ recorte:'Si vas tarde, la matriz relámpago puede ser una demo tuya de 8 minutos. La consultoría 2 (matriz de su caso) y el armado no se recortan.'},
 {id:'s6',n:6,fase:'Comité',date:'2026-11-21',dia:'Sábado 21 de noviembre',hora:'8:00 a.m. – 12:00 m.',start:480,titulo:'Exposición final del caso',
  pregunta:'¿El rediseño convence a una dirección exigente?',read:2,
- avance:'Exposición final evaluada con la rúbrica.',
- prep:['Recibir las diapositivas antes de las 7:00 a.m.','Rúbrica impresa o en hoja de cálculo por equipo.','Encuesta de evaluación del curso.'],
+ avance:'Exposición final evaluada con la rúbrica.',tools:['matriz'],
+ prep:['Recibir los borradores antes de las 7:00 a.m. y la versión final antes de las 9:35 a.m.','Rúbrica impresa o en hoja de cálculo por equipo.','Asignar roles para las preguntas: gerencia general, finanzas, voz de los colaboradores.','Encuesta de evaluación del curso.'],
  guion:[[20,'din','Conversatorio: lectura eje de la etapa 3','Cada equipo dice en 1 minuto qué error de Kotter amenaza su implementación y cómo lo evita.'],
-  [5,'plen','Reglas de la exposición','10 minutos de exposición y 5 de preguntas. Recordatorio de la rúbrica.'],
-  [80,'taller','Exposiciones, bloque 1','Evalúas con la rúbrica; los pares preguntan desde un rol de dirección (gerencia general, finanzas, colaboradores).'],
+  [10,'expo','Avance teórico: una exposición que convence','La respuesta primero, el costo de no hacer nada, por qué no lo que pidió el cliente, un plan por fases y cómo se medirá.'],
+  [15,'din','Dinámica guiada: pitch de 60 segundos','Cada equipo resume su caso en un minuto; el grupo responde “me convenció…” o “me faltó…”.'],
+  [35,'cnsl','Consultoría final: ensayo con la rúbrica','Revisan su exposición criterio por criterio, ensayan con cronómetro y preparan respuestas a tres preguntas difíciles.'],
   [15,'pausa','Pausa',''],
-  [70,'taller','Exposiciones, bloque 2','Mismo formato.'],
+  [5,'plen','Reglas de la exposición','10 minutos de exposición y 5 de preguntas. Recordatorio de la rúbrica.'],
+  [100,'taller','Exposiciones','Evalúas con la rúbrica; los pares preguntan desde un rol de dirección (gerencia general, finanzas, colaboradores).'],
   [20,'plen','Retroalimentación general','Lo que más convenció y lo que faltó con más frecuencia. Cinco hábitos de un gerente de personas con mirada de procesos.'],
   [10,'cons','Consultorio final','Dudas sobre la nota, cuándo y cómo recibirán la retroalimentación escrita, y lo que quieran llevar a su organización.'],
-  [20,'plen','Cierre','Carta a mi yo de 90 días y encuesta de evaluación.']],
- claves:[['Preguntas desde un rol','Asigna a cada estudiante un rol de dirección para las preguntas; así nadie se desconecta mientras exponen otros.'],['Tiempos','150 minutos alcanzan para 10 equipos de 15 minutos. Con más equipos: 8 minutos de exposición y 4 de preguntas.']],
+  [10,'plen','Cierre','Carta a mi yo de 90 días y encuesta de evaluación.']],
+ claves:[['Preguntas desde un rol','Asigna a cada estudiante un rol de dirección para las preguntas; así nadie se desconecta mientras exponen otros.'],['Tiempos','100 minutos alcanzan para 5 equipos de 15 minutos más los cambios. Con 4 equipos, usa lo que sobra para preguntas más profundas.']],
  recorte:'Si un equipo se excede, corta a los 10 minutos y pasa a preguntas: el tiempo es parte de la rúbrica.'}
 ];
 
@@ -797,70 +820,174 @@ s3:[
 ],
 s4:[
  {sec:'Conversatorio',k:'cover',kick:'Etapa 2 · Diagnosticar y validar · Sesión 4 · Sábado 14 de noviembre',title:'Validar el diagnóstico',sub:'¿Qué evidencia sostiene el cuello y qué explicaciones alternativas quedan descartadas?'},
- {sec:'Conversatorio',k:'read1',br:'Buenos días. Abrimos con Rousseau y Barends, y con la hipótesis de ayer sobre la mesa.',kick:'Conversatorio · lectura eje de la etapa 2',idx:1,min:20,n:'Semáforo en el tablero: cada equipo califica su hipótesis en las cuatro fuentes y anota qué le falta.'},
- {sec:'Laboratorio',k:'act',br:'Una de las cuatro fuentes es lo que dicen las personas. Veamos qué tan bien la leemos.',kick:'Dinámica',title:'Humano frente a máquina',steps:['Una sala codifica a mano 12 comentarios de salida en 7 minutos','En paralelo, corro el mismo análisis con IA','Comparamos coincidencias, omisiones y exageraciones'],min:15,n:'Busca el comentario 18: “marqué salario porque era lo más fácil”.'},
- {sec:'Laboratorio',k:'list',br:'La IA ayuda si se usa como asistente del consultor, no como oráculo.',title:'Cuatro reglas de uso',items:[['Datos','Nada personal ni confidencial.'],['Prompt','Rol, contexto, tarea, formato y límites: “dime lo que no puedes concluir”.'],['Verificación','Cada afirmación se comprueba en la fuente.'],['Decisión','La IA analiza; el consultor decide.']]},
- {sec:'Taller',k:'act',br:'Úsenla para atacar su propia hipótesis.',kick:'Equipos',title:'Contraste con IA',steps:['Entreguen a la IA el caso y su hipótesis','Pídanle tres explicaciones alternativas y el dato que distinguiría cada una','Decidan cuáles descartan y con qué argumento','Anoten lo que les falta para revisarlo conmigo'],min:50},
+ {sec:'Conversatorio',k:'read1',br:'Buenos días. Abrimos con Rousseau y Barends, y con la hipótesis de ayer sobre la mesa.',kick:'Conversatorio · lectura eje de la etapa 2',idx:1,min:20,n:'Semáforo en el tablero: cada equipo califica su hipótesis en las cuatro fuentes y anota qué le falta. Ese faltante es lo que trabajarán hoy en consultoría.'},
+ {sec:'Teoría',k:'big',br:'De la lectura nos quedamos con una idea para toda la mañana.',kick:'Avance teórico · 15 min',text:'Validar no es buscar lo que confirma la hipótesis: es <em>intentar desmentirla</em> y no lograrlo.',n:'Unos segundos de silencio. Luego: “Hoy lo hacemos en tres movimientos”.'},
+ {sec:'Teoría',k:'list',br:'Para eso, tres movimientos.',title:'Validar un diagnóstico en tres movimientos',items:[['Abrir','Antes de quedarse con una causa, listar todas las posibles: el diagrama de Ishikawa.'],['Profundizar','A las causas más probables, cinco porqués hasta llegar a algo que el proceso controla.'],['Triangular y descartar','Cada causa raíz con al menos dos fuentes de evidencia; cada explicación alternativa, descartada con un dato.']]},
+ {sec:'Teoría',k:'list',br:'El Ishikawa viene de la fábrica. En un proceso de personas, sus seis espinas se ven así.',title:'Las seis espinas en un proceso de personas',items:[['Método y proceso','Pasos, secuencias, esperas y traspasos.'],['Personas y liderazgo','Capacidad, carga y acompañamiento.'],['Gobernanza y decisiones','Quién decide y quién es dueño del proceso.'],['Medición y control','Qué se mide, cuándo y quién lo mira.'],['Sistemas e información','Herramientas y cómo circula la información.'],['Entorno y mercado','Lo que la empresa no controla.']],cls:'two',n:'Las cinco primeras las controla la empresa. Si toda su explicación cae en “entorno”, todavía no encontraron la causa.'},
+ {sec:'Teoría',k:'list',br:'Y para no quedarse en la superficie, cinco porqués. En Andes Contact se ve así.',title:'Cinco porqués, en Andes Contact',items:[['¿Por qué se van?','Porque en las semanas 3 a 6 se sienten solos y presionados.'],['¿Por qué solos?','Porque el supervisor tiene 22 personas y el tutor no está activo.'],['¿Por qué el tutor no está activo?','Porque nadie le liberó tiempo ni se le mide por eso.'],['¿Por qué presionados?','Porque las metas aplican desde la semana 2.'],['¿Por qué desde la semana 2?','Porque el indicador de la campaña no distingue a nuevos de antiguos.']],cls:'tight',n:'El último porqué cae en algo que el proceso controla: una regla de medición. Ahí es donde se rediseña.'},
+ {sec:'Dinámica',k:'act',br:'Practiquemos la validación con una fuente que suele engañar: lo que dicen las personas.',kick:'Dinámica guiada · en salas',title:'Ustedes frente a la máquina',steps:['Abran Claude, ChatGPT o Gemini con su cuenta gratuita','Peguen el prompt 1: ya trae los 20 comentarios de salida de Andes Contact','En la misma conversación, peguen el prompt 2: el consultor escéptico','Verifiquen: ¿citó bien los comentarios? ¿Vio el 18? ¿Qué dice que no se puede concluir?'],min:25,n:'Pega en el chat los dos prompts (siguientes láminas, botón Copiar). Quince minutos en salas y diez en plenaria con la revelación.'},
+ {sec:'Dinámica',k:'prompt',br:'Este es el prompt 1. Se los pego en el chat.',kick:'Prompt 1 · el analista',title:'Agrupar los comentarios de salida',pid:'din1'},
+ {sec:'Dinámica',k:'prompt',br:'Y este es el prompt 2, en la misma conversación.',kick:'Prompt 2 · el consultor escéptico',title:'Que la IA cuestione su propio análisis',pid:'din2'},
+ {sec:'Dinámica',k:'paso',br:'Volvamos a plenaria. ¿Qué encontraron?',kick:'Revelación',q:'Si 38% marcó “salario” en la encuesta, ¿qué dicen los comentarios?',h:'Cada sala, una frase',a:'Solo 3 de 20 comentarios hablan de dinero, y uno de ellos dice que se fue por las metas. Siete hablan de llegar al piso sin apoyo (2, 3, 9, 11, 15, 17 y 19), tres de información incompleta en la entrevista y dos de esperas. El 18 explica la encuesta: “marqué salario porque era lo más fácil”.',c:'La razón declarada no es una causa demostrada. La IA ayuda a ordenar, pero cada cita se verifica en la fuente: eso es validar.',min:10},
+ {sec:'Consultoría 1',k:'sprint',br:'Ahora, su caso. Hagan con su hipótesis lo mismo que hicimos con Andes Contact.',kick:'Consultoría 1 · en equipos',title:'Ishikawa del cuello de botella',tool:'ishikawa',steps:['Cabeza del pescado: el resultado que explica su hipótesis','Seis espinas con al menos dos causas cada una (botón “Sugerir”)','A cada causa, su fuente: dato del caso, voces, estudio, experiencia o supuesto','Máximo tres causas raíz, con sus cinco porqués','Pidan al abogado del diablo tres explicaciones alternativas y descarten con un dato'],listo:'Cada causa raíz tiene al menos una fuente que no es un supuesto, y hay explicaciones descartadas con argumento.',min:60,out:'Diapositiva 4, parte A: Ishikawa y explicaciones descartadas',n:'Pega en el chat el enlace del Ishikawa. Recorre las salas con una sola pregunta: “¿qué dato desmentiría esta causa?”.'},
+ {sec:'Consultoría 1',k:'prompt',br:'Si la herramienta falla o quieren otra mirada, este prompt hace lo mismo con su caso.',kick:'Prompt de respaldo · su caso',title:'Contraste de su hipótesis',pid:'contraste'},
  {sec:'Pausa',k:'brk',min:15},
- {sec:'Evidencia',k:'list',br:'Otra fuente es la científica. Antes de citar un estudio, cuatro preguntas.',title:'Antes de citar un estudio',items:[['Diseño','¿Qué tipo de estudio es? Un metaanálisis no pesa igual que un caso.'],['Contexto','¿Su muestra se parece a nuestra empresa?'],['Efecto','¿Qué tan grande es el cambio que encontró?'],['Sesgos','¿Quién lo financió? ¿Qué limitaciones reconoce?']]},
- {sec:'Evidencia',k:'act',br:'Y una advertencia práctica antes de buscar.',kick:'Dinámica',title:'Cazador de alucinaciones',steps:['Pido en vivo a un chatbot sin búsqueda web tres referencias','En parejas, cinco minutos para verificarlas','¿Existe? ¿Dice lo que el chatbot afirma?'],min:10},
- {sec:'Taller',k:'list',br:'Para buscar bien, primero hay que preguntar bien.',title:'La pregunta PICO',items:[['Población','¿En quiénes?'],['Intervención','¿Qué práctica?'],['Comparación','¿Frente a qué?'],['Resultado','¿Qué cambia?']]},
- {sec:'Taller',k:'act',br:'Busquen evidencia para su cuello de botella.',kick:'Equipos',title:'Evidencia para su diagnóstico',steps:['Formulen su pregunta PICO','Busquen en Consensus o Elicit','Evalúen 3 a 5 estudios: diseño, contexto, efecto y aplicabilidad'],min:60,out:'Diapositiva 4: validación'},
- {sec:'Plenaria',k:'big',br:'Volvamos juntos. Espacio abierto: quien quiera, comparte.',kick:'Comentarios entre consultoras',text:'Creíamos <em>___</em>. La evidencia dice <em>___</em>. En nuestro caso significa <em>___</em>.',sub:'Las otras consultoras pueden comentar o sugerir.',min:20},
+ {sec:'Consultoría 2',k:'list',br:'Volvemos. Su causa raíz necesita una fuente más: la científica. Antes de citar un estudio, cuatro preguntas.',title:'Antes de citar un estudio',items:[['Diseño','¿Qué tipo de estudio es? Un metaanálisis no pesa igual que un caso.'],['Contexto','¿Su muestra se parece a nuestra empresa?'],['Efecto','¿Qué tan grande es el cambio que encontró?'],['Sesgos','¿Quién lo financió? ¿Qué limitaciones reconoce?']]},
+ {sec:'Consultoría 2',k:'list',br:'Y para buscar bien, primero hay que preguntar bien.',title:'La pregunta PICO',items:[['Población','¿En quiénes? Conductores nuevos, auxiliares de enfermería, mandos medios…'],['Intervención','¿Qué práctica? Acompañamiento, turnos previsibles, despliegue estructurado…'],['Comparación','¿Frente a qué? La práctica actual.'],['Resultado','¿Qué cambia? Rotación temprana, tiempo de cobertura, implementación.']]},
+ {sec:'Consultoría 2',k:'sprint',br:'Busquen evidencia para su causa raíz.',kick:'Consultoría 2 · en equipos',title:'Evidencia científica para su diagnóstico',steps:['Formulen su pregunta PICO (el prompt de la siguiente lámina ayuda)','Busquen en Consensus, Elicit o Google Scholar','Evalúen 3 a 5 estudios: diseño, contexto, efecto y sesgos','Completen: creíamos…, la evidencia dice…, en nuestro caso significa…'],listo:'Cada estudio está verificado en la fuente y tiene una línea sobre qué tanto aplica a su empresa.',min:70,out:'Diapositiva 4, parte B: 3 a 5 estudios evaluados',n:'Ninguna referencia sale de un chatbot sin verificar. Consensus y Elicit buscan en bases de artículos reales.'},
+ {sec:'Consultoría 2',k:'prompt',br:'Este prompt les ayuda a preguntar bien. No les da referencias: esas las buscan ustedes.',kick:'Prompt · pregunta PICO',title:'De la causa raíz a la búsqueda',pid:'pico'},
  {sec:'Consultorio',k:'big',br:'Antes de cerrar la etapa, sus dudas y consultas.',kick:'Consultorio',text:'Sus <em>dudas y consultas</em>: sobre el caso, la exposición o la forma de trabajo.',sub:'Micrófono abierto o chat. Las dudas sobre su caso las vemos aquí o mientras los acompaño en sus salas.',min:15},
- {sec:'Cierre',k:'act',br:'Cerramos la segunda etapa.',kick:'Cierre de la etapa 2',title:'Lo que ya tienen',steps:['Un cuello de botella identificado y validado','El viernes empezamos revisando lo que les falte','El viernes empieza la etapa 3: rediseñar y convencer'],min:10}
+ {sec:'Cierre',k:'big',br:'Volvamos juntos. Espacio abierto: quien quiera, comparte.',kick:'Comentarios entre consultoras',text:'Creíamos <em>___</em>. La evidencia dice <em>___</em>. En nuestro caso significa <em>___</em>.',sub:'Las otras consultoras pueden comentar o sugerir.',min:15},
+ {sec:'Cierre',k:'act',br:'Cerramos la segunda etapa.',kick:'Cierre de la etapa 2',title:'Lo que ya tienen',steps:['Un cuello de botella con su Ishikawa y causas raíz validadas','Explicaciones alternativas descartadas y 3 a 5 estudios evaluados','El viernes: rediseño y matriz de restricciones. Traigan su Ishikawa terminado'],min:5}
 ],
 s5:[
- {sec:'Apertura',k:'cover',kick:'Etapa 3 · Rediseñar y convencer · Sesión 5 · Viernes 20 de noviembre',title:'Rediseñar el proceso',sub:'¿Cómo debe funcionar el proceso para producir otros resultados?'},
- {sec:'Apertura',k:'big',br:'Última etapa. Ya saben qué falla y por qué; ahora, cómo debería funcionar.',text:'Etapa 3: <em>rediseñar y convencer</em>.',sub:'Hoy rediseñamos. El sábado lo defienden ante la dirección.'},
- {sec:'Rediseño',k:'act',br:'Calentemos con Andes Contact, con una restricción incómoda.',kick:'En salas',title:'Rediseño relámpago',steps:['Rediseñen la incorporación de Andes Contact','Restricción: sin presupuesto adicional','Diez minutos; luego comparamos'],min:20},
- {sec:'Rediseño',k:'split',br:'Esta es una posibilidad. Compárenla con la suya.',title:'Antes y después',a:{h:'Antes',t:'Dos cohortes de 25 cada quince días. Doce días de espera sin contacto. Supervisor con 22 personas. Metas desde la semana 2.'},b:{h:'Después',t:'Cohortes semanales de 15. Preincorporación durante la espera. Tutor y líder con 12 personas en las primeras seis semanas. Metas desde la semana 5.'},hi:'b'},
- {sec:'Rediseño',k:'list',br:'Detrás de ese rediseño hay principios que sirven para cualquier proceso.',title:'Principios de rediseño',items:[['ECRS','Eliminar, combinar, reordenar, simplificar. En ese orden.'],['Proteger el cuello','Que nunca espere ni haga trabajo innecesario.'],['Paralelizar','Lo que no depende entre sí, en simultáneo.'],['Decidir donde está la información','Quien ve el problema, con autoridad para resolverlo.']]},
- {sec:'Tribunal',k:'big',br:'Uno de esos principios obliga a decidir qué automatizar. Andes Contact tiene una propuesta tentadora.',text:'Una IA que puntúa el <em>riesgo de renuncia</em> de cada candidato y descarta a los de riesgo alto.',sub:'Promete reducir la rotación temprana un 30%.'},
- {sec:'Tribunal',k:'act',br:'Ustedes deciden si se implementa.',kick:'Tribunal',title:'¿Automatizamos esta decisión?',steps:['Fiscalía, defensa y voz de los colaboradores: seis minutos cada uno','Jurado: ocho minutos para decidir, con condiciones','Antecedentes: sesgo aprendido, variables sustitutas, Ley 1581 de 2012'],min:30,n:'Reuters reportó en 2018 que Amazon abandonó una herramienta experimental de selección porque penalizaba hojas de vida asociadas a mujeres. La dirección de residencia puede funcionar como sustituto del estrato.'},
- {sec:'Tribunal',k:'sema',br:'De ese debate sale un criterio práctico para su rediseño.',title:'Qué automatizar en un proceso de personas',items:[['#1d7552','Verde','Sintetizar documentos, agendar, recordar, codificar comentarios.'],['#F2B91F','Amarillo','Priorizar o recomendar, con revisión humana y monitoreo por grupo.'],['#FF7A6B','Rojo','Decidir sola contratar, despedir, ascender o sancionar.']]},
+ {sec:'Apertura',k:'cover',kick:'Etapa 3 · Rediseñar y convencer · Sesión 5 · Viernes 20 de noviembre',title:'Rediseñar el proceso',sub:'¿Cómo debe funcionar el proceso y qué mejoras se pueden implementar de verdad?'},
+ {sec:'Teoría',k:'big',br:'Última etapa. Ya saben qué falla y por qué; ahora, cómo debería funcionar.',kick:'Avance teórico · 20 min',text:'Etapa 3: <em>rediseñar y convencer</em>.',sub:'Hoy rediseñamos y priorizamos. Mañana lo defienden ante la dirección.'},
+ {sec:'Teoría',k:'split',br:'Así se ve un rediseño: no agrega programas, cambia cómo fluye el trabajo.',title:'Antes y después en Andes Contact',a:{h:'Antes',t:'Dos cohortes de 25 cada quince días. Doce días de espera sin contacto. Supervisor con 22 personas. Metas desde la semana 2.'},b:{h:'Después',t:'Cohortes semanales de 15. Preincorporación durante la espera. Tutor y líder con 12 personas en las primeras seis semanas. Metas desde la semana 5.'},hi:'b'},
+ {sec:'Teoría',k:'list',br:'Detrás de ese rediseño hay principios que sirven para cualquier proceso.',title:'Principios de rediseño',items:[['ECRS','Eliminar, combinar, reordenar, simplificar. En ese orden.'],['Proteger el cuello','Que nunca espere ni haga trabajo innecesario.'],['Paralelizar','Lo que no depende entre sí, en simultáneo.'],['Decidir donde está la información','Quien ve el problema, con autoridad para resolverlo.']]},
+ {sec:'Teoría',k:'sema',br:'Si su rediseño usa IA, un criterio práctico.',title:'Qué automatizar en un proceso de personas',items:[['#1d7552','Verde','Sintetizar documentos, agendar, recordar, codificar comentarios.'],['#F2B91F','Amarillo','Priorizar o recomendar, con revisión humana y monitoreo por grupo.'],['#FF7A6B','Rojo','Decidir sola contratar, despedir, ascender o sancionar.']],n:'Ejemplo rápido: una IA que descarta candidatos por “riesgo de renuncia” es roja. Amazon abandonó en 2018 una herramienta experimental de selección por sesgo.'},
+ {sec:'Teoría',k:'list',br:'Pero no todo lo que se puede rediseñar se puede implementar. Para decidir, la matriz de restricciones.',title:'Matriz de restricciones: cómo se lee',items:[['Tres criterios','Inversión, tiempo y personas que exige cada mejora, de 1 (poco) a 5 (mucho).'],['Pesos del cliente','Cada cliente decide cuánto le pesa cada criterio.'],['Puntaje','Valoración por peso, sumada: más alto, más difícil de implementar.'],['Nivel','Intervalos por la regla de Sturges: muy baja, baja, media o muy alta restricción.'],['Decisión','Muy baja o baja: aplicar ya. Media: por fases. Muy alta: postergar o rediseñar.']],cls:'tight'},
+ {sec:'Teoría',k:'pesos',br:'Y como su cliente, estos son los pesos que les doy.',title:'Los pesos de cada cliente',n:'Revélalos como cliente. Si un equipo discute un peso, que lo argumente como lo haría ante su cliente.'},
+ {sec:'Dinámica',k:'sprint',br:'Practiquemos con Andes Contact antes de hacerlo con su empresa.',kick:'Dinámica guiada · en salas',title:'Matriz relámpago',tool:'matriz',steps:['Abran la matriz y activen el modo práctica (Andes Contact)','Hay seis mejoras ya escritas: valoren inversión, tiempo y personas de 1 a 5','Marquen cuáles atacan el cuello de botella','Lean el nivel: ¿cuál aplicarían ya?'],listo:'En diez minutos tienen un orden de mejoras y pueden defenderlo.',min:15,n:'Pega el enlace de la matriz en el chat. Diez minutos en salas, cinco en plenaria.'},
+ {sec:'Dinámica',k:'paso',kick:'Revelación',q:'¿Qué mejora quedó primero y dónde quedó el salario +10%?',h:'Cada sala, su primera mejora',a:'La preincorporación durante la espera y las metas progresivas salen con restricción baja y atacan el cuello. El salario +10% sale con restricción muy alta (COP 3.400 millones al año, toda la planilla) y no toca el cuello.',c:'La matriz no reemplaza el diagnóstico: ordena lo que el diagnóstico ya justificó. Una mejora fácil que no ataca el cuello no cambia el resultado.',min:5},
+ {sec:'Consultoría 1',k:'sprint',br:'Ahora su empresa. Primero, cómo debería funcionar el proceso.',kick:'Consultoría 1 · en equipos',title:'El proceso futuro',steps:['De cada causa raíz de su Ishikawa, una o dos mejoras que cambien el proceso','Apliquen ECRS: ¿qué eliminan, combinan, reordenan o simplifican?','Dibujen el proceso futuro junto al actual: menos esperas, menos traspasos','Marquen dónde usarían IA y con qué color del semáforo'],listo:'Cada mejora responde a una causa raíz validada, y el dibujo muestra qué cambia.',min:55,out:'Diapositiva 5: proceso rediseñado',n:'Pregunta en cada sala: “¿esto cambia el proceso o agrega un programa?”. Plantilla del lienzo en Materiales.'},
  {sec:'Pausa',k:'brk',min:15},
- {sec:'Taller',k:'act',br:'Ahora sí: el rediseño de su empresa.',kick:'Equipos',title:'Lienzo de rediseño',steps:['Proceso futuro y qué cambia frente al actual','Responsables, recursos y quién gana o pierde con el cambio','Métricas: línea base, meta y plazo','Uso de IA, con su color en el semáforo'],min:70,out:'Diapositivas 5 a 7'},
- {sec:'Pre-mortem',k:'big',br:'Antes de enamorarse de su propuesta, imaginemos que fracasó.',kick:'Pre-mortem · en equipos',text:'Es junio de 2027 y <em>su rediseño fracasó</em>. ¿Por qué?',sub:'Tres causas y un ajuste al plan para cada una.',min:15},
- {sec:'Clínica',k:'act',br:'Antes del sábado, miremos juntos la rúbrica.',kick:'Comentarios entre consultoras',title:'¿Qué les falta para el sábado?',steps:['Repasamos la rúbrica final, criterio por criterio','Quien quiera comparte una duda o un avance','Las otras consultoras sugieren qué reforzar'],min:30},
- {sec:'Armado',k:'act',br:'Con la rúbrica en mente, armen su exposición aquí y no el viernes a medianoche.',kick:'Equipos',title:'Armado de la exposición',steps:['Ordenen sus 8 diapositivas con todo lo construido en las cinco sesiones','Repartan quién expone cada parte','Anoten lo que falta y cómo lo cierran esta noche'],min:20,out:'Exposición completa en borrador'},
+ {sec:'Consultoría 2',k:'sprint',br:'Volvemos. ¿Cuáles de esas mejoras se pueden implementar de verdad?',kick:'Consultoría 2 · en equipos',title:'Matriz de restricciones de su caso',tool:'matriz',steps:['Importen sus causas raíz desde el Ishikawa','Escriban la mejora de cada causa (puede haber varias)','Valoren inversión, tiempo y personas de 1 a 5 con la escala de la herramienta','Lean el nivel y decidan: aplicar ya, por fases o postergar','Pidan la revisión del socio (Claude) y ajusten lo que no puedan defender'],listo:'Saben qué mejoras van primero y pueden explicar por qué las otras esperan.',min:45,out:'Diapositiva 5: mejoras priorizadas',n:'Los pesos ya están fijos en la herramienta. Si discuten un peso, que lo argumenten.'},
+ {sec:'Consultoría 3',k:'sprint',br:'Con las mejoras priorizadas, el plan.',kick:'Consultoría 3 · en equipos',title:'Implementación y métricas',steps:['Hoja de ruta: fase 1 (restricción baja), fase 2 (media), fase 3 o descarte (muy alta)','Responsables, recursos y quién gana o pierde con el cambio','Tres métricas (proceso, resultado y experiencia) con línea base, meta y plazo','Pre-mortem: “es junio de 2027 y fracasó, ¿por qué?”, y un ajuste por causa'],listo:'Cada fase tiene responsable y cada métrica tiene línea base, meta y plazo.',min:40,out:'Diapositivas 6 y 7: implementación y métricas'},
+ {sec:'Consultoría 3',k:'prompt',br:'Para el pre-mortem, una mirada externa.',kick:'Prompt · pre-mortem',title:'Que alguien intente tumbar su plan',pid:'premortem'},
+ {sec:'Armado',k:'act',br:'Con todo construido, armen su exposición aquí y no a medianoche.',kick:'Equipos',title:'Armado de la exposición',steps:['Ordenen sus 8 diapositivas con todo lo construido en las cinco sesiones','Repartan quién expone cada parte','Anoten lo que falta y cómo lo cierran esta noche'],min:20,out:'Exposición completa en borrador'},
  {sec:'Consultorio',k:'big',br:'Antes de cerrar, sus dudas sobre la exposición de mañana.',kick:'Consultorio',text:'Sus <em>dudas y consultas</em>: sobre el caso, la exposición o la forma de trabajo.',sub:'Micrófono abierto o chat. Las dudas sobre su caso las vemos aquí o mientras los acompaño en sus salas.',min:15},
- 
- {sec:'Cierre',k:'list',br:'El sábado presentan. Así será.',title:'La exposición final',items:[['Entrega','Diapositivas antes de las 7:00 a.m. del sábado.'],['Tiempo','Diez minutos de exposición y cinco de preguntas.'],['Preguntas','Desde un rol de dirección: gerencia general, finanzas, colaboradores.'],['Evaluación','La rúbrica que ya usaron hoy.']]},
+ {sec:'Cierre',k:'list',br:'Mañana presentan. Así será.',title:'La exposición final',items:[['Entrega','Borrador antes de las 7:00 a.m.; versión final antes de las 9:35 a.m.'],['Tiempo','Diez minutos de exposición y cinco de preguntas.'],['Preguntas','Desde un rol de dirección: gerencia general, finanzas, colaboradores.'],['Evaluación','La rúbrica que ya conocen.']]},
  {sec:'Cierre',k:'read1',br:'Y una última lectura, para no caer en los errores de siempre al implementar.',kick:'Lectura eje de la etapa 3',idx:2,min:5}
 ],
 s6:[
  {sec:'Conversatorio',k:'cover',kick:'Etapa 3 · Rediseñar y convencer · Sesión 6 · Sábado 21 de noviembre',title:'Exposición final del caso',sub:'¿El rediseño convence a una dirección exigente?'},
  {sec:'Conversatorio',k:'read1',br:'Buenos días. Última lectura, último ajuste antes de exponer.',kick:'Conversatorio · lectura eje de la etapa 3',idx:2,min:20,n:'Cada equipo, un minuto: el error de Kotter que amenaza su implementación y cómo lo evita.'},
- {sec:'Reglas',k:'eval',br:'Recordemos las reglas antes de empezar.',title:'Exposición final',n:'Asigna roles para preguntar: gerencia general, finanzas, voz de los colaboradores.'},
- {sec:'Exposiciones',k:'act',br:'Comenzamos.',kick:'Bloque 1',title:'Exposiciones',steps:['Diez minutos de exposición','Cinco minutos de preguntas desde un rol de dirección'],min:80},
+ {sec:'Teoría',k:'list',br:'Antes de exponer, cómo se convence a una dirección.',kick:'Avance teórico · 10 min',title:'Una exposición que convence',items:[['La respuesta primero','La recomendación arriba; después, por qué.'],['El costo de no hacer nada','Un número que la dirección entienda.'],['Lo que pidió el cliente','Y por qué proponen otra cosa, con evidencia.'],['Un plan por fases','Lo que va ya y lo que espera, según su matriz.'],['Cómo sabrán que funcionó','Tres métricas con línea base, meta y plazo.']],cls:'tight',n:'Es el principio de la pirámide (Minto): la conclusión arriba y los argumentos debajo.'},
+ {sec:'Dinámica',k:'act',br:'Probemos si su mensaje se entiende en un minuto.',kick:'Dinámica guiada · plenaria',title:'Pitch de 60 segundos',steps:['Cada equipo, 60 segundos: problema, causa raíz, propuesta y un número','El grupo responde en el chat: “me convenció…” o “me faltó…”','Anoten lo que deben aclarar en la exposición'],min:15},
+ {sec:'Consultoría',k:'sprint',br:'Último espacio de consultoría antes de exponer.',kick:'Consultoría final · en equipos',title:'Ensayo con la rúbrica',steps:['Revisen su exposición contra los seis criterios de la rúbrica','Ensayen con cronómetro: diez minutos exactos','Preparen respuestas a tres preguntas difíciles: finanzas, gerencia y colaboradores','Envíen la versión final antes de las 9:35'],listo:'Cada criterio de la rúbrica tiene una diapositiva que lo responde.',min:35,n:'Pasa por cada sala unos minutos y haz una pregunta difícil desde un rol.'},
+ {sec:'Consultoría',k:'prompt',br:'Si quieren entrenar las preguntas difíciles:',kick:'Prompt · la junta directiva',title:'Que la dirección los ponga a prueba',pid:'junta'},
  {sec:'Pausa',k:'brk',min:15},
- {sec:'Exposiciones',k:'act',br:'Seguimos con el segundo bloque.',kick:'Bloque 2',title:'Exposiciones',steps:['Mismo formato'],min:70},
- {sec:'Síntesis',k:'act',br:'Ya escuchamos a todos. ¿Qué aprendimos como grupo?',kick:'Plenaria',title:'Lo que convenció y lo que faltó',steps:['Lo que más convenció a la dirección','Lo que faltó con más frecuencia','Una pregunta que nadie respondió bien'],min:15},
+ {sec:'Reglas',k:'eval',br:'Recordemos las reglas antes de empezar.',title:'Exposición final',n:'Asigna roles para preguntar: gerencia general, finanzas, voz de los colaboradores.'},
+ {sec:'Exposiciones',k:'act',br:'Comenzamos.',kick:'Exposiciones',title:'Exposiciones',steps:['Diez minutos de exposición','Cinco minutos de preguntas desde un rol de dirección','Un minuto para el cambio de equipo'],min:100,n:'Con 4 equipos sobran unos 35 minutos: úsalos para preguntas más profundas o retroalimentación en vivo.'},
+ {sec:'Síntesis',k:'act',br:'Ya escuchamos a todos. ¿Qué aprendimos como grupo?',kick:'Plenaria',title:'Lo que convenció y lo que faltó',steps:['Lo que más convenció a la dirección','Lo que faltó con más frecuencia','Una pregunta que nadie respondió bien'],min:20},
  {sec:'Síntesis',k:'list',br:'Si tuviera que resumir estas tres semanas en hábitos, serían estos.',title:'Cinco hábitos del gerente de personas con mirada de procesos',items:[['Proceso antes que programa','Pide el mapa antes de aprobar la iniciativa.'],['Busca la fila','Pregunta dónde espera el caso.'],['Declarado no es observado','Contrasta lo que la gente dice con lo que hace.'],['Evidencia antes que moda','Revisa qué dicen los estudios antes de copiar.'],['La IA analiza, tú decides','Nunca delegues una decisión sobre personas.']]},
  {sec:'Síntesis',k:'quote',br:'Y volvemos a donde empezamos:',text:'Gerenciar personas también es diseñar operaciones.',by:'La idea de la primera tarde, tres semanas después'},
  {sec:'Consultorio',k:'big',br:'Antes de despedirnos, sus preguntas: sobre la nota, la retroalimentación o lo que venga.',kick:'Consultorio',text:'Sus <em>dudas y consultas</em>: sobre el caso, la exposición o la forma de trabajo.',sub:'Micrófono abierto o chat. Las dudas sobre su caso las vemos aquí o mientras los acompaño en sus salas.',min:10},
- {sec:'Cierre',k:'act',br:'Una última tarea, solo para ustedes.',kick:'Cierre',title:'Carta a mi yo de 90 días',steps:['¿Qué habrá cambiado en un proceso de mi organización?','¿Qué número lo demostrará?'],min:5},
+ {sec:'Cierre',k:'act',br:'Una última tarea, solo para ustedes.',kick:'Cierre',title:'Carta a mi yo de 90 días',steps:['¿Qué habrá cambiado en un proceso de mi organización?','¿Qué número lo demostrará?'],min:10},
  {sec:'Cierre',k:'cover',kick:'Gracias',title:COURSE,sub:'Mg. Alexis Paúl Salinas Rojas · apsalinas@ucsp.edu.pe'}
 ]};
 
 /* ===== MATERIALES ===== */
-const PROMPTS=[
- ['Analista (voz del colaborador)','Actúa como analista de experiencia del colaborador. Te comparto comentarios de salida (anonimizados) de un proceso de [proceso].\n1) Agrúpalos en máximo 6 temas y define cada uno en una línea.\n2) Cuenta cuántos comentarios caen en cada tema.\n3) Cita textualmente 2 comentarios por tema.\n4) Indica en qué etapa del proceso ocurre cada tema.\nFormato: tabla.'],
- ['Consultor escéptico','Ahora cuestiona tu análisis:\n- ¿Qué temas podrían estar sobrerrepresentados por cómo se recogieron los datos?\n- ¿Qué diferencia hay entre la razón declarada y el patrón que sugieren los comentarios?\n- ¿Qué datos pedirías para confirmar o desmentir la causa principal?\nDime explícitamente qué NO se puede concluir con estos datos.'],
- ['Política frente a realidad','Compara el documento de política con los comentarios. Para cada punto de la política, indica si los comentarios muestran que se cumple, que no se cumple o que no hay información. Cita la fuente de cada afirmación. No infieras lo que no esté escrito.']
-];
+/* Herramientas de consultoría (GitHub Pages). Si cambias el nombre de los repositorios, ajusta aquí. */
+const APPS={
+ validador:{n:'Validador del encargo',e:'Etapa 1',url:'https://apsalinas-bot.github.io/sabana-validador/',p:'Revisa el encargo, la pregunta operacional y el mapa; sugiere aristas y da una visión externa.'},
+ ishikawa:{n:'Ishikawa asistido',e:'Etapa 2',url:'https://apsalinas-bot.github.io/sabana-ishikawa/',p:'Sugiere causas por espina, dibuja el diagrama, marca la evidencia de cada causa y hace de abogado del diablo.'},
+ matriz:{n:'Matriz de restricciones',e:'Etapa 3',url:'https://apsalinas-bot.github.io/sabana-matriz/',p:'Valora cada mejora en inversión, tiempo y personas con los pesos del cliente y dice cuáles aplican.'}
+};
+/* Pesos del cliente para la matriz de restricciones (deben coincidir con los de la herramienta). */
+const PESOS={andes:{n:'Andes Contact (práctica)',inv:40,tie:30,per:30},esp:{n:'Servicios Públicos Montealto',inv:40,tie:35,per:25},transporte:{n:'Transcarga del Valle',inv:25,tie:50,per:25},clinica:{n:'Clínica Oriente Salud',inv:30,tie:25,per:45}};
+const PR={
+ din1:['Prompt 1 · El analista (S4, dinámica)',`Actúa como analista de experiencia del colaborador en una consultora de procesos.
+
+CONTEXTO
+Andes Contact S.A.S. (empresa ficticia, uso académico) es un contact center de Bogotá con 1.400 agentes. El 41% de los nuevos se va antes de 90 días. En la encuesta de salida, el 38% marcó "salario" como razón principal. Abajo van 20 comentarios de salida anonimizados.
+
+TAREA
+1. Agrupa los comentarios en máximo 6 temas y define cada tema en una línea.
+2. Cuenta cuántos comentarios caen en cada tema (uno puede estar en dos temas).
+3. Para cada tema, da el número de 2 comentarios que lo ilustran y cita una frase textual.
+4. Indica en qué etapa de la incorporación ocurre cada tema: reclutamiento, contratación, espera, formación o primeras semanas en piso.
+5. Responde: ¿el salario domina en los comentarios o solo en la encuesta?
+
+FORMATO
+Una tabla con los temas y luego tres conclusiones de una línea.
+
+LÍMITES
+No inventes comentarios ni datos. Si algo no se puede concluir con esta información, dilo.
+
+COMENTARIOS DE SALIDA
+`+VERB.map((v,i)=>String(i+1).padStart(2,'0')+'. '+v).join('\n')],
+ din2:['Prompt 2 · El consultor escéptico (S4, dinámica)',`Ahora actúa como un consultor escéptico que revisa el análisis anterior.
+1. ¿Qué temas podrían estar sobrerrepresentados o subrepresentados por la forma en que se recogieron los datos?
+2. ¿Qué diferencia hay entre la razón declarada en la encuesta ("salario") y el patrón que muestran los comentarios? ¿Qué comentario lo explica mejor?
+3. ¿Qué tres datos le pedirías a la empresa para confirmar o desmentir la causa principal?
+4. Dime explícitamente qué NO se puede concluir con 20 comentarios.
+Sé breve: máximo 12 líneas.`],
+ contraste:['Contraste de la hipótesis (S4, consultoría 1)',`Actúa como socio senior de una consultora de procesos de gestión humana: riguroso, escéptico y concreto.
+
+CONTEXTO
+Nuestro cliente (empresa ficticia, uso académico) es:
+[PEGUEN AQUÍ LA FICHA DE SU CASO]
+
+Nuestra hipótesis del cuello de botella es:
+[PEGUEN AQUÍ SU HIPÓTESIS]
+
+TAREA
+1. Propón 3 explicaciones alternativas a nuestra hipótesis que un directivo podría defender.
+2. Para cada una, el dato que la distinguiría de nuestra hipótesis y dónde conseguirlo: en el caso, preguntándole al cliente o en estudios.
+3. Señala qué parte de nuestra hipótesis se apoya solo en supuestos.
+4. Dinos qué NO se puede concluir con la información del caso.
+
+FORMATO
+Lista numerada; máximo 15 líneas.
+
+LÍMITES
+No inventes datos del caso. No cites estudios: si mencionas alguno, márcalo como "por verificar".`],
+ pico:['Pregunta PICO y búsqueda (S4, consultoría 2)',`Actúa como bibliotecario de investigación en gestión humana.
+
+Nuestra causa raíz es: [ESCRIBAN SU CAUSA RAÍZ]
+La práctica que creemos que la resuelve es: [ESCRIBAN LA PRÁCTICA O MEJORA]
+Población de nuestro caso: [QUIÉNES: conductores, auxiliares de enfermería, mandos medios…]
+
+TAREA
+1. Redacta 2 preguntas PICO (población, intervención, comparación, resultado).
+2. Para cada una, propón 3 cadenas de búsqueda en inglés para Consensus, Elicit o Google Scholar.
+3. Dime qué tipo de estudio pesaría más para responderla (metaanálisis, experimento, cuasiexperimento, estudio de caso) y por qué.
+
+LÍMITES
+No me des referencias ni autores: las buscaremos nosotros en bases reales.`],
+ premortem:['Pre-mortem (S5, consultoría 3)',`Actúa al mismo tiempo como el gerente financiero escéptico de nuestro cliente y como un mando medio que pierde algo con el cambio.
+
+CONTEXTO
+Empresa (ficticia, uso académico): [NOMBRE Y PROCESO]
+Proceso rediseñado: [PEGUEN SU PROCESO FUTURO]
+Mejoras priorizadas y fases: [PEGUEN EL RESUMEN DE SU MATRIZ]
+
+TAREA
+Es junio de 2027 y el rediseño fracasó.
+1. Dame 5 razones plausibles del fracaso, de más a menos probable.
+2. Para cada una: una señal de alerta temprana (un indicador) y un ajuste concreto al plan.
+3. Si alguna razón coincide con uno de los ocho errores de Kotter (1995), nómbralo.
+
+FORMATO
+Lista numerada, máximo 15 líneas. Sin introducción.`],
+ junta:['La junta directiva (S6, consultoría final)',`Actúa como la junta directiva de nuestro cliente (empresa ficticia, uso académico): un gerente general, un gerente financiero y una representante de los colaboradores.
+
+Les vamos a presentar esta propuesta:
+[PEGUEN EL RESUMEN DE SU EXPOSICIÓN: problema, causa raíz, propuesta, fases y métricas]
+
+TAREA
+1. Hagan 2 preguntas difíciles cada uno, desde su rol.
+2. Señalen el punto más débil de la propuesta.
+3. Digan qué número o evidencia los convencería.
+
+No respondan las preguntas: queremos practicar las respuestas nosotros.`]
+};
+const PROMPTS=Object.values(PR);
 const TEMPLATES=[
  ['Ficha del encargo (S1)','FICHA DEL ENCARGO\nEquipo:\nEmpresa asignada:\nProceso:            Empieza en:            Termina en:\nLo que pide el cliente:\nSíntoma (qué se ve y qué sabemos de él):\nPrimera intuición del equipo:\nPregunta operacional: ¿Qué en el proceso de ___ produce ___?\nDudas para revisar con el profesor:'],
  ['Auditoría de una decisión (S1)','AUDITORÍA DE UNA DECISIÓN\n1. La decisión: ¿qué se decidió y quién decidió?\n2. El problema: ¿qué buscaba resolver? ¿Estaba medido?\n3. El supuesto: ¿qué tenía que ser cierto?\n4. La evidencia (verde / amarillo / rojo): organizacional · grupos de interés · científica · experiencial\n5. El faltante: ¿qué dato habría cambiado la decisión?\n6. El proceso: ¿qué proceso estaba detrás?'],
  ['Hipótesis del cuello (S3)','HIPÓTESIS\nCreemos que [resultado] se explica principalmente por [cuello] en [etapa], porque [dato].\nSi es cierto, deberíamos observar [evidencia].\nLo desmentiría encontrar [dato].\nLittle: llegadas por día ___ × días de espera ___ = personas en espera ___\nIndicadores: proceso ___ · resultado ___ · experiencia ___'],
+ ['Ishikawa del cuello (S4, respaldo sin herramienta)','ISHIKAWA DEL CUELLO\nResultado (cabeza del pescado):\nMétodo y proceso:\nPersonas y liderazgo:\nGobernanza y decisiones:\nMedición y control:\nSistemas e información:\nEntorno y mercado:\nFuente de cada causa: dato del caso · voces · estudio · experiencia · supuesto\nCausas raíz (máximo 3) y sus cinco porqués:\nExplicaciones alternativas descartadas y con qué dato:'],
+ ['Matriz de restricciones (S5, respaldo sin herramienta)','MATRIZ DE RESTRICCIONES\nPesos del cliente: inversión __% · tiempo __% · personas __%\nMejora | Causa que ataca | ¿Ataca el cuello? | Inversión 1–5 | Tiempo 1–5 | Personas 1–5 | Puntaje\nPuntaje = inversión × peso + tiempo × peso + personas × peso\nDecisión: aplicar ya · por fases · postergar'],
  ['Lienzo de rediseño (S5)','LIENZO DE REDISEÑO\nProceso actual → proceso futuro:\nPrincipio aplicado (ECRS, proteger el cuello, paralelizar…):\nResponsables y recursos:\nQuién gana y quién pierde con el cambio:\nRiesgos (pre-mortem) y mitigación:\nMétricas: línea base · meta · plazo\nUso de IA y color en el semáforo:']
 ];
 
 /* ===== UTILIDADES ===== */
 const $=(s,el=document)=>el.querySelector(s);
 const fmtT=m=>{const h=Math.floor(m/60),mm=String(m%60).padStart(2,'0');if(h===12&&mm==='00')return'12:00 m.';return((h%12)||12)+':'+mm+' '+(h>=12?'p.m.':'a.m.');};
-const TYPE={expo:'Exposición',din:'Dinámica',taller:'Taller',pausa:'Pausa',plen:'Plenaria',cons:'Consultorio'};
+const TYPE={expo:'Avance teórico',din:'Dinámica',cnsl:'Consultoría',taller:'Taller',pausa:'Pausa',plen:'Plenaria',cons:'Consultorio'};
 const TODAY=(()=>{try{return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Lima',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}catch(e){return new Date().toISOString().slice(0,10);}})();
 function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
 const escH=t=>t.replace(/&/g,'&amp;').replace(/</g,'&lt;');
@@ -940,12 +1067,12 @@ function viewCurso(){
 
   <div class="block"><h2>1. La estructura</h2><p class="lead">Seis sesiones en tres etapas. Cada etapa tiene una lectura que la articula.</p>${stg}</div>
 
-  <div class="block"><h2>2. Cómo es una sesión de cuatro horas</h2><p class="lead">Más de 80% del tiempo trabajan los estudiantes. Siempre hay un consultorio para dudas.</p>
-   <div class="rit-page">${RITMO.map(([n,m,d,t])=>`<div class="rrow"><b>${n}</b><div class="trk"><i class="sw-${t}" style="width:${m}%"></i></div><span class="mono">${m} min</span><small>${d}</small></div>`).join('')}</div></div>
+  <div class="block"><h2>2. Cómo es una sesión de cuatro horas</h2><p class="lead">Desde la sesión 4: un avance teórico breve, una dinámica guiada y el resto es consultoría sobre su caso. Siempre hay un consultorio para dudas.</p>
+   <div class="rit-page">${RITMO.map(([n,m,d,t])=>`<div class="rrow"><b>${n}</b><div class="trk"><i class="sw-${t}" style="width:${Math.round(m/RMAX()*100)}%"></i></div><span class="mono">${m} min</span><small>${d}</small></div>`).join('')}</div></div>
 
   <div class="block"><h2>3. La evaluación</h2>
    <div class="eval"><div style="display:flex;flex-direction:column;gap:10px"><span class="label">Única nota del curso</span><h3>Exposición final del caso de su empresa, evaluada con rúbrica</h3><p class="note">Los avances de cada sesión no se califican: se retroalimentan en clase y se convierten en las diapositivas de la exposición.</p></div>
-    <div class="facts"><div class="fact"><b>Cuándo</b><span>Sábado 21 de noviembre</span></div><div class="fact"><b>Quiénes</b><span>Equipos de 2 a 3, formados el viernes 6</span></div><div class="fact"><b>El caso</b><span>Una empresa colombiana ficticia asignada a cada equipo</span></div><div class="fact"><b>Formato</b><span>10 minutos de exposición + 5 de preguntas; máximo 8 diapositivas</span></div><div class="fact"><b>Entrega</b><span>Diapositivas antes de las 7:00 a.m. del sábado 21</span></div><div class="fact"><b>Escala</b><span>0,0 a 5,0, ponderada por la rúbrica</span></div></div></div>
+    <div class="facts"><div class="fact"><b>Cuándo</b><span>Sábado 21 de noviembre</span></div><div class="fact"><b>Quiénes</b><span>Equipos de 2 a 3, formados el viernes 6</span></div><div class="fact"><b>El caso</b><span>Una empresa colombiana ficticia asignada a cada equipo</span></div><div class="fact"><b>Formato</b><span>10 minutos de exposición + 5 de preguntas; máximo 8 diapositivas</span></div><div class="fact"><b>Entrega</b><span>Borrador antes de las 7:00 a.m. y versión final antes de las 9:35 a.m. del sábado 21</span></div><div class="fact"><b>Escala</b><span>0,0 a 5,0, ponderada por la rúbrica</span></div></div></div>
    <details class="prep"><summary>Ver las 7 partes de la exposición y la rúbrica completa</summary><div class="inner"><div class="tbl-wrap"><table><thead><tr><th>#</th><th>Parte de la exposición</th><th>Se construye en</th></tr></thead><tbody>${PARTS.map((p,i)=>`<tr><td class="num">${i+1}</td><td>${p[0]}</td><td class="num">${p[1]}</td></tr>`).join('')}</tbody></table></div>${rubricTable()}</div></details></div>
 
   <div class="block"><h2>4. Cómo desarrollar su caso</h2><p class="lead">${GUIA_INTRO}</p>${guiaHTML()}<p class="note">${GUIA_CIERRE}</p></div>
@@ -967,11 +1094,12 @@ function viewSesion(s){
   return `<section class="view">
    <div class="s-head">
     <div class="s-title"><span class="label">Etapa ${e.n} · ${e.nombre} · Sesión ${s.n} de 6 · ${s.dia} · ${s.hora}${td?' · <span style="color:var(--signal)">Hoy</span>':''}</span><h1>${s.titulo}</h1><p class="q">${s.pregunta}</p><button class="btn" data-present="${s.id}">▶ Presentar (${DECKS[s.id].length} diapositivas)</button></div>
-    <div class="s-side"><div class="box ok"><span class="label">Avance de su caso en esta sesión</span><p>${s.avance}</p>${g.length?`<p class="note">${g.map(x=>`<b>${x[0]}:</b> ${x[2]}`).join('<br>')}</p>`:''}</div>${rbox}</div>
+    <div class="s-side"><div class="box ok"><span class="label">Avance de su caso en esta sesión</span><p>${s.avance}</p>${g.length?`<p class="note">${g.map(x=>`<b>${x[0]}:</b> ${x[2]}`).join('<br>')}</p>`:''}</div>${rbox}${toolsBox(s)}</div>
    </div>
    <div class="block"><h2>Agenda</h2><div class="ribbon" aria-hidden="true">${ribbon}</div><div class="legend">${Object.entries(TYPE).map(([k,v])=>`<span><i class="sw-${k}"></i>${v}</span>`).join('')}</div><div class="guion">${rows}</div></div>
   </section>`;}
 
+function toolsBox(s){if(!s.tools||!s.tools.length)return '';return `<div class="box"><span class="label">Herramientas de consultoría de hoy</span>${s.tools.map(t=>`<a href="${APPS[t].url}" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600">${APPS[t].e} · ${APPS[t].n} ↗</a>`).join('')}<p class="note">Pega estos enlaces en el chat al iniciar la consultoría.</p></div>`;}
 function guiaHTML(){return `<div class="guia">${GUIA.map((g,i)=>`<div class="gstep"><span class="gn">${i+1}</span><div><div class="gh"><b>${g[0]}</b><span class="mono">${g[1]}</span></div><p class="gq">${g[2]}</p><p class="gok">${g[3]}</p></div></div>`).join('')}</div>`;}
 function viewEmpresas(){
   return `<section class="view">
@@ -1013,7 +1141,8 @@ function viewCaso(){
 function viewKit(){return `<section class="view">
   <div class="block"><h2>Lecturas eje</h2><div class="grid3">${READ.map((r,i)=>`<div class="card"><span class="label">Etapa ${i+1} · ${r.cuando.split(' · ')[1]}</span><p>${r.ref}</p><p class="muted">${r.para}</p>${readLink(r)}</div>`).join('')}</div></div>
   <div class="block"><h2>Plantillas</h2><p class="lead">Texto plano para pegar en el chat, el tablero o un documento compartido.</p><div class="grid2">${TEMPLATES.map(([t,p],i)=>copyBox(t,p,'t'+i)).join('')}</div></div>
-  <div class="block"><h2>Prompts (sesión 4)</h2><div class="grid2">${PROMPTS.map(([t,p],i)=>copyBox(t,p,'p'+i)).join('')}</div></div>
+  <div class="block"><h2>Herramientas de consultoría</h2><p class="lead">Una por etapa. Los estudiantes entran con su correo de La Sabana; el trabajo se guarda por equipo.</p><div class="grid3">${Object.values(APPS).map(a=>`<div class="card"><span class="label">${a.e}</span><h3>${a.n}</h3><p class="muted">${a.p}</p><a href="${a.url}" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;font-size:13.5px">Abrir ↗</a></div>`).join('')}</div></div>
+  <div class="block"><h2>Prompts de las sesiones 4 a 6</h2><p class="lead">Para pegar en el chat. Los de la dinámica traen los datos incluidos; los de consultoría tienen espacios en mayúsculas para su caso.</p><div class="grid2">${PROMPTS.map(([t,p],i)=>copyBox(t,p,'p'+i)).join('')}</div></div>
   <div class="block"><h2>Atajos del modo presentación</h2><div class="tbl-wrap"><table><tbody><tr><td class="num">← → Espacio</td><td>Anterior y siguiente (o toca los bordes)</td></tr><tr><td class="num">R</td><td>Revelar respuesta</td></tr><tr><td class="num">T</td><td>Cronómetro de la dinámica</td></tr><tr><td class="num">N</td><td>Tus notas</td></tr><tr><td class="num">F</td><td>Pantalla completa</td></tr><tr><td class="num">Esc</td><td>Salir</td></tr></tbody></table></div></div>
  </section>`;}
 
@@ -1031,7 +1160,8 @@ window.addEventListener('hashchange',route);
 
 /* ===== MODO PRESENTACIÓN ===== */
 const deck=$('#deck'),stage=$('#stage');let D={id:null,i:0,timer:null,left:0,run:false};
-const RITMO=[['Apertura',20,'Dinámica o conversatorio','din'],['Caso y discusión',40,'Se discute, no se expone','din'],['Pausa',15,'','pausa'],['Taller en equipos',95,'Avanzan su empresa','taller'],['Plenaria',35,'Lo que se repite','plen'],['Consultorio',15,'Sus dudas','cons'],['Cierre',20,'Siguiente paso','plen']];
+const RITMO=[['Apertura',20,'Conversatorio de la lectura o encuadre','din'],['Avance teórico',15,'Lo justo para el paso de hoy','expo'],['Dinámica guiada',25,'Práctica breve y guiada','din'],['Pausa',15,'','pausa'],['Consultoría',130,'Avanzan su caso con las herramientas','cnsl'],['Consultorio',15,'Sus dudas','cons'],['Cierre',20,'Comentarios y siguiente paso','plen']];
+const RMAX=()=>Math.max(...RITMO.map(r=>r[1]));
 const itemsHTML=(items,cls)=>`<ol class="items ${cls||''}">${items.map((it,i)=>`<li data-n="${String(i+1).padStart(2,'0')}"><span>${Array.isArray(it)?`<b>${it[0]}.</b> <span class="t">${it[1]}</span>`:it}</span></li>`).join('')}</ol>`;
 const yr=r=>r.ref.match(/\((\d{4})\)/)[1];
 const fbKey=()=>`fb-${D.id}-${D.i}`;
@@ -1055,7 +1185,7 @@ function slideHTML(s){const k=s.kick?`<div class="kick">${s.kick}</div>`:'',br=s
   case 'sema':return `<div class="sl">${br}<h2>${s.title}</h2><div class="sema">${s.items.map(([c,a,b])=>`<div><i style="background:${c}"></i><b>${a}</b><span>${b}</span></div>`).join('')}</div></div>`;
   case 'sim':return `<div class="sl">${br}${k}<h2>${s.title}</h2><div class="simwrap sim">${simHTML('sd')}</div></div>`;
   case 'etapas':return `<div class="sl stgsl">${br}<h2 class="wide">${s.title}</h2><div class="stg">${ETAPAS.map(e=>{const r=READ[e.read],a=SES.find(q=>q.id===e.ses[0]),b=SES.find(q=>q.id===e.ses[1]);return `<div><span>Etapa ${e.n}</span><h3>${e.nombre}</h3><ol class="flow"><li><b>Vie ${a.date.slice(8)}</b>Sesión ${a.n} · ${a.fase}</li><li class="rd"><b>Lectura</b><span class="rt">${r.au} (${yr(r)})</span><small>${r.para}</small><a class="rbtn" href="${r.link}" target="_blank" rel="noopener">${r.lab.startsWith('PDF')?'Abrir PDF':'Abrir lectura'} ↗</a></li><li><b>Sáb ${b.date.slice(8)}</b>Conversatorio + Sesión ${b.n} · ${b.fase}</li></ol></div>`;}).join('')}</div></div>`;
-  case 'ritmo':return `<div class="sl">${br}<h2>${s.title}</h2><div class="rit">${RITMO.map(([n,m,d,t])=>`<div class="rrow"><b>${n}</b><div class="trk"><i class="r-${t}" style="width:${m}%"></i></div><span>${m} min</span><small>${d}</small></div>`).join('')}</div><p class="sub" style="margin-top:1.5cqw">Más de 80% del tiempo trabajan ustedes.</p></div>`;
+  case 'ritmo':return `<div class="sl">${br}<h2>${s.title}</h2><div class="rit">${RITMO.map(([n,m,d,t])=>`<div class="rrow"><b>${n}</b><div class="trk"><i class="r-${t}" style="width:${Math.round(m/RMAX()*100)}%"></i></div><span>${m} min</span><small>${d}</small></div>`).join('')}</div><p class="sub" style="margin-top:1.5cqw">Más de 80% del tiempo trabajan ustedes.</p></div>`;
   case 'reads':return `<div class="sl">${br}<h2>${s.title}</h2><div class="rds">${READ.map((r,i)=>`<div><span>Etapa ${i+1} · conversatorio el sábado ${SES.find(q=>q.id===ETAPAS[i].ses[1]).date.slice(8)}</span><h3>${r.au} (${yr(r)})</h3><p>${r.tit}</p><small>${r.por}</small></div>`).join('')}</div><p class="sub" style="margin-top:1.5cqw">Se entrega el viernes que abre la etapa · 20 minutos de conversatorio al inicio del sábado · sin control de lectura.</p></div>`;
   case 'parts':return `<div class="sl tight">${br}<h2>${s.title}</h2><ol class="items">${PARTS.map((p,i)=>`<li data-n="${String(i+1).padStart(2,'0')}"><span><b>${p[0]}</b> <span class="t" style="font-family:var(--mono);font-size:1.3cqw;color:#0b4da2">· ${p[1]}</span></span></li>`).join('')}</ol></div>`;
   case 'eval':return `<div class="sl">${br}<h2>${s.title}</h2><div class="rcols"><div><h3>Qué presentan</h3><ol><li>Sábado 21, en equipos de 2 a 3</li><li>10 minutos de exposición y 5 de preguntas</li><li>Máximo 8 diapositivas</li><li>Nota de 0,0 a 5,0; los avances no se califican</li></ol></div><div><h3>Rúbrica</h3><div class="rw">${RUBRIC.map(([c,w])=>`<div><b>${w}%</b><span>${c}</span></div>`).join('')}</div></div></div></div>`;
@@ -1063,6 +1193,9 @@ function slideHTML(s){const k=s.kick?`<div class="kick">${s.kick}</div>`:'',br=s
   case 'guia':return `<div class="sl tight">${br}<h2 class="wide">${s.title}</h2><div class="gsl">${GUIA.map((g,i)=>`<div><span class="n">${i+1}</span><b>${g[0]}</b><em>${g[1]}</em><span class="q">${g[2]}</span></div>`).join('')}</div><p class="sub" style="font-size:1.55cqw;margin-top:auto">${GUIA_CIERRE}</p></div>`;
   case 'caso1':{const c=CASES[s.ci];return `<div class="sl">${br}<div class="kick">${c.ciudad} · ${c.sector}</div><h2 class="wide">${c.nombre}</h2><div class="cgrid"><div><h3>Cliente</h3><p><b>${c.cliente[0]}</b><br>${c.cliente[1]}</p><h3>Proceso</h3><p>${c.proceso}</p></div><div><h3>La situación</h3><p>${c.contexto}</p></div></div><div class="ask"><span>Lo que pide el cliente</span>${c.encargo}</div></div>`;}
   case 'paso':return `<div class="sl paso">${br}${s.tl?`<div class="ptl">${[['Día 0','buscan a alguien'],['Día 10','se postula'],['Día 19','entrevistas'],['Día 22','le dicen que quedó'],['Día 29','exámenes y papeles'],['Día 41','sigue esperando'],['Días 42–56','capacitación'],['Día 57','empieza a trabajar']].map(([d,t])=>`<span><b>${d}</b>${t}</span>`).join('')}</div>`:''}<span class="badge">${s.kick} · ${s.min} min</span><p class="claim">${s.q}</p><p class="hint">${s.h||'Respondan en el chat'} · respondan en el chat · R para revelar</p>${fbBox('Lo que dice el grupo','Escribe aquí lo que responden…')}<div class="verdict"><span class="tag" style="color:#0b4da2">Respuesta</span><p>${s.a}</p>${s.c?`<p class="crit"><b>Criterio:</b> ${s.c}</p>`:''}</div></div>`;
+  case 'sprint':{const a=s.tool?APPS[s.tool]:null;return `<div class="sl">${br}<span class="badge${/Dinámica/.test(s.kick)?'':' cn'}">${s.kick} · ${s.min} min</span><h2 class="wide">${s.title}</h2><div class="spg"><div>${itemsHTML(s.steps)}</div><div class="spside">${a?`<div class="tool"><span>${a.e} · herramienta</span><b>${a.n}</b><a class="rbtn" href="${a.url}" target="_blank" rel="noopener">Abrir la herramienta ↗</a></div>`:''}${s.listo?`<div class="listo"><b>Listo cuando</b>${s.listo}</div>`:''}</div></div>${s.out?`<div class="outbox"><b>Avance:</b> ${s.out}</div>`:''}</div>`;}
+  case 'prompt':{const p=PR[s.pid];return `<div class="sl">${br}<span class="badge">${s.kick}</span><h2 class="wide">${s.title}</h2><pre class="pbox">${escT(p[1])}</pre><div class="pact"><button class="rbtn" data-pcopy="${s.pid}">Copiar prompt completo</button><small>Pégalo en el chat de la sesión. Funciona en Claude, ChatGPT o Gemini.</small></div></div>`;}
+  case 'pesos':return `<div class="sl">${br}<h2>${s.title}</h2><div class="pesos">${Object.entries(PESOS).map(([id,p])=>`<div class="prow"><b>${p.n}</b>${[['inv','Inversión'],['tie','Tiempo'],['per','Personas']].map(([x,l])=>`<div class="pcell"><span>${l}</span><div class="ptrk"><i style="width:${p[x]}%"></i></div><em>${p[x]}%</em></div>`).join('')}</div>`).join('')}</div><p class="note2" style="margin-top:auto">Los fija el cliente y suman 100%. Ya están cargados en la matriz de restricciones.</p></div>`;
   case 'read1':{const r=READ[s.idx];return `<div class="sl">${br}<span class="badge">${s.kick} · ${s.min} min</span><p class="readref"><a class="refa" href="${r.link}" target="_blank" rel="noopener">${r.ref}</a> <a class="rbtn inline" href="${r.link}" target="_blank" rel="noopener">${r.lab.startsWith('PDF')?'Abrir PDF':'Abrir lectura'} ↗</a></p><p class="sub" style="font-size:1.7cqw;color:#0b2447"><b>Para qué:</b> ${r.para}</p><div class="rcols"><div><h3>Preguntas guía</h3><ol>${r.qs.map(q=>`<li>${q}</li>`).join('')}</ol></div><div><h3>Conversatorio</h3><p>${r.din}</p></div></div></div>`;}
  }return '';}
 const fmtClock=sec=>{const n=sec<0;sec=Math.abs(sec);return(n?'−':'')+Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');};
@@ -1084,7 +1217,7 @@ function openDeck(id){D.id=id;const v=parseInt(store('deck-'+id)||'0',10);D.i=is
 function closeDeck(){stopTimer();deck.hidden=true;document.body.style.overflow='';if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});}
 function toggleNotes(){const b=$('#dNotesBox');b.hidden=!b.hidden;deck.classList.toggle('notes-open',!b.hidden);}
 function toggleFull(){try{if(document.fullscreenElement)document.exitFullscreen();else deck.requestFullscreen().catch(()=>{});}catch(e){}}
-stage.addEventListener('click',e=>{const z=e.target.closest('[data-nav]');if(z)go(+z.dataset.nav);});
+stage.addEventListener('click',e=>{const pc=e.target.closest('[data-pcopy]');if(pc){e.stopPropagation();const t=PR[pc.dataset.pcopy][1];(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{pc.textContent='Copiado ✓';setTimeout(()=>pc.textContent='Copiar prompt completo',1800);}).catch(()=>{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');pc.textContent='Copiado ✓';}catch(x){pc.textContent='No se pudo copiar';}ta.remove();});return;}const z=e.target.closest('[data-nav]');if(z)go(+z.dataset.nav);});
 $('#dPrev').onclick=()=>go(-1);$('#dNext').onclick=()=>go(1);$('#dRev').onclick=()=>stage.classList.toggle('rev');$('#dTimer').onclick=toggleTimer;$('#dNotes').onclick=toggleNotes;$('#dFull').onclick=toggleFull;$('#dClose').onclick=closeDeck;
 document.addEventListener('keydown',e=>{if(deck.hidden)return;if(e.target.matches('input,textarea,[contenteditable]')){if(e.key==='Escape')e.target.blur();return;}
   const k=e.key.toLowerCase();if(k==='arrowright'||k===' '||k==='pagedown'){e.preventDefault();go(1);}else if(k==='arrowleft'||k==='pageup'){e.preventDefault();go(-1);}
