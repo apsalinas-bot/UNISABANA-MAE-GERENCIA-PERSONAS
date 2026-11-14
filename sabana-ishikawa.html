@@ -370,17 +370,17 @@ const uid=()=>Math.random().toString(36).slice(2,9);
 const APP={
  id:'ishikawa',title:'Ishikawa asistido',stage:'Etapa 2',
  intro:'Abran todas las causas posibles de su problema, marquen con qué evidencia sostienen cada una y quédense con las causas raíz que resisten el intento de desmentirlas.',
- fresh(c){return {efecto:CASES[c].efecto,hip:'',causas:[],ai:{}};},
+ fresh(c){return {efecto:'',hip:'',causas:[],ai:{}};},
  brief(d){const c=d.causas||[];return `${c.length} causas · ${c.filter(x=>x.st==='raiz').length} raíz · ${c.filter(x=>x.st==='descartada').length} descartadas`;},
  render(){const c=curCase();return `
   <div class="card"><span class="label">${esc(c.n)} · cliente: ${esc(c.cliente)}</span><h2><span class="n">01</span>La cabeza del pescado</h2>
-   <p class="lead">El resultado que su hipótesis del cuello de botella quiere explicar. Que se pueda medir.</p>
-   <div class="grid2"><label class="f">Resultado (efecto)<textarea data-k="efecto" rows="2">${esc(ST.efecto)}</textarea></label>
+   <p class="lead">Escriban su problema (el resultado que quieren explicar, con un dato) y su hipótesis. Las sugerencias de causas salen de lo que escriban aquí.</p>
+   <div class="grid2"><label class="f">Problema (efecto)<textarea data-k="efecto" rows="2" placeholder="Ej.: cubrir una vacante de conductor toma casi dos meses">${esc(ST.efecto)}</textarea></label>
    <label class="f">Su hipótesis del cuello (sesión 3)<textarea data-k="hip" rows="2" placeholder="Creemos que [resultado] se explica principalmente por [cuello] en [etapa], porque [dato].">${esc(ST.hip)}</textarea></label></div></div>
 
   <div class="card"><h2><span class="n">02</span>Las seis espinas</h2>
-   <p class="lead">Al menos dos causas por espina. “Sugerir del caso” trae causas posibles: revísenlas, edítenlas o bórrenlas. A cada causa, su fuente de evidencia y su estado.</p>
-   <div class="row"><button class="btn gold sm" data-allbank>Sugerir del caso en las seis espinas</button><span class="note">Las sugerencias son hipótesis, no conclusiones.</span></div>
+   <p class="lead">Al menos dos causas por espina. “Sugerir” propone causas a partir de su problema y su hipótesis: revísenlas, edítenlas o bórrenlas. A cada causa, su fuente de evidencia y su estado.</p>
+   <div class="row"><button class="btn gold sm" data-allbank>Sugerir causas en las seis espinas</button><span class="note">Las sugerencias son hipótesis, no conclusiones.</span></div>
    <div class="grid2">${CATS.map(([k,n,d])=>this.catCard(k,n,d)).join('')}</div>
    ${aiBox('sug')}</div>
 
@@ -389,15 +389,12 @@ const APP={
    <div class="row"><button class="btn sm" data-png>Descargar PNG</button><button class="btn ghost sm" data-svg>Descargar SVG</button>
    <span class="note"><span class="dot d-g"></span> fuente sólida · <span class="dot d-y"></span> fuente parcial · <span class="dot d-r"></span> supuesto · <span class="dot d-n"></span> sin fuente · texto en negrita: causa raíz</span></div></div>
 
-  <div class="card"><h2><span class="n">04</span>Causas raíz: cinco porqués</h2>
-   <p class="lead">Máximo tres causas raíz. Pregunten “¿por qué?” hasta llegar a algo que el proceso controla, y escriban qué dato las desmentiría.</p>
-   ${this.whys()}</div>
 
-  <div class="card"><h2><span class="n">05</span>Validación</h2>
+  <div class="card"><h2><span class="n">04</span>Validación</h2>
    <div class="grid2"><div><span class="label">Estado de la evidencia</span><div class="chk" id="valid" style="margin-top:8px"></div></div>
    <div>${aiBox('diablo')}</div></div></div>
 
-  <div class="card"><h2><span class="n">06</span>Para su diapositiva 4</h2>
+  <div class="card"><h2><span class="n">05</span>Para su diapositiva 4</h2>
    <p class="lead">Resumen listo para copiar. Sus causas pasan solas a la matriz de restricciones, donde escriben la mejora y la valoran.</p>
    <pre id="sum" style="white-space:pre-wrap;font:13px/1.55 var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;margin:0;max-height:320px;overflow:auto"></pre>
    <div class="row"><button class="btn sm" data-copysum>Copiar resumen</button></div></div>`;},
@@ -408,41 +405,55 @@ const APP={
      <div class="row" style="gap:6px;flex-wrap:nowrap"><select data-k="causas.${i}.ev" data-rerender style="flex:1;font-size:13px;padding:6px 8px">${EV.map(e=>`<option value="${e[0]}"${(x.ev||'')===e[0]?' selected':''}>${e[1]}</option>`).join('')}</select>
      <select data-k="causas.${i}.st" data-rerender style="flex:1;font-size:13px;padding:6px 8px">${Object.entries(STN).map(([v,l])=>`<option value="${v}"${x.st===v?' selected':''}>${l}</option>`).join('')}</select></div>
      ${x.st==='descartada'?`<input type="text" data-k="causas.${i}.nota" value="${esc(x.nota||'')}" placeholder="Descartada porque… (el dato que la descarta)" style="font-size:13px">`:''}
-     ${x.src!=='eq'?`<span class="note" style="font-size:11.5px">${x.src==='ia'?'Sugerida por IA':'Sugerida del caso'}: revísenla</span>`:''}</div>`;}).join('')}
+     ${x.src!=='eq'?`<span class="note" style="font-size:11.5px">${x.src==='ia'?'Sugerida por IA':'Sugerida'}: revísenla</span>`:''}</div>`;}).join('')}
    <div class="row" style="flex-wrap:nowrap"><input type="text" id="add-${k}" placeholder="Nueva causa…" data-addk="${k}"><button class="btn sm ghost" data-add="${k}">Agregar</button></div>
-   <button class="link" data-bank="${k}" style="align-self:flex-start">Sugerir del caso</button></div>`;},
- whys(){const r=ST.causas.filter(x=>x.st==='raiz');if(!r.length)return `<p class="note">Todavía no hay causas raíz. En la sección 2, cambien el estado de una causa a “Causa raíz probable”.</p>`;
-   return `${r.length>3?`<p class="err">Tienen ${r.length} causas raíz. Quédense con máximo tres: las demás pueden seguir abiertas.</p>`:''}<div class="grid${r.length>1?'3':'2'}">${r.map(x=>{const i=ST.causas.indexOf(x);x.w=x.w||['','','','',''];return `<div class="card" style="padding:14px;gap:8px;border-color:var(--gold)"><span class="label">${CATN[x.cat]}</span><b style="font-family:var(--display);font-size:16px">${esc(x.t)}</b>
-     ${x.w.map((w,j)=>`<label class="f">¿Por qué? ${j+1}<input type="text" data-k="causas.${i}.w.${j}" value="${esc(w)}"></label>`).join('')}
-     <label class="f">¿Qué dato la desmentiría?<input type="text" data-k="causas.${i}.nota" value="${esc(x.nota||'')}"></label></div>`;}).join('')}</div>`;},
+   <button class="link" data-bank="${k}" style="align-self:flex-start">Sugerir en esta espina</button></div>`;},
  live(){const f=$('#fishbox');if(f)f.innerHTML=fishSVG();const v=$('#valid');if(v)v.innerHTML=checks().map(([c,t,s])=>`<div><span class="dot d-${c}"></span><span>${t}${s?`<small>${s}</small>`:''}</span></div>`).join('');const s=$('#sum');if(s)s.textContent=summary();},
  click(b){
    if(b.dataset.add){const k=b.dataset.add,i=$('#add-'+k);if(!i.value.trim())return;ST.causas.push({id:uid(),cat:k,t:i.value.trim(),src:'eq',ev:'',st:'abierta'});save();route();setTimeout(()=>$('#add-'+k)?.focus(),0);return;}
    if(b.dataset.del){ST.causas=ST.causas.filter(x=>x.id!==b.dataset.del);save();route();return;}
    if(b.dataset.bank){addBank(b.dataset.bank);return;}
-   if(b.dataset.allbank!==undefined){CATS.forEach(c=>addBank(c[0],true));route();toast('Causas sugeridas agregadas: revísenlas');return;}
+   if(b.dataset.allbank!==undefined){if(!(ST.efecto||'').trim()&&!(ST.hip||'').trim())return toast('Escriban primero su problema y su hipótesis (sección 01)');let n=0;CATS.forEach(c=>{n+=addBank(c[0],true);});route();toast(n?`${n} causas sugeridas a partir de su problema e hipótesis: revísenlas`:'Ya tienen todas las sugerencias');return;}
    if(b.dataset.png!==undefined)return svgPng($('#fishbox svg'),'ishikawa-'+teamKey()+'.png');
    if(b.dataset.svg!==undefined)return svgFile($('#fishbox svg'),'ishikawa-'+teamKey()+'.svg');
    if(b.dataset.copysum!==undefined)return copyTxt(summary());
  }
 };
 document.addEventListener('keydown',e=>{const k=e.target.dataset&&e.target.dataset.addk;if(k&&e.key==='Enter'){e.preventDefault();$(`[data-add="${k}"]`).click();}});
-function addBank(k,quiet){const have=new Set(ST.causas.map(x=>x.t.toLowerCase()));const add=(curCase().causas[k]||[]).filter(t=>!have.has(t.toLowerCase()));
-  add.forEach(t=>ST.causas.push({id:uid(),cat:k,t,src:'banco',ev:'',st:'abierta'}));save();if(!quiet){route();toast(add.length?`${add.length} causa(s) sugerida(s)`:'Ya tienen todas las sugerencias del caso');}}
+/* ---- Sugerencias a partir del problema y la hipótesis del equipo (no del caso) ---- */
+const TEMAS=[
+ [/esper|demor|tard|lent|retras|d[ií]as|semanas|meses|cobertura|vacante|cubrir/i,{metodo:['Etapas en secuencia que podrían ir en paralelo','Esperas entre etapas sin un responsable'],medicion:['No se mide cuánto dura cada etapa'],sistemas:['Nadie ve en qué etapa está cada caso'],gobierno:['Nadie es dueño del tiempo total del proceso']}],
+ [/rotaci|se va|se van|renunc|retir|abandon|salida|permanen|deserci|fuga/i,{personas:['Acompañamiento insuficiente en las primeras semanas'],metodo:['Inducción genérica, no adaptada al puesto'],medicion:['No se analiza cuándo y por qué se van'],entorno:['Ofertas de otras empresas durante el proceso']}],
+ [/selecci|reclut|contrat|aspirant|candidat|vincul|postul|conductor/i,{metodo:['Pruebas o trámites que se repiten','El candidato hace demasiados traslados'],personas:['Pocas personas para el volumen de selección'],sistemas:['El candidato no sabe en qué etapa va'],gobierno:['Proveedores externos sin acuerdo de tiempos']}],
+ [/turno|horari|programa|jornada|horas extra|noche/i,{metodo:['Turnos publicados con poca anticipación'],gobierno:['Cada jefe programa con criterios propios'],sistemas:['Programación manual, sin herramienta'],personas:['A los nuevos les tocan los peores turnos']}],
+ [/directri|pol[ií]tic|estrateg|implement|despliegue|lineamient|gerenci|alinea|junta/i,{metodo:['Se aprueba sin plan de despliegue'],gobierno:['Cambios de dirección sin continuidad','Nadie es responsable del despliegue'],personas:['Los mandos medios no participan en el diseño'],medicion:['No hay indicadores de implementación']}],
+ [/comunic|informaci|aviso|enter|coordin|traspaso/i,{sistemas:['La información circula por canales informales'],metodo:['Traspasos entre áreas sin protocolo'],personas:['Líderes sin rutina de comunicación con su equipo']}],
+ [/capacit|formaci|inducci|aprend|entrena/i,{metodo:['Formación igual para todos los roles'],personas:['Formadores sin capacidad para el volumen'],medicion:['No se evalúa si la formación sirve en el puesto']}],
+ [/meta|productiv|desempe|indicador|resultado|kpi|rendimiento/i,{medicion:['Metas iguales para nuevos y antiguos','Se mide el resultado, no el proceso'],gobierno:['Metas definidas sin quienes operan el proceso']}],
+ [/l[ií]der|supervis|jefe|mando/i,{personas:['Jefes con demasiadas personas a cargo','Líderes sin tiempo para acompañar'],gobierno:['Se asciende a jefes sin formación en gestión']}],
+ [/carga|satur|sobrecarg|estr[eé]s|agot|hueco/i,{personas:['Carga de trabajo mal distribuida'],metodo:['Tareas que no agregan valor'],medicion:['No se mide la carga real por persona']}],
+ [/salari|sueldo|pago|compens|bono|remuner/i,{entorno:['Compensación por debajo del mercado (por verificar)'],medicion:['Se toma la razón declarada como causa']}],
+ [/cultura|resisten|actitud|vocaci|compromis|motivaci/i,{gobierno:['Lo que se pide no tiene incentivos que lo respalden'],metodo:['El proceso dificulta hacer lo correcto'],medicion:['Se juzga la actitud sin datos del proceso']}]];
+function focoHip(){const h=(ST.hip||'').replace(/\s+/g,' ');const m=h.match(/(?:principalmente\s+)?(?:por|en)\s+(?:el|la|los|las|un|una)?\s*([^,.;]{6,60})/i);if(m)return m[1].replace(/\s+(porque|ya que|debido).*$/i,'').trim();const e=(ST.efecto||'').trim();return e?cut(e,50):'';}
+function sugerencias(k){const txt=(ST.efecto||'')+' '+(ST.hip||'');const out=[];TEMAS.forEach(([re,c])=>{if(re.test(txt)&&c[k])out.push(...c[k]);});
+  let f=focoHip().replace(/^(la |el |los |las )?(falta|ausencia|demora|lentitud|carencia|exceso|escasez|poca|poco)\s+(de |del |en )?(la |el |los |las )?/i,'');f=cut(f,38);if(f){const G={metodo:`«${f}»: pasos repetidos o en secuencia`,personas:`«${f}»: poca capacidad de quienes lo operan`,gobierno:`«${f}»: sin responsable de punta a punta`,medicion:`«${f}»: no se mide ni se revisa`,sistemas:`«${f}»: la información no está a la vista`,entorno:`«${f}»: factores externos (por verificar)`};out.push(G[k]);}
+  return [...new Set(out)];}
+function addBank(k,quiet){if(!(ST.efecto||'').trim()&&!(ST.hip||'').trim()){toast('Escriban primero su problema y su hipótesis (sección 01)');return 0;}
+  const have=new Set(ST.causas.map(x=>x.t.toLowerCase()));const add=sugerencias(k).filter(t=>!have.has(t.toLowerCase())).slice(0,3);
+  add.forEach(t=>ST.causas.push({id:uid(),cat:k,t,src:'banco',ev:'',st:'abierta'}));save();if(!quiet){route();toast(add.length?`${add.length} causa(s) sugerida(s)`:'No hay más sugerencias para esta espina: agreguen las suyas');}return add.length;}
 
 function checks(){const C=ST.causas,out=[];const raiz=C.filter(x=>x.st==='raiz'),desc=C.filter(x=>x.st==='descartada');
   const emptyCats=CATS.filter(([k])=>C.filter(x=>x.cat===k&&x.st!=='descartada').length<2).map(c=>c[1]);
   out.push([emptyCats.length?'y':'g',emptyCats.length?`Espinas con menos de dos causas: ${emptyCats.join(', ')}`:'Las seis espinas tienen al menos dos causas']);
   const sinF=C.filter(x=>!x.ev&&x.st!=='descartada').length;out.push([sinF?'y':'g',sinF?`${sinF} causa(s) sin fuente de evidencia`:'Todas las causas tienen fuente']);
   out.push([raiz.length===0?'r':raiz.length>3?'y':'g',raiz.length===0?'Aún no eligen causas raíz':raiz.length>3?`${raiz.length} causas raíz: máximo tres`:`${raiz.length} causa(s) raíz elegida(s)`]);
-  raiz.forEach(x=>{const ok=x.ev&&x.ev!=='sup';const w=(x.w||[]).filter(Boolean).length;out.push([ok&&w>=3?'g':ok?'y':'r',`Raíz: ${x.t}`,`${ok?'Fuente: '+EVN[x.ev]:'Se apoya solo en un supuesto: busquen un dato del caso o un estudio'} · ${w} de 5 porqués${x.nota?'':' · falta el dato que la desmentiría'}`]);});
+  raiz.forEach(x=>{const ok=x.ev&&x.ev!=='sup';out.push([ok?'g':'r',`Raíz: ${x.t}`,ok?'Fuente: '+EVN[x.ev]:'Se apoya solo en un supuesto: busquen un dato del caso o un estudio']);});
   const dn=desc.filter(x=>!x.nota).length;out.push([desc.length===0?'y':dn?'y':'g',desc.length===0?'Ninguna explicación descartada todavía':`${desc.length} descartada(s)${dn?`, ${dn} sin el dato que la descarta`:', todas con su argumento'}`,desc.length===0?'Validar también es descartar: usen al abogado del diablo.':'']);
   const ent=C.filter(x=>x.st==='raiz'&&x.cat==='entorno').length;if(ent)out.push(['y','Hay una causa raíz en “Entorno y mercado”','La empresa no la controla. ¿Qué parte del proceso la amplifica?']);
   return out;}
 
 function summary(){const c=curCase(),C=ST.causas;const L=[`ISHIKAWA · ${c.n}`,`Resultado: ${ST.efecto}`];if(ST.hip)L.push(`Hipótesis: ${ST.hip}`);
   CATS.forEach(([k,n])=>{const l=C.filter(x=>x.cat===k);if(l.length)L.push(`\n${n.toUpperCase()}\n`+l.map(x=>`- ${x.t} [${EVN[x.ev||'']}]${x.st==='raiz'?' ← CAUSA RAÍZ':x.st==='descartada'?' (descartada'+(x.nota?': '+x.nota:'')+')':''}`).join('\n'));});
-  const r=C.filter(x=>x.st==='raiz');if(r.length)L.push('\nCINCO PORQUÉS\n'+r.map(x=>`${x.t}\n`+(x.w||[]).filter(Boolean).map((w,j)=>`  ${j+1}. ${w}`).join('\n')+(x.nota?`\n  Lo desmentiría: ${x.nota}`:'')).join('\n'));
   return L.join('\n');}
 
 /* ---- diagrama ---- */
@@ -457,7 +468,7 @@ function fishSVG(d=ST,c=curCase(),label=(S.name||('Equipo '+S.slot))){const W=12
     const l=(d.causas||[]).filter(x=>x.cat===k),show=l.slice(0,7),N=Math.max(show.length,1);
     show.forEach((x,i)=>{const t=0.12+(i+0.5)*(0.78/N);const px=x0+DX*t,py=ye+(SY-ye)*t;const rz=x.st==='raiz',ds=x.st==='descartada';
       g+=`<line x1="${px-6}" y1="${py}" x2="${px}" y2="${py}" stroke="#8a97ad"/><circle cx="${px}" cy="${py}" r="${rz?6.5:4.5}" fill="${col[EVC[x.ev||'']]}"${rz?' stroke="#f2b91f" stroke-width="3"':''}/>
-      ${(()=>{let L=wrapT(x.t,rz?29:32);if(L.length>2)L=[L[0],cut(L.slice(1).join(' '),rz?29:32)];const y0=L.length>1?py-2:py+4;return L.map((l,j)=>`<text x="${px-10}" y="${y0+j*13}" text-anchor="end" font-family="${F}" font-size="${rz?12:11}" font-weight="${rz?700:400}" fill="${ds?'#9aa5b8':'#0b2447'}"${ds?' text-decoration="line-through"':''}>${esc(l)}</text>`).join('');})()}`;});
+      ${(()=>{const n=rz?29:32;let L=wrapT(x.t,n);if(L.length>3)L=[L[0],L[1],cut(L.slice(2).join(' '),n)];const y0=py+4-(L.length-1)*6.5;return L.map((l,j)=>`<text x="${px-10}" y="${y0+j*13}" text-anchor="end" font-family="${F}" font-size="${rz?12:11}" font-weight="${rz?700:400}" fill="${ds?'#9aa5b8':'#0b2447'}"${ds?' text-decoration="line-through"':''}>${esc(l)}</text>`).join('');})()}`;});
     if(l.length>7)g+=`<text x="${xe-30}" y="${up?SY-14:SY+22}" font-family="${F}" font-size="11" fill="#51607a">+${l.length-7} más</text>`;
     if(!l.length)g+=`<text x="${x0+DX*.5-8}" y="${ye+(SY-ye)*.5+4}" text-anchor="end" font-family="${F}" font-size="11.5" fill="#9aa5b8" font-style="italic">sin causas todavía</text>`;});
   g+=`<text x="40" y="${H-14}" font-family="${F}" font-size="12" fill="#51607a">${esc(c.n)} · ${esc(label)} · Ishikawa del cuello de botella</text>`;
@@ -465,8 +476,8 @@ function fishSVG(d=ST,c=curCase(),label=(S.name||('Equipo '+S.slot))){const W=12
 
 /* ---- IA ---- */
 const causasTxt=()=>ST.causas.map(x=>`- [${CATN[x.cat]}] ${x.t} · fuente: ${EVN[x.ev||'']} · estado: ${STN[x.st]}${x.nota?' · nota: '+x.nota:''}`).join('\n')||'(sin causas todavía)';
-AI.sug={title:'Sugerir causas con Claude',desc:'Propone dos causas nuevas por espina a partir del caso y de lo que ya tienen. Luego pulsen “Agregar a las espinas”.',afterLabel:'Agregar a las espinas',auto:true,
- build:()=>({prompt:`CASO DEL CLIENTE\n${curCase().ficha}\n\nRESULTADO A EXPLICAR\n${ST.efecto}\n\nHIPÓTESIS DEL EQUIPO\n${ST.hip||'(sin hipótesis escrita)'}\n\nCAUSAS QUE YA TIENEN\n${causasTxt()}\n\nTAREA\nPropón 2 causas nuevas por cada espina del diagrama de Ishikawa, distintas de las que ya tienen, plausibles con el caso y que se puedan verificar.\nFORMATO ESTRICTO: una causa por línea, así: clave: causa (máximo 12 palabras). Claves permitidas: metodo, personas, gobierno, medicion, sistemas, entorno. Nada más: sin introducción ni cierre.`}),
+AI.sug={title:'Sugerir causas con Claude',desc:'Propone dos causas nuevas por espina a partir de su problema y su hipótesis. Luego pulsen “Agregar a las espinas”.',afterLabel:'Agregar a las espinas',auto:true,
+ build:()=>({prompt:`PROBLEMA DEL EQUIPO\n${ST.efecto||'(sin problema escrito)'}\n\nHIPÓTESIS DEL EQUIPO\n${ST.hip||'(sin hipótesis escrita)'}\n\nCAUSAS QUE YA TIENEN\n${causasTxt()}\n\nTAREA\nPropón 2 causas nuevas por cada espina del diagrama de Ishikawa, derivadas solo de su problema y su hipótesis, distintas de las que ya tienen y que se puedan verificar.\nFORMATO ESTRICTO: una causa por línea, así: clave: causa (máximo 12 palabras). Claves permitidas: metodo, personas, gobierno, medicion, sistemas, entorno. Nada más: sin introducción ni cierre.`}),
  after(t){let n=0;const have=new Set(ST.causas.map(x=>x.t.toLowerCase()));(t||'').split('\n').forEach(l=>{const m=l.normalize('NFD').replace(/[̀-ͯ]/g,'').match(/^\s*[-*\d.)]*\s*(metodo|personas|gobierno|medicion|sistemas|entorno)\s*[:|\-–]\s*(.+)$/i);if(m){const txt=l.slice(l.length-m[2].length).trim().replace(/\.$/,'');if(!have.has(txt.toLowerCase())){ST.causas.push({id:uid(),cat:m[1].toLowerCase(),t:txt,src:'ia',ev:'',st:'abierta'});have.add(txt.toLowerCase());n++;}}});save();route();toast(n?`${n} causa(s) agregada(s)`:'No encontré líneas con el formato “clave: causa”');}};
 AI.diablo={title:'Abogado del diablo',desc:'Intenta desmentir su diagnóstico: explicaciones alternativas, el dato que las distingue y las causas raíz débiles.',
  build:()=>({prompt:`CASO DEL CLIENTE\n${curCase().ficha}\n\nRESULTADO\n${ST.efecto}\nHIPÓTESIS DEL EQUIPO\n${ST.hip||'(sin hipótesis escrita)'}\n\nSU ISHIKAWA\n${causasTxt()}\n\nTAREA (actúa como abogado del diablo)\n1. Tres explicaciones alternativas a su hipótesis que un directivo del cliente podría defender.\n2. Para cada una, el dato que la distinguiría de su hipótesis y dónde conseguirlo (el caso, el cliente o estudios).\n3. Qué causa raíz se apoya solo en supuestos o es en realidad un síntoma.\n4. Una pregunta incómoda que deberían hacerle al cliente.\nNo cites estudios con autores ni años.`})};
@@ -563,8 +574,8 @@ function docSheets(){const A=(_DB.apps&&_DB.apps.ishikawa)||{},U=_DB.users||{};c
   const S1=[['Correo','Ingresó','Empresa','Equipo','Consultora','Último ingreso']].concat(all.map(e=>{const u=U[e]||{};return [e,u.last?'Sí':'No',CASES[u.case]?.corto||'',u.slot||'',u.name||'',u.last?fmtT(u.last):''];}));
   const S2=[['Equipo','Empresa','Último guardado','Por','Entrega','Resultado (efecto)','Hipótesis','Causas','Causas raíz','Descartadas','Abogado del diablo (IA)']].concat(T.map(([tk,d])=>{const p=pTeam(tk),C=d.causas||[],act=C.filter(x=>x.st!=='descartada');return [d.team||'Equipo '+p.slot,CASES[p.cid]?.corto||p.cid,fmtT(d.upd),d.by||'',estado(d)[0],d.efecto||'',d.hip||'',C.length,C.filter(x=>x.st==='raiz').length,C.filter(x=>x.st==='descartada').length,d.ai?.diablo||''];}));
   const EVN3={'':'Sin fuente',caso:'Dato del caso',estudio:'Estudio científico',voces:'Voces de grupos de interés',exp:'Experiencia profesional',sup:'Supuesto'};
-  const S3=[['Equipo','Empresa','Espina','Causa','Fuente','Estado','Porqué 1','Porqué 2','Porqué 3','Porqué 4','Porqué 5','Nota']].concat(T.flatMap(([tk,d])=>{const p=pTeam(tk);const {R}=mcalc(d,p.cid);const m=new Map(R.map(r=>[r.x.id,r]));
-    return (d.causas||[]).map(x=>{const r=m.get(x.id);return [d.team||'Equipo '+p.slot,CASES[p.cid]?.corto||p.cid,CATN[x.cat]||x.cat,x.t,EVN3[x.ev||''],STN[x.st]||x.st,...[0,1,2,3,4].map(j=>(x.w||[])[j]||''),x.nota||''];});}));
+  const S3=[['Equipo','Empresa','Espina','Causa','Fuente','Estado','Nota']].concat(T.flatMap(([tk,d])=>{const p=pTeam(tk);const {R}=mcalc(d,p.cid);const m=new Map(R.map(r=>[r.x.id,r]));
+    return (d.causas||[]).map(x=>{const r=m.get(x.id);return [d.team||'Equipo '+p.slot,CASES[p.cid]?.corto||p.cid,CATN[x.cat]||x.cat,x.t,EVN3[x.ev||''],STN[x.st]||x.st,x.nota||''];});}));
   return [['Participantes',S1],['Equipos',S2],['Causas',S3]];}
 function loadXLSX(){return window.XLSX?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s);});}
 async function docXlsx(){const sh=docSheets(),st=new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');try{await loadXLSX();const wb=XLSX.utils.book_new();sh.forEach(([n,rows])=>{const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=rows[0].map((h,i)=>({wch:Math.min(60,Math.max(10,...rows.slice(0,60).map(r=>String(r[i]??'').length))+2)}));XLSX.utils.book_append_sheet(wb,ws,n);});XLSX.writeFile(wb,`MGDP-ishikawa-${st}.xlsx`);}
