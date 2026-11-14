@@ -305,6 +305,7 @@ document.addEventListener('click',async e=>{const b=e.target.closest('button');i
   if(a==='panel'){S.panel=true;return route();}
   if(a==='sync'){_dirty=true;clearTimeout(_cloudT);await pushCloud();return toast('Guardado en la nube');}
   if(a==='reload'){_dirty&&await pushCloud();ST=null;await route();return toast('Actualizado');}
+  if(a==='recover')return recoverCloud(b);
   if(a==='reset'){if(!confirmReset(b))return;ST=APP.example();save();return route();}
   if(a==='back'){S.panel=false;S.view=null;S.practice=false;ST=null;return route();}
   if(a==='unview'){S.view=null;S.panel=true;S.practice=false;ST=null;return route();}
@@ -321,6 +322,15 @@ document.addEventListener('input',e=>{const el=e.target;const k=el.dataset&&el.d
   let v=el.type==='checkbox'?el.checked:el.value;if(el.dataset.num!==undefined)v=+v||0;setPath(ST,k,v);save();APP.live&&APP.live(el);});
 document.addEventListener('change',e=>{const el=e.target;if(el.dataset&&el.dataset.rerender!==undefined&&!ro())route();});
 
+/* ---- recuperar lo último guardado en la base de datos (por equipo) ---- */
+async function recoverCloud(b){if(!cloudOn())return toast('Esta opción es para los equipos (no para el modo ejemplo)');
+  if(!b.dataset.armed){b.dataset.armed='1';const o=b.textContent;b.dataset.o=o;b.textContent='¿Seguro? Reemplaza lo de esta pantalla · pulsa otra vez';setTimeout(()=>{if(b.isConnected&&b.dataset.armed){delete b.dataset.armed;b.textContent=o;}},4000);return;}
+  delete b.dataset.armed;b.disabled=true;b.textContent='Buscando en la base de datos…';
+  try{await _q;const r=await binFetch('GET');const d=r&&r.apps&&r.apps[APP.id]&&r.apps[APP.id][teamKey()];
+    if(!d){b.disabled=false;b.textContent=b.dataset.o;return toast('No hay nada guardado todavía para su equipo');}
+    _dirty=false;ST=JSON.parse(JSON.stringify(d));ST.ai=ST.ai||{};LS.set(localKey(),ST);if(APP.afterLoad)await APP.afterLoad();
+    setSave('ok','Recuperado '+hhmm());await route();toast(`Recuperado: lo guardó ${(d.by||'su equipo').split('@')[0]} el ${new Date(d.upd||Date.now()).toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'})}`);}
+  catch(e){b.disabled=false;b.textContent=b.dataset.o;toast('No pude conectar con la base de datos: intenten de nuevo');}}
 function confirmReset(b){if(b.dataset.armed)return true;b.dataset.armed='1';b.textContent='¿Seguro? Pulsa otra vez';setTimeout(()=>{if(b.isConnected){delete b.dataset.armed;b.textContent='Restablecer ejemplo';}},3000);return false;}
 function boot(){if(sessionStorage.getItem('sab-doc')){S.doc=true;document.title=APP.title+' · La Sabana MGDP';return route();}const s=LS.get('sab-session');if(s&&s.email&&allowed(s.email)){S.email=s.email;S.admin=isAdm(s.email);S.key=s.key||'';setTeam();}
   document.title=APP.title+' · La Sabana MGDP';route();}
@@ -390,7 +400,7 @@ const APP={
 
   <div class="card"><h2><span class="n">02</span>Las mejoras</h2>
    <p class="lead">${S.practice?'Seis mejoras de práctica ya escritas: valórenlas de 1 a 5.':'Sus causas se cargan solas desde su Ishikawa (las descartadas no). Para cada causa, escriban la mejora y valoren de 1 a 5 cuánto exige en costo, tiempo y personal.'}</p>
-   <div class="row">${S.practice?'':`<button class="btn gold sm" data-import>Traer lo último del Ishikawa</button>`}<button class="btn ghost sm" data-addrow>+ Agregar mejora</button></div>
+   <div class="row">${S.practice?'':`<button class="btn gold sm" data-import>Traer lo último del Ishikawa</button>`}<button class="btn ghost sm" data-addrow>+ Agregar mejora</button>${cloudOn()?`<button class="btn ghost sm" data-act="recover" title="Si perdieron el avance en esta computadora, trae lo último que su equipo guardó en la base de datos">⟲ Recuperar lo último guardado</button>`:''}</div>
    <div class="tbl"><table class="mtx" style="min-width:1040px"><thead><tr><th>#</th><th>Espina</th><th style="min-width:150px">Causa que ataca</th><th style="min-width:190px">Mejora propuesta</th><th>¿Cuello?</th>${CRIT.map(([,l])=>`<th>${l}<br><span style="font-weight:400">${pesos()[CRIT.find(c=>c[1]===l)[0]]}%</span></th>`).join('')}<th>Puntaje</th><th>Nivel</th><th></th></tr></thead>
    <tbody>${ST.rows.map((r,i)=>`<tr><td class="num">${i+1}</td><td><select data-k="rows.${i}.cat" style="font-size:13px;padding:6px;min-width:128px;max-width:150px">${CATS.map(([k,n])=>`<option value="${k}"${r.cat===k?' selected':''}>${n}</option>`).join('')}</select></td>
      <td style="font-size:13px">${r.src?`${esc(r.causa)}${r.fuera?'<br><span class="err" style="font-size:12px">Ya no está en su Ishikawa (o la descartaron): bórrenla si no aplica.</span>':'<br><span class="note" style="font-size:11.5px">desde su Ishikawa</span>'}`:`<textarea data-k="rows.${i}.causa" rows="3" style="min-height:0;font-size:13px">${esc(r.causa)}</textarea>`}</td><td><textarea data-k="rows.${i}.mejora" rows="3" style="min-height:0;font-size:13px" placeholder="¿Qué cambia en el proceso?">${esc(r.mejora)}</textarea></td>
@@ -404,9 +414,16 @@ const APP={
 
   <div class="card"><h2><span class="n">04</span>Revisión externa</h2>${aiBox('socio')}</div>
 
-  <div class="card"><h2><span class="n">05</span>Para su diapositiva 5</h2>
+  <div class="card"><h2><span class="n">05</span>Resumen de su matriz</h2>
    <pre id="sum" style="white-space:pre-wrap;font:13px/1.55 var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;margin:0;max-height:300px;overflow:auto"></pre>
-   <div class="row"><button class="btn sm" data-copysum>Copiar resumen</button></div></div>`;},
+   <div class="row"><button class="btn sm" data-copysum>Copiar resumen</button></div></div>
+
+  <div class="card"><h2><span class="n">06</span>Prompt para armar sus diapositivas</h2>
+   <p class="lead">Junta lo que tienen en su Ishikawa (problema, hipótesis, causas, causas raíz y descartadas) y en esta matriz (mejoras priorizadas). Pegan el prompt en Claude, ChatGPT o Canva y obtienen un borrador de diapositivas para editar y mejorar.</p>
+   <div class="row"><button class="btn gold sm" data-gp="full">Generar el prompt de sus diapositivas</button><span class="note">Un solo prompt con el Ishikawa y la matriz. Sirve en Claude, ChatGPT o Canva.</span></div>
+   <textarea id="slideprompt" rows="12" style="font:12.5px/1.5 var(--mono)" placeholder="Pulsen el botón: el prompt aparece aquí y lo pueden editar antes de copiarlo."></textarea>
+   <div class="row"><button class="btn sm" data-copyprompt>Copiar prompt</button><span class="note" id="promptlen"></span></div>
+   <p class="note">La IA arma un borrador: revisen cada dato contra su trabajo. Lo que falte (proceso actual, métricas, estudios) aparece como [POR COMPLETAR].</p></div>`;},
  live(){const {R,st}=calc();
    R.forEach(r=>{const a=$('#pt-'+r.id),b=$('#lv-'+r.id);if(!a)return;a.textContent=r.ok?r.pt.toFixed(2):'–';b.innerHTML=r.ok?`<span class="pill" style="border-color:${LV[r.lv][1]};color:${LV[r.lv][1]};font-weight:600">${LV[r.lv][0]}</span><br><span class="note" style="font-size:12px">${decide(r)}</span>`:'<span class="note">Falta valorar</span>';});
    const ch=$('#chart');if(ch)ch.innerHTML=chartSVG(R);
@@ -427,6 +444,8 @@ const APP={
      const L=[['#','Espina','Causa','Mejora','Ataca el cuello',`Inversión (${P.inv}%)`,`Tiempo (${P.tie}%)`,`Personas (${P.per}%)`,'Puntaje','Nivel','Decisión'].map(q).join(';')].concat(R.map((r,i)=>[i+1,CATN[r.cat],r.causa,r.mejora,r.cuello?'Sí':'No',r.inv||'',r.tie||'',r.per||'',r.ok?r.pt.toFixed(2).replace('.',','):'',r.ok?LV[r.lv][0]:'',decide(r)].map(q).join(';')));
      return dl('matriz-'+teamKey()+'.csv',new Blob(['﻿'+L.join('\n')],{type:'text/csv'}));}
    if(b.dataset.copysum!==undefined){const {R,st}=calc();return copyTxt(summary(R,st));}
+   if(b.dataset.gp){const old=b.textContent;b.disabled=true;b.textContent='Armando…';try{const ik=S.practice?null:await loadOther('ishikawa');const t=slidePrompt(ik);const ta=$('#slideprompt');ta.value=t;$('#promptlen').textContent=`${t.length.toLocaleString('es-CO')} caracteres`;ta.scrollIntoView({block:'center'});if(!ik&&!S.practice)toast('No encontré su Ishikawa: el prompt va solo con la matriz');}finally{b.disabled=false;b.textContent=old;}return;}
+   if(b.dataset.copyprompt!==undefined){const t=$('#slideprompt').value.trim();if(!t)return toast('Primero generen el prompt');return copyTxt(t);}
  }
 };
 function chartSVG(R){const r=R.filter(x=>x.ok).sort((a,b)=>a.pt-b.pt);const W=640,rh=34,H=Math.max(1,r.length)*rh+40,lx=250,bw=W-lx-60;const F='Arial, Helvetica, sans-serif';
@@ -437,8 +456,8 @@ function chartSVG(R){const r=R.filter(x=>x.ok).sort((a,b)=>a.pt-b.pt);const W=64
       `<rect x="${lx}" y="${y+4}" width="${w}" height="20" rx="3" fill="${LV[x.lv][1]}"/><text x="${lx+w+6}" y="${y+18}" font-family="${F}" font-size="12" fill="#0b2447">${x.pt.toFixed(2)}</text>`;});
   return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="min-width:0">${g}</svg>`;}
 function wrapT(t,n){const w=String(t).split(/\s+/),L=[];let l='';w.forEach(x=>{if((l+' '+x).trim().length>n){if(l)L.push(l);l=x;}else l=(l+' '+x).trim();});if(l)L.push(l);return L;}
-function summary(R,st){const c=curCase(),P=pesos();const L=[`MATRIZ DE RESTRICCIONES · ${c.n}`,`Pesos del cliente: inversión ${P.inv}% · tiempo ${P.tie}% · personas ${P.per}%`,''];
-  R.forEach((r,i)=>L.push(`${i+1}. ${r.mejora||'(sin texto)'}\n   Causa: ${r.causa||'–'} [${CATN[r.cat]}]${r.cuello?' · ataca el cuello':''}\n   Inversión ${r.inv||'–'} · Tiempo ${r.tie||'–'} · Personas ${r.per||'–'} → ${r.ok?r.pt.toFixed(2)+' · '+LV[r.lv][0]+' · '+decide(r):'sin valorar'}`));
+function summary(R,st){const c=curCase(),P=pesos();const L=[`MATRIZ DE RESTRICCIONES · ${c.n}`,`Pesos del cliente: costo ${P.inv}% · tiempo ${P.tie}% · personal ${P.per}%`,''];
+  R.forEach((r,i)=>L.push(`${i+1}. ${r.mejora||'(sin texto)'}\n   Causa: ${r.causa||'–'} [${CATN[r.cat]}]${r.cuello?' · ataca el cuello':''}\n   Costo ${r.inv||'–'} · Tiempo ${r.tie||'–'} · Personal ${r.per||'–'} → ${r.ok?r.pt.toFixed(2)+' · '+LV[r.lv][0]+' · '+decide(r):'sin valorar'}`));
   return L.join('\n');}
 AI.socio={title:'Revisión del socio',desc:'Revisa si sus valoraciones son consistentes, si las mejoras cambian el proceso o solo agregan programas, y si la fase 1 ataca el cuello.',
  build:()=>{const {R,st}=calc();return {prompt:`CASO DEL CLIENTE\n${curCase().ficha}\n\nMATRIZ DEL EQUIPO\n${summary(R,st)}\n\nEscala: 1 = exige poco, 5 = exige mucho. Puntaje alto = más difícil de implementar.\n\nTAREA\n1. Señala hasta 3 valoraciones que parezcan inconsistentes (por ejemplo, algo que involucra a toda la organización con "personas = 1") y por qué.\n2. Indica qué mejoras cambian el proceso y cuáles solo agregan un programa o una campaña.\n3. ¿Las mejoras de fase 1 atacan el cuello de botella? Si no, dilo claro.\n4. Propón en tres líneas cómo ordenarían las fases ante el cliente.`};}};
@@ -452,6 +471,40 @@ APP.example=function(){const r=(cat,causa,mejora,cuello,inv,tie,per)=>({id:uid()
   r('gobierno','Nadie es dueño del proceso de punta a punta','Un dueño del proceso de incorporación, de la oferta al día 90',true,1,1,1),
   r('entorno','Otras ofertas llegan durante la espera','Programa de bienestar y marca empleadora',false,3,3,3)],
  ai:{socio:'1. Revisen “Tutor activo y líder con 12 personas”: personas = 3 parece bajo si implica reorganizar supervisores en varias campañas.\n2. Cambian el proceso: cohortes semanales, preincorporación, metas progresivas y el dueño del proceso. Son programas que no tocan el flujo: el salario +10% y la marca empleadora.\n3. La fase 1 sí ataca el cuello: espera, metas y un dueño. Bien.\n4. Ante el cliente: fase 1 (0 a 3 meses) dueño, preincorporación, metas progresivas y cohortes semanales; fase 2 (3 a 6 meses) tutor y líder con 12; el salario, solo si la rotación no baja en seis meses.'}};};
+/* ---- prompt para diapositivas (Ishikawa + matriz) ---- */
+const EVP={'':'sin fuente',caso:'dato del caso',estudio:'estudio científico',voces:'voces de grupos de interés',exp:'experiencia profesional',sup:'supuesto'};
+function slidePrompt(ik){const c=curCase(),P=pesos(),{R,st}=calc();const team=S.name||('Equipo '+S.slot);
+  const C=(ik&&ik.causas)||[],act=C.filter(x=>x.st!=='descartada'),raiz=C.filter(x=>x.st==='raiz'),desc=C.filter(x=>x.st==='descartada');
+  const prob=(ik&&ik.efecto)||'[POR COMPLETAR: problema]',hip=(ik&&ik.hip)||'[POR COMPLETAR: hipótesis]';
+  const ok=R.filter(r=>r.ok).sort((a,b)=>a.pt-b.pt);const fase=(i)=>ok.filter(r=>i===1?r.lv<=1:i===2?r.lv===2:r.lv===3);
+  const mej=r=>`${r.mejora||'(mejora sin texto)'} — causa: ${r.causa||'–'}; costo ${r.inv}, tiempo ${r.tie}, personal ${r.per}; total ${r.pt.toFixed(2)}; ${LV[r.lv][0].toLowerCase()}`;
+  const L=[`Actúa como consultor senior de procesos de gestión humana y como diseñador de presentaciones ejecutivas.`,
+   `Arma el contenido de una presentación para la dirección de nuestro cliente con la información de abajo. Es un caso ficticio de uso académico (Maestría en Gerencia y Desarrollo de Personas, Universidad de La Sabana).`,
+   `REGLAS: no inventes datos, cifras, nombres ni estudios. Usa solo lo que está aquí. Si algo falta, escríbelo como [POR COMPLETAR: qué falta]. Escribe en español, en tono ejecutivo y directo.`,'',
+   `CONTEXTO`,`- Cliente: ${c.n} · ${c.cliente}`,`- Proceso: ${c.proceso}`,`- Lo que pidió el cliente: "${c.encargo}"`,`- Consultora: ${team}`,'',
+   `PROBLEMA (efecto)`,`- ${prob}`,'',`HIPÓTESIS DEL CUELLO DE BOTELLA`,`- ${hip}`,'',
+   `DIAGNÓSTICO: DIAGRAMA DE ISHIKAWA (causa · fuente de evidencia)`];
+  if(ik&&act.length)CATS.forEach(([k,n])=>{const l=act.filter(x=>x.cat===k);if(l.length)L.push(`${n}:`,...l.map(x=>`  - ${x.t} · ${EVP[x.ev||'']}${x.st==='raiz'?' · CAUSA RAÍZ':''}`));});else L.push('- [POR COMPLETAR: causas del Ishikawa]');
+  L.push('',`CAUSAS RAÍZ (máximo 3)`,...(raiz.length?raiz.map(x=>`- ${x.t} (${CATN[x.cat]}; ${EVP[x.ev||'']})`):['- [POR COMPLETAR]']));
+  L.push('',`EXPLICACIONES DESCARTADAS`,...(desc.length?desc.map(x=>`- ${x.t}${x.nota?': '+x.nota:''}`):['- Ninguna registrada']));
+  L.push('',`MATRIZ DE RESTRICCIONES`,`- Pesos del cliente: costo ${P.inv}%, tiempo ${P.tie}%, personal ${P.per}%. Escala de 1 (exige poco) a 5 (exige mucho). Total ponderado más alto = más difícil de implementar.`);
+  if(st)L.push(`- Escala de restricción (Sturges): muy baja hasta ${st.L[1].toFixed(2)}; baja hasta ${st.L[2].toFixed(2)}; media hasta ${st.L[3].toFixed(2)}; muy alta sobre ${st.L[3].toFixed(2)}.`);
+  L.push(`- Mejoras valoradas, de menor a mayor restricción:`,...(ok.length?ok.map(r=>`  - ${mej(r)}`):['  - [POR COMPLETAR: valoren sus mejoras]']));
+  const pend=R.filter(r=>!r.ok);if(pend.length)L.push(`- Sin valorar todavía: ${pend.map(r=>r.mejora||r.causa).join('; ')}`);
+  L.push('',`HOJA DE RUTA SEGÚN LA MATRIZ`,`- Fase 1 (aplicar ya: muy baja y baja restricción): ${fase(1).map(r=>r.mejora).join('; ')||'—'}`,`- Fase 2 (por fases: media restricción): ${fase(2).map(r=>r.mejora).join('; ')||'—'}`,`- Postergar o rediseñar (muy alta restricción): ${fase(3).map(r=>r.mejora).join('; ')||'—'}`,'',
+   `ESTRUCTURA DE LA PRESENTACIÓN (8 diapositivas)`,
+   `1. Portada: un título que diga la recomendación en una frase.`,
+   `2. El encargo y la pregunta operacional: lo que pidió el cliente, el problema con su dato y por qué miramos el proceso.`,
+   `3. Proceso actual: [POR COMPLETAR: mapa con esperas y traspasos]; deja un espacio para el diagrama.`,
+   `4. Cuello de botella: la hipótesis en una frase y lo que la sostiene.`,
+   `5. Validación: el Ishikawa resumido (las seis espinas), las causas raíz con su fuente y las explicaciones descartadas.`,
+   `6. Mejoras priorizadas: la matriz de restricciones como tabla o gráfico de barras, coloreado por nivel de restricción.`,
+   `7. Implementación por fases: fase 1, fase 2 y lo que se posterga, con responsables [POR COMPLETAR].`,
+   `8. Métricas e impacto: indicadores de proceso, resultado y experiencia con línea base, meta y plazo [POR COMPLETAR].`,'',
+   `FORMATO DE SALIDA, para cada diapositiva:`,`- Título (máximo 10 palabras, que sea una afirmación, no un tema).`,`- 3 o 4 viñetas cortas.`,`- Visual sugerido (diagrama, tabla o gráfico) y qué datos lleva.`,`- Notas del expositor (2 o 3 líneas).`,
+   `Al final, lista los [POR COMPLETAR] que debemos resolver antes de exponer.`);
+  return L.join('\n');}
+
 /* ---- sincronización con el Ishikawa del mismo equipo ---- */
 async function syncIk(verbose){if(S.practice||S.slot==='P'||ro())return 0;const ik=await loadOther('ishikawa');
   if(!ik||!ik.causas||!ik.causas.length){if(verbose)toast('Todavía no encuentro causas en su Ishikawa');return verbose?-1:0;}
