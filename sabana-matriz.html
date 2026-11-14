@@ -323,7 +323,7 @@ document.addEventListener('input',e=>{const el=e.target;const k=el.dataset&&el.d
 document.addEventListener('change',e=>{const el=e.target;if(el.dataset&&el.dataset.rerender!==undefined&&!ro())route();});
 
 /* ---- recuperar lo último guardado en la base de datos (por equipo) ---- */
-async function recoverCloud(b){if(!cloudOn())return toast('Esta opción es para los equipos (no para el modo ejemplo)');
+async function recoverCloud(b){if(!cloudOn())return toast(S.slot==='P'?'En el modo ejemplo no hay nada en la base de datos: este botón funciona para los equipos':'Sin conexión a la base de datos');
   if(!b.dataset.armed){b.dataset.armed='1';const o=b.textContent;b.dataset.o=o;b.textContent='¿Seguro? Reemplaza lo de esta pantalla · pulsa otra vez';setTimeout(()=>{if(b.isConnected&&b.dataset.armed){delete b.dataset.armed;b.textContent=o;}},4000);return;}
   delete b.dataset.armed;b.disabled=true;b.textContent='Buscando en la base de datos…';
   try{await _q;const r=await binFetch('GET');const d=r&&r.apps&&r.apps[APP.id]&&r.apps[APP.id][teamKey()];
@@ -400,7 +400,7 @@ const APP={
 
   <div class="card"><h2><span class="n">02</span>Las mejoras</h2>
    <p class="lead">${S.practice?'Seis mejoras de práctica ya escritas: valórenlas de 1 a 5.':'Sus causas se cargan solas desde su Ishikawa (las descartadas no). Para cada causa, escriban la mejora y valoren de 1 a 5 cuánto exige en costo, tiempo y personal.'}</p>
-   <div class="row">${S.practice?'':`<button class="btn gold sm" data-import>Traer lo último del Ishikawa</button>`}<button class="btn ghost sm" data-addrow>+ Agregar mejora</button>${cloudOn()?`<button class="btn ghost sm" data-act="recover" title="Si perdieron el avance en esta computadora, trae lo último que su equipo guardó en la base de datos">⟲ Recuperar lo último guardado</button>`:''}</div>
+   <div class="row">${S.practice?'':`<button class="btn gold sm" data-import>Traer lo último del Ishikawa</button>`}<button class="btn ghost sm" data-addrow>+ Agregar mejora</button><button class="btn ghost sm" data-act="recover" title="Si perdieron el avance en esta computadora, trae lo último que su equipo guardó en la base de datos">⟲ Recuperar lo último guardado</button></div>
    <div class="tbl"><table class="mtx" style="min-width:1040px"><thead><tr><th>#</th><th>Espina</th><th style="min-width:150px">Causa que ataca</th><th style="min-width:190px">Mejora propuesta</th><th>¿Cuello?</th>${CRIT.map(([,l])=>`<th>${l}<br><span style="font-weight:400">${pesos()[CRIT.find(c=>c[1]===l)[0]]}%</span></th>`).join('')}<th>Puntaje</th><th>Nivel</th><th></th></tr></thead>
    <tbody>${ST.rows.map((r,i)=>`<tr><td class="num">${i+1}</td><td><select data-k="rows.${i}.cat" style="font-size:13px;padding:6px;min-width:128px;max-width:150px">${CATS.map(([k,n])=>`<option value="${k}"${r.cat===k?' selected':''}>${n}</option>`).join('')}</select></td>
      <td style="font-size:13px">${r.src?`${esc(r.causa)}${r.fuera?'<br><span class="err" style="font-size:12px">Ya no está en su Ishikawa (o la descartaron): bórrenla si no aplica.</span>':'<br><span class="note" style="font-size:11.5px">desde su Ishikawa</span>'}`:`<textarea data-k="rows.${i}.causa" rows="3" style="min-height:0;font-size:13px">${esc(r.causa)}</textarea>`}</td><td><textarea data-k="rows.${i}.mejora" rows="3" style="min-height:0;font-size:13px" placeholder="¿Qué cambia en el proceso?">${esc(r.mejora)}</textarea></td>
