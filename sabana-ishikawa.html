@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ishikawa asistido · La Sabana MGDP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#f5f7fb;--surface:#fff;--ink:#0b2447;--muted:#51607a;--line:#d7deea;--accent:#0b4da2;--accent-soft:#e4edf9;--signal:#8f6700;--signal-soft:#fbf1d2;--gold:#f2b91f;--ok:#1d7552;--ok-soft:#e1f1e9;--bad:#c0392b;--bad-soft:#fbe7e4;--cn:#0e7c86;--cn-soft:#dff3f4;
+ --display:"Source Serif 4",Georgia,serif;--body:"Instrument Sans","Segoe UI",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--display);line-height:1.15;margin:0;text-wrap:balance}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:max(16px,env(safe-area-inset-left,0px))}
+.top{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:14px;padding-block:10px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:700;font-size:15px;white-space:nowrap}.brand span{color:var(--signal)}
+.appname{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px}
+.stage{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;background:var(--cn-soft);color:var(--cn);padding:3px 8px;border-radius:6px;font-weight:600}
+.who{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.who b{color:var(--ink)}
+main{padding-block:24px 80px;display:flex;flex-direction:column;gap:22px}
+.label{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:600;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:clamp(16px,2.6vw,24px);display:flex;flex-direction:column;gap:12px;min-width:0}
+.card>h2{font-size:21px;font-weight:700;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.card>h2 .n{font-family:var(--mono);font-size:13px;color:var(--cn);font-weight:600}
+.lead{color:var(--muted);font-size:14.5px;max-width:78ch}
+.note{font-size:13px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:900px){.grid3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.grid2,.grid3{grid-template-columns:minmax(0,1fr)}}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:600;color:var(--muted)}
+input[type=text],input[type=email],input[type=password],input[type=number],textarea,select{border:1px solid var(--line);border-radius:9px;background:#fff;padding:9px 11px;font-size:14.5px;width:100%;min-width:0;color:var(--ink);font-weight:400}
+textarea{resize:vertical;min-height:70px;line-height:1.5}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.btn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:9px;padding:9px 15px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:#fff;color:var(--accent)}
+.btn.sm{padding:6px 11px;font-size:13px}
+.btn.ai{background:var(--ink);border-color:var(--ink)}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.link{background:none;border:0;color:var(--accent);font-weight:600;font-size:13px;padding:0;text-decoration:underline}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12.5px;background:#fff}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+.d-g{background:var(--ok)}.d-y{background:#d9a400}.d-r{background:var(--bad)}.d-n{background:#b7c1d1}
+.login{max-width:440px;margin:6vh auto 0;display:flex;flex-direction:column;gap:16px}
+.login h1{font-size:30px}
+.err{color:var(--bad);font-size:13.5px}
+.casepick{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+@media (max-width:760px){.casepick{grid-template-columns:minmax(0,1fr)}}
+.cpick{border:1.5px solid var(--line);border-radius:12px;padding:14px;background:#fff;text-align:left;display:flex;flex-direction:column;gap:5px}
+.cpick b{font-family:var(--display);font-size:16.5px}
+.cpick span{font-size:13px;color:var(--muted)}
+.cpick.on{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#fff}
+.seg button{border:0;background:none;padding:7px 13px;font-size:13.5px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--accent);color:#fff}
+.quote{border-left:3px solid var(--gold);padding:4px 0 4px 12px;font-family:var(--display);font-size:16px;font-weight:600}
+.casebar{display:flex;flex-wrap:wrap;gap:8px 22px;border:1px solid var(--line);border-radius:12px;padding:12px 16px;background:var(--surface)}
+.casebar>div{display:flex;flex-direction:column;gap:1px;font-size:14px;min-width:0}
+.casebar b{font-family:var(--display);font-size:16px}
+.aibox{border:1px dashed var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;background:#fbfcfe}
+.aibox h3{font-size:16px;display:flex;align-items:center;gap:8px}
+.aibox h3::before{content:"✦";color:var(--gold)}
+.aiout{min-height:120px;font-size:14px}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#fff}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--bg);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.x{border:0;background:none;color:#8a97ad;font-size:18px;line-height:1;padding:2px 6px;border-radius:6px}
+.x:hover{color:var(--bad);background:var(--bad-soft)}
+.banner{border:1px solid var(--signal);background:var(--signal-soft);border-radius:12px;padding:12px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:14px}
+fieldset.ro{border:0;margin:0;padding:0;min-width:0;display:flex;flex-direction:column;gap:22px}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:50}
+#toast.on{opacity:1;transform:translateX(-50%)}
+.chk{display:flex;flex-direction:column;gap:8px}
+.chk>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px;align-items:baseline;font-size:14px}
+.chk>div .dot{transform:translateY(1px)}
+.chk small{display:block;color:var(--muted);font-size:12.5px}
+.svgbox{border:1px solid var(--line);border-radius:12px;background:#fff;overflow:auto}
+.svgbox svg{display:block;width:100%;height:auto;min-width:760px}
+.cnt{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.foot{font-size:12.5px;color:var(--muted);text-align:center;padding-top:10px}
+.mtx th,.mtx td{padding:8px 6px}
+
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><div class="brand">La Sabana <span>·</span> MGDP</div><div class="appname" id="appname"></div><div class="who" id="who"></div></div></header>
+<main class="wrap" id="app"></main>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+/* =====================================================================
+   CONFIGURACIÓN · edita solo este bloque
+   ===================================================================== */
+const CFG={
+  // URL de tu Worker de Cloudflare (ver worker.js). Vacío = sin botón de Claude ni guardado en la nube:
+  // los equipos usan "Copiar prompt" con su propia IA y el trabajo se guarda en su navegador.
+  WORKER_URL:'',
+  // Base de datos del curso (JSONBin): aquí se guardan las respuestas de todos los equipos.
+  BIN_ID:'6af8594fffd5d16053c0f600',   // BIN general (Ishikawa y validador)
+  BINS:{ishikawa:'6af8594fffd5d16053c0f600',validador:'6af8594fffd5d16053c0f600',matriz:'6af85c80ffd5d16053c0fadc'},   // un BIN por herramienta
+  BIN_KEY:'$2a$10$2sih3TPm3qkCuJG97N99ru4sHdofBFicx2zBOwK1MqUYzlDJ502W2',
+  PANEL_URL:'',
+  DOC_DNI_SHA256:'8d9408a0ea52e9c0a344486dc50f53e895364a2c9e44fd7b7aeefd9497df4cae',   // acceso docente: DNI del profesor (guardado como hash)
+  DOMAIN:'unisabana.edu.co',
+  USERS:['josecarco','leidymove','giovannipeca','juanmelar','franciscollba','claudiacabga','mariaipro','marthagarcar','valentinatoqma','carmenprsa'],
+  ADMINS:['alexissr@unisabana.edu.co','apsalinas@ucsp.edu.pe']   // profesor: entra con el ejemplo de Andes Contact ya completo
+};
+/* Pesos del cliente para la matriz de restricciones (deben sumar 100 y coincidir con la presentación). */
+const PESOS={andes:{inv:40,tie:30,per:30},esp:{inv:40,tie:30,per:30},transporte:{inv:40,tie:30,per:30},clinica:{inv:40,tie:30,per:30}};   // Costo 40% · Tiempo 30% · Personal 30%
+
+/* =====================================================================
+   CASOS (empresas ficticias, uso académico)
+   ===================================================================== */
+const CATS=[['metodo','Método y proceso','Pasos, secuencias, esperas y traspasos'],['personas','Personas y liderazgo','Capacidad, carga y acompañamiento'],['gobierno','Gobernanza y decisiones','Quién decide y quién es dueño del proceso'],['medicion','Medición y control','Qué se mide, cuándo y quién lo mira'],['sistemas','Sistemas e información','Herramientas y cómo circula la información'],['entorno','Entorno y mercado','Lo que la empresa no controla']];
+const CATN=Object.fromEntries(CATS.map(c=>[c[0],c[1]]));
+const CASES={
+ esp:{n:'Empresa de Servicios Públicos Montealto E.S.P.',corto:'Servicios Públicos Montealto',cliente:'Marcela Rincón, presidenta de la Junta Directiva',proceso:'Despliegue de directrices de la gerencia a la operación',
+  encargo:'Los mandos medios se resisten a las nuevas directrices. Necesitamos trabajar la cultura y el liderazgo para alinearlos con la gerencia.',
+  efecto:'Las directrices de cada gerencia no llegan a implementarse en la operación',
+  ficha:'Empresa municipal de servicios públicos en Cundinamarca. Alta rotación en la gerencia general (3 gerentes en 3 años); mandos medios con más de 20 años en la empresa. Cada nueva gerencia trae políticas y procedimientos que no logran implementarse: algunos líderes mantienen prácticas tradicionales y no hay alineación entre niveles. Ya se intentó estandarizar procesos, un ciclo PHVA adaptado y trabajo en cultura; nada se sostuvo. Voces: mando medio: "Cada gerente llega con su plan. Nosotros seguimos aquí cuando se va"; gerente saliente: "Las directrices se aprobaban en el comité, pero en la operación todo seguía igual"; colaborador: "No sabemos a quién hacerle caso: al gerente nuevo o al jefe de siempre". Pregunta abierta: ¿la rotación de la gerencia está relacionada con la resistencia de los mandos medios, o hay fallas estructurales de gobernanza?',
+  aristas:['Qué pasa con una directriz cuando cambia el gerente: ¿hay empalme?','Quién custodia las directrices: Junta, comité o un área de planeación','Si los mandos medios participan en el diseño de las directrices','Quién verifica que una directriz se implementó y cuándo','Por qué no se sostuvieron la estandarización y el PHVA','Qué gana y qué pierde un mando medio al adoptar la directriz'],
+  causas:{metodo:['Las directrices se aprueban en comité sin plan de despliegue','No hay procedimiento de empalme entre gerencias','Cada gerencia rehace políticas en lugar de ajustarlas'],personas:['Los mandos medios no participan en el diseño de las directrices','Mandos medios sin formación en gestión del cambio','Los colaboradores no saben a quién obedecer'],gobierno:['La Junta no exige continuidad de las estrategias','Rotación de 3 gerentes en 3 años','Nadie es dueño del despliegue de punta a punta'],medicion:['No hay indicadores de implementación de directrices','El PHVA se quedó en planear y hacer, sin verificar','Nadie hace seguimiento después de aprobar'],sistemas:['Las directrices viven en actas, no en un sistema de gestión','Sin tablero compartido de avance','Las directrices se comunican por correo o voz a voz'],entorno:['Ciclos políticos municipales cambian prioridades','Cambios regulatorios frecuentes en servicios públicos','Presión de la comunidad por el servicio inmediato']}},
+ transporte:{n:'Transcarga del Valle S.A.S.',corto:'Transcarga del Valle',cliente:'Andrés Cuéllar, gerente general',proceso:'Selección y vinculación de conductores',
+  encargo:'No hay conductores en el mercado. Queremos una campaña de atracción y un bono de enganche.',
+  efecto:'Cubrir una vacante de conductor toma casi dos meses (más de 20 camiones parados)',
+  ficha:'Empresa de transporte de carga por carretera en Cali, con operación hacia Buenaventura; 850 colaboradores, 600 conductores. El sector dice que faltan conductores de tractocamión. Por el tipo de carga, exige un estudio de seguridad a todos los aspirantes. Se sabe: cubrir una vacante toma casi dos meses; más de 20 camiones parados por falta de conductor; de cada diez aspirantes, pocos llegan a manejar; un competidor de la región dice contratar en menos de dos semanas. Voces: jefe de flota: "Cada camión parado es plata perdida todos los días"; analista de selección: "Espero el estudio de seguridad y mientras tanto el conductor se va con otro"; conductor recién vinculado: "Fui tres veces a Cali para papeles y pruebas. Vivo en Tuluá".',
+  aristas:['En qué etapa se pierden los aspirantes (el embudo completo)','Si el estudio de seguridad va en secuencia o podría ir en paralelo','Cuántas veces viaja el aspirante y dónde se hacen las pruebas','Qué hace distinto el competidor que contrata en dos semanas','Cuánto cuesta un camión parado por día','A quién atraería de verdad el bono de enganche'],
+  causas:{metodo:['El estudio de seguridad empieza al final y en secuencia','El aspirante viaja tres veces a Cali','Pruebas y entrevistas en días distintos'],personas:['Una sola analista de selección para 600 conductores','El jefe de flota no participa en la selección','No se aprovechan los conductores referidos'],gobierno:['Nadie responde por el costo del camión parado','Requisitos definidos sin revisar si todos son necesarios','Proveedor del estudio de seguridad sin acuerdo de tiempos'],medicion:['No se mide el embudo: cuántos aspirantes se pierden en cada etapa','El tiempo de cobertura no tiene meta','No se registra por qué abandonan los aspirantes'],sistemas:['Hojas de vida en el correo, sin seguimiento del estado','Sin agendamiento en línea de pruebas','El aspirante no sabe en qué etapa va'],entorno:['Escasez de conductores de tractocamión en el sector','Un competidor contrata en menos de dos semanas','Aspirantes que viven fuera de Cali']}},
+ clinica:{n:'Clínica Oriente Salud',corto:'Clínica Oriente Salud',cliente:'Patricia Lozano, directora de gestión humana',proceso:'Incorporación de auxiliares de enfermería y asignación de turnos',
+  encargo:'Las auxiliares jóvenes no tienen vocación: se van a los pocos meses. Queremos un programa de bienestar y reconocimiento.',
+  efecto:'Más de un tercio de las auxiliares nuevas se va antes de seis meses',
+  ficha:'Clínica privada de mediana y alta complejidad en Bucaramanga; 1.100 colaboradores, 380 en enfermería. Abrió una nueva torre de hospitalización hace un año. Compite por personal con otras clínicas y con ofertas para trabajar en el exterior. Cada jefe de servicio arma los turnos de su equipo. Se sabe: más de un tercio de las auxiliares nuevas se va antes de seis meses; la inducción dura dos días y es igual para todos los servicios; en la UCI se quedan más que en hospitalización; el gasto en horas extra creció fuerte este año. Voces: jefe de enfermería de hospitalización: "No tengo tiempo de acompañar a nadie. Me paso el turno cubriendo huecos"; auxiliar con cuatro meses: "Me enteré el jueves de que trabajaba otra vez el domingo de noche"; gerente financiero: "Estamos pagando horas extra y personal temporal como nunca".',
+  aristas:['Una inducción por servicio y no una general','Con cuánta anticipación conoce la auxiliar sus turnos','Qué hace distinto la UCI frente a hospitalización','Las horas extra como síntoma de vacantes y no como causa','La carga del jefe de enfermería y su tiempo para acompañar','¿Falta de vocación o un proceso que las empuja a irse?'],
+  causas:{metodo:['Inducción de dos días igual para todos los servicios','Turnos armados por cada jefe sin reglas comunes','Turnos publicados con poca anticipación'],personas:['Jefes de enfermería sin tiempo para acompañar','Sin auxiliar tutora en las primeras semanas','A las nuevas les tocan los turnos menos deseados'],gobierno:['Gestión humana diseña la inducción sin los jefes de servicio','Nadie es dueño del primer semestre de la auxiliar','Las horas extra se aprueban sin revisar su causa'],medicion:['Se mide la rotación anual, no la de los primeros seis meses por servicio','No se compara UCI con hospitalización','No hay entrevista de salida estructurada'],sistemas:['Sin software de programación de turnos','Cambios de turno comunicados por chat','Protocolos de la nueva torre sin actualizar'],entorno:['Competencia por personal con otras clínicas','Ofertas para trabajar en el exterior','La nueva torre aumentó la demanda de personal']}},
+ andes:{n:'Andes Contact S.A.S. (práctica)',corto:'Andes Contact (práctica)',cliente:'Gerencia general',proceso:'Incorporación de agentes',
+  encargo:'Subir el salario base 10% para frenar la rotación temprana (COP 3.400 millones al año).',
+  efecto:'41% de los agentes nuevos se va antes de 90 días',
+  ficha:'Contact center de Bogotá con 1.400 agentes en tres sedes. 41% se va antes de 90 días (sede Centro); 18% acepta la oferta y nunca llega a la formación. La incorporación toma 66 días, con 12 días de espera antes de la formación (2 cohortes de 25 cada quince días para ~105 contrataciones al mes). La sede Norte subió el salario 10% y casi no cambió la rotación; la sede Sur estructuró el acompañamiento en piso (líder con 12 personas, tutor activo, metas desde la semana 5) y bajó la salida a 24%. 38% marca "salario" en la encuesta de salida.',
+  aristas:['El tiempo de espera entre el contrato y la formación','La capacidad de formación frente a las contrataciones','El acompañamiento en las primeras semanas en piso','Metas de productividad desde la semana 2','La razón declarada frente al patrón observado','Qué hace distinto la sede Sur'],
+  causas:{metodo:['Cohortes de formación cada quince días generan fila','Exámenes médicos programados una semana después','Documentos pedidos tres veces'],personas:['Supervisor con 22 personas no puede acompañar','Tutor asignado pero inactivo','La instructora no da abasto para la práctica'],gobierno:['Nadie es dueño del proceso de punta a punta','La decisión de subir el salario se tomó sin diagnóstico','La política de incorporación no se cumple'],medicion:['Se mide la rotación, no los días de espera','Metas de productividad desde la semana 2','La encuesta de salida induce a marcar salario'],sistemas:['Sin aviso al candidato durante la espera','Sistemas del piso distintos a los de la formación','La información del candidato no se comparte entre áreas'],entorno:['Otras ofertas llegan durante la espera','Salario base 8% bajo el mercado','Los clientes cambian campañas y obligan a reasignar']},
+  mejoras:[['entorno','Salario base 8% bajo el mercado','Subir el salario base 10% en todas las sedes',false],['metodo','Cohortes de formación cada quince días generan fila','Cohortes semanales de 15 en lugar de quincenales de 25',true],['sistemas','Sin aviso al candidato durante la espera','Preincorporación durante la espera: llamada semanal y contenidos en línea',true],['personas','Supervisor con 22 personas no puede acompañar','Tutor activo y supervisor con 12 personas en las primeras seis semanas',true],['medicion','Metas de productividad desde la semana 2','Metas progresivas: plenas desde la semana 5',true],['entorno','Otras ofertas llegan durante la espera','Programa de bienestar y marca empleadora',false]]}
+};
+const REAL=['esp','transporte','clinica'];
+
+/* =====================================================================
+   NÚCLEO: sesión, guardado, IA
+   ===================================================================== */
+const $=(s,el=document)=>el.querySelector(s);
+const esc=t=>String(t??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const LS={get(k,d=null){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}},del(k){try{localStorage.removeItem(k);}catch(e){}}};
+const S={email:null,admin:false,key:'',case:null,slot:null,name:'',practice:false,view:null,panel:false};
+let ST=null;
+const AI={};   // tareas de IA registradas por cada app: {title, desc, build:()=>({system,prompt}), after(text)}
+const SYS='Eres socio senior de una consultora de procesos de gestión humana y acompañas a un equipo de estudiantes de la Maestría en Gerencia y Desarrollo de Personas de la Universidad de La Sabana (Colombia). El caso es ficticio y de uso académico. Responde en español, en texto plano, con listas numeradas y frases cortas; sin tablas, sin encabezados markdown y sin asteriscos. Máximo 230 palabras. No inventes datos del caso: si algo no está, dilo como supuesto. No hagas el trabajo por ellos: señala, pregunta y provoca que piensen.';
+
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),2200);}
+async function copyTxt(t){try{await navigator.clipboard.writeText(t);toast('Copiado');}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast('Copiado');}catch(x){toast('No se pudo copiar');}a.remove();}}
+function dl(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
+function svgPng(svg,name,scale=2){const xml=new XMLSerializer().serializeToString(svg);const vb=svg.viewBox.baseVal;const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=vb.width*scale;c.height=vb.height*scale;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);c.toBlob(b=>dl(name,b),'image/png');};img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(xml);}
+function svgFile(svg,name){dl(name,new Blob([new XMLSerializer().serializeToString(svg)],{type:'image/svg+xml'}));}
+const teamKey=()=>S.practice?`andes-${S.case}-${S.slot}`:`${S.case}-${S.slot}`;
+const curCase=()=>CASES[S.practice?'andes':S.case];
+const curCaseId=()=>S.practice?'andes':S.case;
+const ro=()=>!!S.view;
+
+function normEmail(v){v=(v||'').trim().toLowerCase();if(v&&!v.includes('@'))v+='@'+CFG.DOMAIN;return v;}
+const isAdm=e=>CFG.ADMINS.map(x=>x.toLowerCase()).includes(e);
+function allowed(e){return isAdm(e)||(e.endsWith('@'+CFG.DOMAIN)&&CFG.USERS.includes(e.split('@')[0]));}
+
+async function api(path,body){const r=await fetch(CFG.WORKER_URL.replace(/\/$/,'')+path,{method:body?'POST':'GET',headers:body?{'content-type':'application/json'}:{},body:body?JSON.stringify(body):undefined});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||('Error '+r.status));return j;}
+
+/* ---- base de datos del curso (JSONBin) ---- */
+const binOn=()=>!!(CFG.BIN_ID&&CFG.BIN_KEY);
+let _hdr=LS.get('sab-binhdr')||'X-Access-Key';
+const binOf=app=>(CFG.BINS&&CFG.BINS[app])||CFG.BIN_ID;
+async function binFetch(method,body,bin=binOf(APP.id)){const url=`https://api.jsonbin.io/v3/b/${bin}${method==='GET'?'/latest':''}`;
+  for(const h of [_hdr,_hdr==='X-Access-Key'?'X-Master-Key':'X-Access-Key']){
+    const r=await fetch(url,{method,cache:'no-store',headers:{[h]:CFG.BIN_KEY,'X-Bin-Meta':'false',...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});
+    if(r.status===401||r.status===403)continue;
+    if(h!==_hdr){_hdr=h;LS.set('sab-binhdr',h);}
+    if(!r.ok)throw new Error('JSONBin '+r.status);
+    if(method!=='GET')return true;const j=await r.json();return j&&j.record&&j.metadata?j.record:j;}
+  throw new Error('La clave del BIN no tiene permiso');}
+let _q=Promise.resolve();
+function binUpdate(fn){_q=_q.then(async()=>{let r=await binFetch('GET');if(!r||typeof r!=='object'||Array.isArray(r))r={};fn(r);await binFetch('PUT',r);const t=$('#syncst');if(t)t.textContent='Guardado en la nube a las '+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});}).catch(e=>{console.warn(e);const t=$('#syncst');if(t)t.textContent='Sin conexión con la nube: guardado en este navegador';});return _q;}
+function touchUser(r,app){if(S.slot==='P')return;r.users=r.users||{};const u=r.users[S.email]||{email:S.email,apps:{}};Object.assign(u,{case:S.case,slot:S.slot,name:S.name,last:Date.now()});u.apps=u.apps||{};u.apps[app]=Date.now();r.users[S.email]=u;}
+const cloudOn=()=>binOn()&&S.slot!=='P';
+let _dirty=false;
+function pushCloud(){if(!_dirty||!ST||!cloudOn())return _q;_dirty=false;const app=APP.id,tk=teamKey(),data=JSON.parse(JSON.stringify(ST));return binUpdate(r=>{r.apps=r.apps||{};r.apps[app]=r.apps[app]||{};r.apps[app][tk]=data;touchUser(r,app);});}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')pushCloud();});
+window.addEventListener('pagehide',()=>pushCloud());
+
+/* ---- estado por equipo ---- */
+function localKey(){return `sab-${APP.id}-${teamKey()}`;}
+async function loadState(){
+  let st=LS.get(localKey());
+  if(binOn()){try{const r=await binFetch('GET');const d=r&&r.apps&&r.apps[APP.id]&&r.apps[APP.id][teamKey()];if(d&&(!st||(d.upd||0)>(st.upd||0)))st=d;}catch(e){}if(S.slot!=='P')binUpdate(r=>touchUser(r,APP.id));}
+  else if(CFG.WORKER_URL){try{const j=await api(`/load?app=${APP.id}&team=${encodeURIComponent(teamKey())}&email=${encodeURIComponent(S.email)}`);if(j&&j.data&&(!st||(j.data.upd||0)>(st.upd||0)))st=j.data;}catch(e){}}
+  ST=st||(S.case==='andes'&&S.slot==='P'&&APP.example?APP.example():APP.fresh(curCaseId()));ST.ai=ST.ai||{};
+}
+let _cloudT=null;
+setInterval(()=>{if(_dirty&&!S.doc)pushCloud();},5000);   // autoguardado en la nube cada 5 segundos
+function save(){if(ro())return;ST.upd=Date.now();ST.by=S.email;ST.team=S.name;LS.set(localKey(),ST);
+  if(cloudOn()){_dirty=true;const t=$('#syncst');if(t)t.textContent='Guardando…';}
+  else if(CFG.WORKER_URL&&!binOn()){clearTimeout(_cloudT);_cloudT=setTimeout(()=>api('/save',{email:S.email,app:APP.id,team:teamKey(),data:ST}).catch(()=>toast('Sin conexión: guardado solo en este navegador')),1500);}}
+async function loadOther(app){ // lee el trabajo del mismo equipo en otra herramienta (p. ej., el Ishikawa desde la matriz)
+  const tk=`${S.case}-${S.slot}`;let st=LS.get(`sab-${app}-${tk}`);
+  if(binOn()){try{const r=await binFetch('GET',null,binOf(app));const d=r&&r.apps&&r.apps[app]&&r.apps[app][tk];if(d&&(!st||(d.upd||0)>(st.upd||0)))st=d;}catch(e){}}
+  else if(CFG.WORKER_URL){try{const j=await api(`/load?app=${app}&team=${encodeURIComponent(tk)}&email=${encodeURIComponent(S.email)}`);if(j&&j.data&&(!st||(j.data.upd||0)>(st.upd||0)))st=j.data;}catch(e){}}
+  return st;}
+
+/* ---- rutas de datos: "causas.3.t" ---- */
+function setPath(o,p,v){const k=p.split('.');let x=o;for(let i=0;i<k.length-1;i++)x=x[k[i]];x[k[k.length-1]]=v;}
+function getPath(o,p){return p.split('.').reduce((x,k)=>x==null?x:x[k],o);}
+
+/* ---- IA ---- */
+function aiBox(id){const t=AI[id];const has=!!CFG.WORKER_URL;return `<div class="aibox"><h3>${t.title}</h3><p class="note">${t.desc}</p>
+  <div class="row">${has?`<button class="btn ai sm" data-ai="${id}"${ro()?' disabled':''}>Pedir a Claude</button>`:''}<button class="btn ghost sm" data-aicopy="${id}">Copiar prompt${has?'':' para su IA'}</button>${t.after?`<button class="btn ghost sm" data-aiuse="${id}"${ro()?' disabled':''}>${t.afterLabel||'Usar la respuesta'}</button>`:''}</div>
+  ${has?'':`<p class="note">Copien el prompt, péguenlo en Claude, ChatGPT o Gemini y traigan la respuesta aquí.</p>`}
+  <textarea class="aiout" data-k="ai.${id}" placeholder="${has?'La respuesta de Claude aparece aquí. Pueden editarla.':'Peguen aquí la respuesta de su IA.'}">${esc(ST.ai[id]||'')}</textarea></div>`;}
+async function runAI(id,btn){const t=AI[id];const {system,prompt}=t.build();const old=btn.innerHTML;btn.disabled=true;btn.innerHTML='<span class="spin"></span> Pensando…';
+  try{const j=await api('/ai',{email:S.email,app:APP.id,system:system||SYS,prompt});ST.ai[id]=j.text||'';save();const ta=document.querySelector(`[data-k="ai.${id}"]`);if(ta)ta.value=ST.ai[id];if(t.auto&&t.after)t.after(ST.ai[id]);}
+  catch(e){toast(e.message||'No se pudo consultar a Claude');}finally{btn.disabled=false;btn.innerHTML=old;}}
+function aiPrompt(id){const {system,prompt}=AI[id].build();return (system||SYS)+'\n\n'+prompt;}
+
+/* =====================================================================
+   PANTALLAS COMUNES
+   ===================================================================== */
+function header(){const c=S.case?curCase():null;
+  $('#appname').innerHTML=`<span class="stage">${S.doc?'Docente':APP.stage}</span>${APP.title}`;
+  if(S.doc){$('#who').innerHTML=`<b>Acceso docente</b><button class="link" data-act="out">Salir</button>`;return;}
+  $('#who').innerHTML=S.email?`${c?`<span><b>${esc(S.name||(S.slot==='P'?'Profesor':'Equipo '+S.slot))}</b> · ${esc(c.corto)}</span>`:''}${S.admin&&binOn()&&CFG.PANEL_URL?`<a class="btn ghost sm" href="${CFG.PANEL_URL}" target="_blank" rel="noopener">Panel docente ↗</a>`:''}${S.admin&&CFG.WORKER_URL&&!binOn()?`<button class="btn ghost sm" data-act="panel">Panel del profesor</button>`:''}${isDemo()&&APP.example?`<button class="btn ghost sm" data-act="reset">Restablecer ejemplo</button>`:''}${S.case?`<button class="link" data-act="team">Cambiar equipo</button>`:''}<button class="link" data-act="out">Salir</button>`:'';}
+function viewLogin(msg){return `<div class="login card"><span class="label">Universidad de La Sabana · MGDP</span><h1>${APP.title}</h1><p class="lead">${APP.intro}</p>
+  <label class="f">Correo de La Sabana<input type="email" id="em" placeholder="usuario@unisabana.edu.co" autocomplete="email"></label>
+  <div id="admk" hidden><label class="f">Clave del panel (solo profesor)<input type="password" id="ak" placeholder="Opcional"></label></div>
+  ${msg?`<p class="err">${msg}</p>`:''}<button class="btn" data-act="login">Entrar</button>
+  <p class="note">Puedes escribir solo tu usuario (por ejemplo, <span class="cnt">leidymove</span>).</p>
+  ${APP.renderDoc?`<details style="border-top:1px solid var(--line);padding-top:12px"><summary class="link" style="cursor:pointer">Acceso docente</summary><div style="display:flex;flex-direction:column;gap:10px;margin-top:10px"><label class="f">DNI del docente<input type="password" id="dni" inputmode="numeric" autocomplete="off"></label><button class="btn ghost" data-act="doclogin">Entrar como docente</button></div></details>`:''}</div>`;}
+function viewTeam(){const t=LS.get('sab-team-'+S.email)||{};const cs=t.case||'',sl=t.slot||(S.admin?'P':'A');
+  return `<div class="card" style="max-width:900px;margin:0 auto;width:100%"><span class="label">Antes de empezar</span><h2>¿Para qué cliente trabaja su consultora?</h2>
+  <p class="lead">Elijan su empresa y su equipo. Todos los integrantes deben elegir lo mismo para ver y editar el mismo trabajo.</p>
+  <div class="casepick">${REAL.concat(S.admin?['andes']:[]).map(id=>`<button class="cpick${cs===id?' on':''}" data-pick="${id}"><b>${id==='andes'?'Ejemplo completo · Andes Contact':CASES[id].corto}</b><span>${id==='andes'?'Solo profesor: elijan “Profesor” para verlo completo':CASES[id].proceso}</span></button>`).join('')}</div>
+  <div class="row"><span class="label">Equipo</span><div class="seg">${['A','B'].concat(S.admin?['P']:[]).map(x=>`<button data-slot="${x}" class="${sl===x?'on':''}">${x==='P'?'Profesor':'Equipo '+x}</button>`).join('')}</div><span class="note">Si hay dos equipos con la misma empresa, uno es A y el otro B.</span></div>
+  <label class="f">Nombre de su consultora (opcional)<input type="text" id="tn" value="${esc(t.name||'')}" placeholder="Ej.: LCJJ Consultores"></label>
+  <div class="row"><button class="btn" data-act="teamok">Continuar</button></div></div>`;}
+async function viewPanel(){let rows=[];try{const j=await api('/list',{app:APP.id,key:S.key});rows=j.items||[];}catch(e){return `<div class="card"><h2>Panel del profesor</h2><p class="err">${esc(e.message)}. Revisa la clave del panel.</p><div class="row"><button class="btn ghost" data-act="back">Volver</button></div></div>`;}
+  rows.sort((a,b)=>(b.data?.upd||0)-(a.data?.upd||0));window._panel=rows;
+  return `<div class="card"><span class="label">Solo profesor</span><h2>Trabajo de los equipos · ${APP.title}</h2>
+  <div class="tbl"><table><thead><tr><th>Equipo</th><th>Empresa</th><th>Último cambio</th><th>Avance</th><th></th></tr></thead><tbody>${rows.length?rows.map((r,i)=>{const [cid,slot]=r.team.split('-').slice(-2);const pr=r.team.startsWith('andes-');return `<tr><td><b>${esc(r.data?.team||'Equipo '+slot)}</b><br><span class="note">${esc(r.data?.by||'')}</span></td><td>${esc(CASES[cid]?.corto||cid)}${pr?' · práctica':''}</td><td class="num">${r.data?.upd?new Date(r.data.upd).toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'}):'–'}</td><td>${esc(APP.brief(r.data||{}))}</td><td><button class="btn sm ghost" data-view="${i}">Ver</button></td></tr>`;}).join(''):`<tr><td colspan="5" class="note">Todavía no hay trabajos guardados.</td></tr>`}</tbody></table></div>
+  <div class="row"><button class="btn ghost" data-act="back">Volver a mi trabajo</button></div></div>`;}
+
+async function route(){header();const app=$('#app');
+  if(S.doc&&!S.view){app.innerHTML='<div class="card"><p class="note">Cargando…</p></div>';app.innerHTML=await APP.renderDoc();return;}
+  if(!S.email&&!S.doc){app.innerHTML=viewLogin();bindLogin();return;}
+  if(!S.case){app.innerHTML=viewTeam();return;}
+  if(S.panel){app.innerHTML='<div class="card"><p class="note">Cargando…</p></div>';app.innerHTML=await viewPanel();return;}
+  if(!ST){await loadState();if(APP.afterLoad)await APP.afterLoad();}
+  app.innerHTML=(S.view?`<div class="banner"><b>Viendo el trabajo de ${esc(S.view.data?.team||S.view.team)}</b><span class="note">Solo lectura.</span><button class="btn sm" data-act="unview">Volver al panel</button></div>`:'')+`<fieldset class="ro"${ro()?' disabled':''}>${APP.render()}</fieldset><p class="foot">${cloudOn()?`Guardado automático cada 5 segundos en la nube del curso: no necesitan guardar. <b><span id="syncst"></span></b>`:S.slot==='P'?'Modo profesor: tus cambios se guardan solo en este navegador.':CFG.WORKER_URL?'Se guarda automáticamente para todo el equipo.':'Se guarda automáticamente en este navegador.'} · Casos ficticios, uso académico.</p>`;
+  APP.live&&APP.live();}
+function bindLogin(){const dn=$('#dni');if(dn)dn.addEventListener('keydown',e=>{if(e.key==='Enter')$('[data-act=doclogin]').click();});const em=$('#em');em.addEventListener('input',()=>{$('#admk').hidden=!(isAdm(normEmail(em.value))&&CFG.WORKER_URL&&!binOn());});em.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});em.focus();}
+function doLogin(){const e=normEmail($('#em').value);if(!allowed(e)){$('#app').innerHTML=viewLogin('Ese correo no está en la lista del curso. Escríbelo como aparece en tu cuenta de La Sabana.');bindLogin();return;}
+  S.email=e;S.admin=isAdm(e);S.key=S.admin?($('#ak')?.value||''):'';LS.set('sab-session',{email:e,key:S.key});
+  setTeam();route();}
+function setTeam(){const t=LS.get('sab-team-'+S.email);if(t&&t.case){S.case=t.case;S.slot=t.slot;S.name=t.name||'';}else if(S.admin){S.case='andes';S.slot='P';S.name='Ejemplo del profesor';}}
+const isDemo=()=>S.case==='andes'&&S.slot==='P'&&!S.view;
+
+document.addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
+  const a=b.dataset.act;
+  if(a==='login')return doLogin();
+  if(a==='doclogin'){const v=($('#dni').value||'').replace(/\D/g,'');const h=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)))].map(x=>x.toString(16).padStart(2,'0')).join('');if(h!==CFG.DOC_DNI_SHA256){$('#app').innerHTML=viewLogin('DNI docente incorrecto.');bindLogin();return;}S.doc=true;S.email=null;sessionStorage.setItem('sab-doc','1');return route();}
+  if(a==='out'&&S.doc){S.doc=false;S.view=null;S.case=null;ST=null;sessionStorage.removeItem('sab-doc');return route();}
+  if(a==='unview'&&S.doc){S.view=null;S.case=null;S.slot=null;S.practice=false;ST=null;return route();}
+  if(a==='out'||a==='team'){clearTimeout(_cloudT);await pushCloud();}
+  if(a==='out'){LS.del('sab-session');Object.assign(S,{email:null,admin:false,key:'',case:null,slot:null,name:'',practice:false,view:null,panel:false});ST=null;return route();}
+  if(a==='team'){S.case=null;S.view=null;S.panel=false;ST=null;return route();}
+  if(a==='panel'){S.panel=true;return route();}
+  if(a==='sync'){_dirty=true;clearTimeout(_cloudT);await pushCloud();return toast('Guardado en la nube');}
+  if(a==='reload'){_dirty&&await pushCloud();ST=null;await route();return toast('Actualizado');}
+  if(a==='reset'){if(!confirmReset(b))return;ST=APP.example();save();return route();}
+  if(a==='back'){S.panel=false;S.view=null;S.practice=false;ST=null;return route();}
+  if(a==='unview'){S.view=null;S.panel=true;S.practice=false;ST=null;return route();}
+  if(a==='teamok'){const p=$('.cpick.on'),sl=$('.seg button.on');if(!p)return toast('Elijan su empresa');S.case=p.dataset.pick;S.slot=sl?sl.dataset.slot:'A';S.name=$('#tn').value.trim();LS.set('sab-team-'+S.email,{case:S.case,slot:S.slot,name:S.name});ST=null;return route();}
+  if(b.dataset.pick){document.querySelectorAll('.cpick').forEach(x=>x.classList.toggle('on',x===b));return;}
+  if(b.dataset.slot){b.parentElement.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));return;}
+  if(b.dataset.view){const r=window._panel[+b.dataset.view];S.view=r;S.panel=false;const parts=r.team.split('-');S.practice=parts[0]==='andes';ST=JSON.parse(JSON.stringify(r.data||{}));ST.ai=ST.ai||{};return route();}
+  if(b.dataset.ai)return runAI(b.dataset.ai,b);
+  if(b.dataset.aicopy)return copyTxt(aiPrompt(b.dataset.aicopy));
+  if(b.dataset.aiuse){const id=b.dataset.aiuse;return AI[id].after(ST.ai[id]||'');}
+  APP.click&&APP.click(b,e);
+});
+document.addEventListener('input',e=>{const el=e.target;const k=el.dataset&&el.dataset.k;if(!k||!ST||ro())return;
+  let v=el.type==='checkbox'?el.checked:el.value;if(el.dataset.num!==undefined)v=+v||0;setPath(ST,k,v);save();APP.live&&APP.live(el);});
+document.addEventListener('change',e=>{const el=e.target;if(el.dataset&&el.dataset.rerender!==undefined&&!ro())route();});
+
+function confirmReset(b){if(b.dataset.armed)return true;b.dataset.armed='1';b.textContent='¿Seguro? Pulsa otra vez';setTimeout(()=>{if(b.isConnected){delete b.dataset.armed;b.textContent='Restablecer ejemplo';}},3000);return false;}
+function boot(){if(sessionStorage.getItem('sab-doc')){S.doc=true;document.title=APP.title+' · La Sabana MGDP';return route();}const s=LS.get('sab-session');if(s&&s.email&&allowed(s.email)){S.email=s.email;S.admin=isAdm(s.email);S.key=s.key||'';setTeam();}
+  document.title=APP.title+' · La Sabana MGDP';route();}
+
+/* =====================================================================
+   ACCESO DOCENTE GENÉRICO (matriz y validador): estados, entregas y descargas
+   Cada app define APP.doc = {estado(d), brief(d), sheets(T), txt(tk,d)}
+   ===================================================================== */
+let gDB=null,gTimer=null;
+const gFmt=t=>t?new Date(t).toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'}):'–';
+const gHace=t=>{if(!t)return '';const m=Math.round((Date.now()-t)/60000);return m<1?'hace segundos':m<60?`hace ${m} min`:`hace ${Math.round(m/60)} h`;};
+function gTeam(tk){const p=tk.split('-');return {slot:p[p.length-1],cid:p[p.length-2],prac:p.length===3};}
+const gEmp=tk=>{const p=gTeam(tk);return (CASES[p.cid]?.corto||p.cid)+(p.prac?' · práctica Andes':'');};
+async function genericDoc(){let DB;try{DB=await binFetch('GET');if(!DB||typeof DB!=='object')DB={};}catch(e){return `<div class="card"><h2>No pude leer la base de datos</h2><p class="err">${esc(e.message)}</p><div class="row"><button class="btn" data-gd="refresh">Reintentar</button></div></div>`;}
+  gDB=DB;const A=(DB.apps&&DB.apps[APP.id])||{},U=DB.users||{};const T=Object.entries(A).sort((a,b)=>a[0].localeCompare(b[0]));
+  const all=CFG.USERS.map(u=>u+'@'+CFG.DOMAIN);const nIn=all.filter(e=>U[e]&&U[e].apps&&U[e].apps[APP.id]).length;
+  clearTimeout(gTimer);gTimer=setTimeout(()=>{if(S.doc&&!S.view)route();},30000);
+  return `<div class="card"><div class="row" style="justify-content:space-between"><div><span class="label">Acceso docente</span><h2>${APP.title} · equipos</h2></div>
+   <div class="row"><button class="btn ghost sm" data-gd="refresh">Actualizar</button><button class="btn sm" data-gd="xlsx">Descargar todo (Excel)</button><button class="btn ghost sm" data-gd="txt">Todas las respuestas (TXT)</button></div></div>
+   <div class="row">${[[`${nIn} / ${all.length}`,'participantes usaron esta herramienta'],[T.length,'equipos con trabajo'],[T.filter(([,d])=>APP.doc.estado(d)[1]==='g').length,'completos']].map(([v,l])=>`<div class="pill" style="padding:8px 14px;border-radius:12px"><b style="font-family:var(--display);font-size:20px">${v}</b><span class="note">${l}</span></div>`).join('')}</div>
+   <p class="note">Se actualiza solo cada 30 segundos. Última lectura: ${new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}.</p></div>
+  <div class="card"><h2>Equipos</h2>${T.length?`<div class="tbl"><table><thead><tr><th>Equipo</th><th>Empresa</th><th>Integrantes</th><th>Último guardado</th><th>Entrega</th><th>Avance</th><th></th></tr></thead><tbody>
+   ${T.map(([tk,d])=>{const p=gTeam(tk),e=APP.doc.estado(d);const mem=Object.values(U).filter(u=>u.case===p.cid&&u.slot===p.slot).map(u=>u.email.split('@')[0]);
+    return `<tr><td><b>${esc(d.team||'Equipo '+p.slot)}</b></td><td>${esc(gEmp(tk))}</td><td style="font-size:12.5px">${esc(mem.join(', ')||'–')}</td><td class="num">${gFmt(d.upd)}<br><span class="note">${gHace(d.upd)}</span></td><td><span class="pill"><span class="dot d-${e[1]}"></span>${e[0]}</span></td><td style="font-size:13px">${esc(APP.doc.brief(d))}</td><td><button class="btn ghost sm" data-gd="ver" data-i="${tk}">Ver</button></td></tr>`;}).join('')}</tbody></table></div>`:'<p class="note">Todavía no hay equipos con trabajo guardado.</p>'}</div>
+  <div class="card"><h2>Participantes</h2><div class="tbl"><table><thead><tr><th>Correo</th><th>Empresa</th><th>Equipo</th><th>Último ingreso</th><th>Usó esta herramienta</th></tr></thead><tbody>${all.map(e=>{const u=U[e];return `<tr><td>${esc(e)}</td><td>${u?esc(CASES[u.case]?.corto||u.case):'<span class="note">No ha ingresado</span>'}</td><td>${u?esc(u.slot):''}</td><td class="num">${u?gFmt(u.last):''}</td><td>${u&&u.apps&&u.apps[APP.id]?gFmt(u.apps[APP.id]):''}</td></tr>`;}).join('')}</tbody></table></div></div>`;}
+function gSheets(){const A=(gDB.apps&&gDB.apps[APP.id])||{},U=gDB.users||{};const T=Object.entries(A);const all=CFG.USERS.map(u=>u+'@'+CFG.DOMAIN);
+  const S1=[['Correo','Ingresó','Empresa','Equipo','Consultora','Último ingreso','Usó esta herramienta']].concat(all.map(e=>{const u=U[e]||{};return [e,u.last?'Sí':'No',CASES[u.case]?.corto||'',u.slot||'',u.name||'',u.last?gFmt(u.last):'',u.apps&&u.apps[APP.id]?gFmt(u.apps[APP.id]):''];}));
+  const S2=[['Equipo','Empresa','Último guardado','Por','Entrega','Avance']].concat(T.map(([tk,d])=>[d.team||'Equipo '+gTeam(tk).slot,gEmp(tk),gFmt(d.upd),d.by||'',APP.doc.estado(d)[0],APP.doc.brief(d)]));
+  return [['Participantes',S1],['Equipos',S2],...APP.doc.sheets(T)];}
+function gLoadX(){return window.XLSX?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s);});}
+async function gXlsx(){const sh=gSheets(),st=new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');try{await gLoadX();const wb=XLSX.utils.book_new();sh.forEach(([n,rows])=>{const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=rows[0].map((h,i)=>({wch:Math.min(60,Math.max(10,...rows.slice(0,60).map(r=>String(r[i]??'').length))+2)}));XLSX.utils.book_append_sheet(wb,ws,n);});XLSX.writeFile(wb,`MGDP-${APP.id}-${st}.xlsx`);}
+  catch(e){toast('Sin conexión al generador de Excel: descargo CSV');const q=t=>'"'+String(t??'').replace(/"/g,'""')+'"';sh.forEach(([n,rows],i)=>setTimeout(()=>dl(`MGDP-${APP.id}-${n}-${st}.csv`,new Blob(['﻿'+rows.map(r=>r.map(q).join(';')).join('\n')],{type:'text/csv'})),i*400));}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-gd]');if(!b||!S.doc)return;const a=b.dataset.gd;
+  if(a==='refresh')return route();
+  if(a==='xlsx')return gXlsx();
+  if(a==='txt'){const A=(gDB.apps&&gDB.apps[APP.id])||{};const out=Object.entries(A).map(([tk,d])=>`${APP.title.toUpperCase()} · ${d.team||'Equipo '+gTeam(tk).slot} · ${gEmp(tk)}\nÚltimo guardado: ${gFmt(d.upd)} por ${d.by||'–'}\n\n${APP.doc.txt(tk,d)}`);return dl(`MGDP-${APP.id}-respuestas.txt`,new Blob([out.join('\n\n'+'='.repeat(60)+'\n\n')||'Sin respuestas'],{type:'text/plain'}));}
+  if(a==='ver'){const tk=b.dataset.i,d=gDB.apps[APP.id][tk],p=gTeam(tk);clearTimeout(gTimer);S.view={team:tk,data:d};S.practice=p.prac;S.case=p.cid;S.slot=p.slot;S.name=d.team||'Equipo '+p.slot;ST=JSON.parse(JSON.stringify(d));ST.ai=ST.ai||{};window.scrollTo(0,0);return route();}
+});
+
+/* =====================================================================
+   ISHIKAWA ASISTIDO · Etapa 2
+   ===================================================================== */
+const EV=[['','¿Fuente?','n'],['caso','Dato del caso','g'],['estudio','Estudio científico','g'],['voces','Voces de grupos de interés','y'],['exp','Experiencia profesional','y'],['sup','Supuesto (sin evidencia)','r']];
+const EVC=Object.fromEntries(EV.map(e=>[e[0],e[2]]));const EVN=Object.fromEntries(EV.map(e=>[e[0],e[1]]));
+const STN={abierta:'Abierta',raiz:'Causa raíz probable',descartada:'Descartada'};
+const uid=()=>Math.random().toString(36).slice(2,9);
+const APP={
+ id:'ishikawa',title:'Ishikawa asistido',stage:'Etapa 2',
+ intro:'Abran todas las causas posibles de su problema, marquen con qué evidencia sostienen cada una y quédense con las causas raíz que resisten el intento de desmentirlas.',
+ fresh(c){return {efecto:CASES[c].efecto,hip:'',causas:[],ai:{}};},
+ brief(d){const c=d.causas||[];return `${c.length} causas · ${c.filter(x=>x.st==='raiz').length} raíz · ${c.filter(x=>x.st==='descartada').length} descartadas`;},
+ render(){const c=curCase();return `
+  <div class="card"><span class="label">${esc(c.n)} · cliente: ${esc(c.cliente)}</span><h2><span class="n">01</span>La cabeza del pescado</h2>
+   <p class="lead">El resultado que su hipótesis del cuello de botella quiere explicar. Que se pueda medir.</p>
+   <div class="grid2"><label class="f">Resultado (efecto)<textarea data-k="efecto" rows="2">${esc(ST.efecto)}</textarea></label>
+   <label class="f">Su hipótesis del cuello (sesión 3)<textarea data-k="hip" rows="2" placeholder="Creemos que [resultado] se explica principalmente por [cuello] en [etapa], porque [dato].">${esc(ST.hip)}</textarea></label></div></div>
+
+  <div class="card"><h2><span class="n">02</span>Las seis espinas</h2>
+   <p class="lead">Al menos dos causas por espina. “Sugerir del caso” trae causas posibles: revísenlas, edítenlas o bórrenlas. A cada causa, su fuente de evidencia y su estado.</p>
+   <div class="row"><button class="btn gold sm" data-allbank>Sugerir del caso en las seis espinas</button><span class="note">Las sugerencias son hipótesis, no conclusiones.</span></div>
+   <div class="grid2">${CATS.map(([k,n,d])=>this.catCard(k,n,d)).join('')}</div>
+   ${aiBox('sug')}</div>
+
+  <div class="card"><h2><span class="n">03</span>El diagrama</h2><p class="lead">Se dibuja solo. Descárguenlo para su diapositiva 4.</p>
+   <div class="svgbox" id="fishbox"></div>
+   <div class="row"><button class="btn sm" data-png>Descargar PNG</button><button class="btn ghost sm" data-svg>Descargar SVG</button>
+   <span class="note"><span class="dot d-g"></span> fuente sólida · <span class="dot d-y"></span> fuente parcial · <span class="dot d-r"></span> supuesto · <span class="dot d-n"></span> sin fuente · texto en negrita: causa raíz</span></div></div>
+
+  <div class="card"><h2><span class="n">04</span>Causas raíz: cinco porqués</h2>
+   <p class="lead">Máximo tres causas raíz. Pregunten “¿por qué?” hasta llegar a algo que el proceso controla, y escriban qué dato las desmentiría.</p>
+   ${this.whys()}</div>
+
+  <div class="card"><h2><span class="n">05</span>Validación</h2>
+   <div class="grid2"><div><span class="label">Estado de la evidencia</span><div class="chk" id="valid" style="margin-top:8px"></div></div>
+   <div>${aiBox('diablo')}</div></div></div>
+
+  <div class="card"><h2><span class="n">06</span>Para su diapositiva 4</h2>
+   <p class="lead">Resumen listo para copiar. Sus causas pasan solas a la matriz de restricciones, donde escriben la mejora y la valoran.</p>
+   <pre id="sum" style="white-space:pre-wrap;font:13px/1.55 var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;margin:0;max-height:320px;overflow:auto"></pre>
+   <div class="row"><button class="btn sm" data-copysum>Copiar resumen</button></div></div>`;},
+ catCard(k,n,d){const list=ST.causas.filter(x=>x.cat===k);return `<div class="card" style="padding:14px;gap:10px;background:#fbfcfe">
+   <div class="row" style="justify-content:space-between"><div><b style="font-family:var(--display);font-size:16.5px">${n}</b><br><span class="note">${d}</span></div><span class="cnt">${list.length} causa${list.length===1?'':'s'}</span></div>
+   ${list.map(x=>{const i=ST.causas.indexOf(x);return `<div style="display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:8px">
+     <div class="row" style="flex-wrap:nowrap"><span class="dot d-${EVC[x.ev||'']}"></span><input type="text" data-k="causas.${i}.t" value="${esc(x.t)}" style="flex:1"><button class="x" data-del="${x.id}" title="Borrar">×</button></div>
+     <div class="row" style="gap:6px;flex-wrap:nowrap"><select data-k="causas.${i}.ev" data-rerender style="flex:1;font-size:13px;padding:6px 8px">${EV.map(e=>`<option value="${e[0]}"${(x.ev||'')===e[0]?' selected':''}>${e[1]}</option>`).join('')}</select>
+     <select data-k="causas.${i}.st" data-rerender style="flex:1;font-size:13px;padding:6px 8px">${Object.entries(STN).map(([v,l])=>`<option value="${v}"${x.st===v?' selected':''}>${l}</option>`).join('')}</select></div>
+     ${x.st==='descartada'?`<input type="text" data-k="causas.${i}.nota" value="${esc(x.nota||'')}" placeholder="Descartada porque… (el dato que la descarta)" style="font-size:13px">`:''}
+     ${x.src!=='eq'?`<span class="note" style="font-size:11.5px">${x.src==='ia'?'Sugerida por IA':'Sugerida del caso'}: revísenla</span>`:''}</div>`;}).join('')}
+   <div class="row" style="flex-wrap:nowrap"><input type="text" id="add-${k}" placeholder="Nueva causa…" data-addk="${k}"><button class="btn sm ghost" data-add="${k}">Agregar</button></div>
+   <button class="link" data-bank="${k}" style="align-self:flex-start">Sugerir del caso</button></div>`;},
+ whys(){const r=ST.causas.filter(x=>x.st==='raiz');if(!r.length)return `<p class="note">Todavía no hay causas raíz. En la sección 2, cambien el estado de una causa a “Causa raíz probable”.</p>`;
+   return `${r.length>3?`<p class="err">Tienen ${r.length} causas raíz. Quédense con máximo tres: las demás pueden seguir abiertas.</p>`:''}<div class="grid${r.length>1?'3':'2'}">${r.map(x=>{const i=ST.causas.indexOf(x);x.w=x.w||['','','','',''];return `<div class="card" style="padding:14px;gap:8px;border-color:var(--gold)"><span class="label">${CATN[x.cat]}</span><b style="font-family:var(--display);font-size:16px">${esc(x.t)}</b>
+     ${x.w.map((w,j)=>`<label class="f">¿Por qué? ${j+1}<input type="text" data-k="causas.${i}.w.${j}" value="${esc(w)}"></label>`).join('')}
+     <label class="f">¿Qué dato la desmentiría?<input type="text" data-k="causas.${i}.nota" value="${esc(x.nota||'')}"></label></div>`;}).join('')}</div>`;},
+ live(){const f=$('#fishbox');if(f)f.innerHTML=fishSVG();const v=$('#valid');if(v)v.innerHTML=checks().map(([c,t,s])=>`<div><span class="dot d-${c}"></span><span>${t}${s?`<small>${s}</small>`:''}</span></div>`).join('');const s=$('#sum');if(s)s.textContent=summary();},
+ click(b){
+   if(b.dataset.add){const k=b.dataset.add,i=$('#add-'+k);if(!i.value.trim())return;ST.causas.push({id:uid(),cat:k,t:i.value.trim(),src:'eq',ev:'',st:'abierta'});save();route();setTimeout(()=>$('#add-'+k)?.focus(),0);return;}
+   if(b.dataset.del){ST.causas=ST.causas.filter(x=>x.id!==b.dataset.del);save();route();return;}
+   if(b.dataset.bank){addBank(b.dataset.bank);return;}
+   if(b.dataset.allbank!==undefined){CATS.forEach(c=>addBank(c[0],true));route();toast('Causas sugeridas agregadas: revísenlas');return;}
+   if(b.dataset.png!==undefined)return svgPng($('#fishbox svg'),'ishikawa-'+teamKey()+'.png');
+   if(b.dataset.svg!==undefined)return svgFile($('#fishbox svg'),'ishikawa-'+teamKey()+'.svg');
+   if(b.dataset.copysum!==undefined)return copyTxt(summary());
+ }
+};
+document.addEventListener('keydown',e=>{const k=e.target.dataset&&e.target.dataset.addk;if(k&&e.key==='Enter'){e.preventDefault();$(`[data-add="${k}"]`).click();}});
+function addBank(k,quiet){const have=new Set(ST.causas.map(x=>x.t.toLowerCase()));const add=(curCase().causas[k]||[]).filter(t=>!have.has(t.toLowerCase()));
+  add.forEach(t=>ST.causas.push({id:uid(),cat:k,t,src:'banco',ev:'',st:'abierta'}));save();if(!quiet){route();toast(add.length?`${add.length} causa(s) sugerida(s)`:'Ya tienen todas las sugerencias del caso');}}
+
+function checks(){const C=ST.causas,out=[];const raiz=C.filter(x=>x.st==='raiz'),desc=C.filter(x=>x.st==='descartada');
+  const emptyCats=CATS.filter(([k])=>C.filter(x=>x.cat===k&&x.st!=='descartada').length<2).map(c=>c[1]);
+  out.push([emptyCats.length?'y':'g',emptyCats.length?`Espinas con menos de dos causas: ${emptyCats.join(', ')}`:'Las seis espinas tienen al menos dos causas']);
+  const sinF=C.filter(x=>!x.ev&&x.st!=='descartada').length;out.push([sinF?'y':'g',sinF?`${sinF} causa(s) sin fuente de evidencia`:'Todas las causas tienen fuente']);
+  out.push([raiz.length===0?'r':raiz.length>3?'y':'g',raiz.length===0?'Aún no eligen causas raíz':raiz.length>3?`${raiz.length} causas raíz: máximo tres`:`${raiz.length} causa(s) raíz elegida(s)`]);
+  raiz.forEach(x=>{const ok=x.ev&&x.ev!=='sup';const w=(x.w||[]).filter(Boolean).length;out.push([ok&&w>=3?'g':ok?'y':'r',`Raíz: ${x.t}`,`${ok?'Fuente: '+EVN[x.ev]:'Se apoya solo en un supuesto: busquen un dato del caso o un estudio'} · ${w} de 5 porqués${x.nota?'':' · falta el dato que la desmentiría'}`]);});
+  const dn=desc.filter(x=>!x.nota).length;out.push([desc.length===0?'y':dn?'y':'g',desc.length===0?'Ninguna explicación descartada todavía':`${desc.length} descartada(s)${dn?`, ${dn} sin el dato que la descarta`:', todas con su argumento'}`,desc.length===0?'Validar también es descartar: usen al abogado del diablo.':'']);
+  const ent=C.filter(x=>x.st==='raiz'&&x.cat==='entorno').length;if(ent)out.push(['y','Hay una causa raíz en “Entorno y mercado”','La empresa no la controla. ¿Qué parte del proceso la amplifica?']);
+  return out;}
+
+function summary(){const c=curCase(),C=ST.causas;const L=[`ISHIKAWA · ${c.n}`,`Resultado: ${ST.efecto}`];if(ST.hip)L.push(`Hipótesis: ${ST.hip}`);
+  CATS.forEach(([k,n])=>{const l=C.filter(x=>x.cat===k);if(l.length)L.push(`\n${n.toUpperCase()}\n`+l.map(x=>`- ${x.t} [${EVN[x.ev||'']}]${x.st==='raiz'?' ← CAUSA RAÍZ':x.st==='descartada'?' (descartada'+(x.nota?': '+x.nota:'')+')':''}`).join('\n'));});
+  const r=C.filter(x=>x.st==='raiz');if(r.length)L.push('\nCINCO PORQUÉS\n'+r.map(x=>`${x.t}\n`+(x.w||[]).filter(Boolean).map((w,j)=>`  ${j+1}. ${w}`).join('\n')+(x.nota?`\n  Lo desmentiría: ${x.nota}`:'')).join('\n'));
+  return L.join('\n');}
+
+/* ---- diagrama ---- */
+function wrapT(t,n){const w=String(t).split(/\s+/),L=[];let l='';w.forEach(x=>{if((l+' '+x).trim().length>n){if(l)L.push(l);l=x;}else l=(l+' '+x).trim();});if(l)L.push(l);return L;}
+const cut=(t,n)=>t.length>n?t.slice(0,n-1)+'…':t;
+function fishSVG(d=ST,c=curCase(),label=(S.name||('Equipo '+S.slot))){const W=1240,H=660,SY=320,DX=170,top=62,bot=578,XE=[350,640,930];const col={g:'#1d7552',y:'#d9a400',r:'#c0392b',n:'#b7c1d1'};const F='Arial, Helvetica, sans-serif';
+  let g=`<rect width="${W}" height="${H}" fill="#fff"/><line x1="40" y1="${SY}" x2="1000" y2="${SY}" stroke="#0b2447" stroke-width="4"/><path d="M1000 ${SY} l-16 -9 v18 z" fill="#0b2447"/>`;
+  const hl=wrapT(d.efecto||'Resultado',24).slice(0,6);g+=`<rect x="1004" y="${SY-92}" width="222" height="184" rx="14" fill="#0b2447"/>`+hl.map((l,i)=>`<text x="1115" y="${SY-(hl.length-1)*10+i*20+5}" text-anchor="middle" font-family="${F}" font-size="15" font-weight="700" fill="#fff">${esc(l)}</text>`).join('');
+  CATS.forEach(([k,n],ci)=>{const up=ci<3,xe=XE[ci%3],ye=up?top:bot,x0=xe-DX;
+    g+=`<line x1="${x0}" y1="${ye}" x2="${xe}" y2="${SY}" stroke="#0b4da2" stroke-width="2.5"/>`;
+    const lw=n.length*7.6+22;g+=`<rect x="${x0-lw/2}" y="${up?ye-34:ye+8}" width="${lw}" height="26" rx="13" fill="#e4edf9"/><text x="${x0}" y="${up?ye-16:ye+26}" text-anchor="middle" font-family="${F}" font-size="13.5" font-weight="700" fill="#0b2447">${esc(n)}</text>`;
+    const l=(d.causas||[]).filter(x=>x.cat===k),show=l.slice(0,7),N=Math.max(show.length,1);
+    show.forEach((x,i)=>{const t=0.12+(i+0.5)*(0.78/N);const px=x0+DX*t,py=ye+(SY-ye)*t;const rz=x.st==='raiz',ds=x.st==='descartada';
+      g+=`<line x1="${px-6}" y1="${py}" x2="${px}" y2="${py}" stroke="#8a97ad"/><circle cx="${px}" cy="${py}" r="${rz?6.5:4.5}" fill="${col[EVC[x.ev||'']]}"${rz?' stroke="#f2b91f" stroke-width="3"':''}/>
+      ${(()=>{let L=wrapT(x.t,rz?29:32);if(L.length>2)L=[L[0],cut(L.slice(1).join(' '),rz?29:32)];const y0=L.length>1?py-2:py+4;return L.map((l,j)=>`<text x="${px-10}" y="${y0+j*13}" text-anchor="end" font-family="${F}" font-size="${rz?12:11}" font-weight="${rz?700:400}" fill="${ds?'#9aa5b8':'#0b2447'}"${ds?' text-decoration="line-through"':''}>${esc(l)}</text>`).join('');})()}`;});
+    if(l.length>7)g+=`<text x="${xe-30}" y="${up?SY-14:SY+22}" font-family="${F}" font-size="11" fill="#51607a">+${l.length-7} más</text>`;
+    if(!l.length)g+=`<text x="${x0+DX*.5-8}" y="${ye+(SY-ye)*.5+4}" text-anchor="end" font-family="${F}" font-size="11.5" fill="#9aa5b8" font-style="italic">sin causas todavía</text>`;});
+  g+=`<text x="40" y="${H-14}" font-family="${F}" font-size="12" fill="#51607a">${esc(c.n)} · ${esc(label)} · Ishikawa del cuello de botella</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama de Ishikawa">${g}</svg>`;}
+
+/* ---- IA ---- */
+const causasTxt=()=>ST.causas.map(x=>`- [${CATN[x.cat]}] ${x.t} · fuente: ${EVN[x.ev||'']} · estado: ${STN[x.st]}${x.nota?' · nota: '+x.nota:''}`).join('\n')||'(sin causas todavía)';
+AI.sug={title:'Sugerir causas con Claude',desc:'Propone dos causas nuevas por espina a partir del caso y de lo que ya tienen. Luego pulsen “Agregar a las espinas”.',afterLabel:'Agregar a las espinas',auto:true,
+ build:()=>({prompt:`CASO DEL CLIENTE\n${curCase().ficha}\n\nRESULTADO A EXPLICAR\n${ST.efecto}\n\nHIPÓTESIS DEL EQUIPO\n${ST.hip||'(sin hipótesis escrita)'}\n\nCAUSAS QUE YA TIENEN\n${causasTxt()}\n\nTAREA\nPropón 2 causas nuevas por cada espina del diagrama de Ishikawa, distintas de las que ya tienen, plausibles con el caso y que se puedan verificar.\nFORMATO ESTRICTO: una causa por línea, así: clave: causa (máximo 12 palabras). Claves permitidas: metodo, personas, gobierno, medicion, sistemas, entorno. Nada más: sin introducción ni cierre.`}),
+ after(t){let n=0;const have=new Set(ST.causas.map(x=>x.t.toLowerCase()));(t||'').split('\n').forEach(l=>{const m=l.normalize('NFD').replace(/[̀-ͯ]/g,'').match(/^\s*[-*\d.)]*\s*(metodo|personas|gobierno|medicion|sistemas|entorno)\s*[:|\-–]\s*(.+)$/i);if(m){const txt=l.slice(l.length-m[2].length).trim().replace(/\.$/,'');if(!have.has(txt.toLowerCase())){ST.causas.push({id:uid(),cat:m[1].toLowerCase(),t:txt,src:'ia',ev:'',st:'abierta'});have.add(txt.toLowerCase());n++;}}});save();route();toast(n?`${n} causa(s) agregada(s)`:'No encontré líneas con el formato “clave: causa”');}};
+AI.diablo={title:'Abogado del diablo',desc:'Intenta desmentir su diagnóstico: explicaciones alternativas, el dato que las distingue y las causas raíz débiles.',
+ build:()=>({prompt:`CASO DEL CLIENTE\n${curCase().ficha}\n\nRESULTADO\n${ST.efecto}\nHIPÓTESIS DEL EQUIPO\n${ST.hip||'(sin hipótesis escrita)'}\n\nSU ISHIKAWA\n${causasTxt()}\n\nTAREA (actúa como abogado del diablo)\n1. Tres explicaciones alternativas a su hipótesis que un directivo del cliente podría defender.\n2. Para cada una, el dato que la distinguiría de su hipótesis y dónde conseguirlo (el caso, el cliente o estudios).\n3. Qué causa raíz se apoya solo en supuestos o es en realidad un síntoma.\n4. Una pregunta incómoda que deberían hacerle al cliente.\nNo cites estudios con autores ni años.`})};
+
+APP.example=function(){const C=(cat,t,ev,st,extra={})=>({id:uid(),cat,t,src:'eq',ev,st,...extra});
+ return {efecto:CASES.andes.efecto,hip:'Creemos que la salida temprana se explica principalmente por la falta de acompañamiento en las semanas 3 a 6 en piso, porque la sede Sur, con líder de 12 personas, tutor activo y metas desde la semana 5, bajó la salida a 24%.',
+ causas:[
+  C('metodo','Cohortes de formación cada quince días generan fila','caso','abierta'),
+  C('metodo','Exámenes médicos programados una semana después','voces','abierta'),
+  C('metodo','Documentos pedidos tres veces','voces','abierta'),
+  C('personas','Supervisor con 22 personas no puede acompañar','caso','raiz',{w:['Los nuevos se sienten solos en las semanas 3 a 6 (comentarios 2, 3, 11 y 17)','El supervisor tiene 22 personas y no alcanza a acompañar','La planta de supervisores se calcula igual para nuevos y antiguos','El tutor existe en el papel, pero sin tiempo liberado','A nadie se le mide por acompañar a los nuevos'],nota:'Que en la sede Sur la salida no hubiera bajado al reducir el equipo del líder a 12'}),
+  C('personas','Tutor asignado pero inactivo','voces','abierta'),
+  C('personas','Falta de vocación de servicio de los jóvenes','sup','descartada',{nota:'La sede Sur bajó la salida a 24% cambiando el acompañamiento: el problema responde al proceso'}),
+  C('gobierno','Nadie es dueño del proceso de punta a punta','exp','abierta'),
+  C('gobierno','La decisión de subir el salario se tomó sin diagnóstico','caso','abierta'),
+  C('medicion','Metas de productividad desde la semana 2','caso','raiz',{w:['Se van por el estrés de las metas tempranas (comentarios 5 y 12)','Las metas plenas aplican desde la semana 2','El indicador de la campaña no distingue a nuevos de antiguos','El contrato con el cliente fija la productividad por agente','Nadie negoció una curva de aprendizaje con el cliente'],nota:'Que quienes no tienen metas tempranas se fueran en la misma proporción'}),
+  C('medicion','Se mide la rotación, no los días de espera','exp','abierta'),
+  C('medicion','La encuesta de salida induce a marcar salario','voces','abierta'),
+  C('sistemas','Sin aviso al candidato durante la espera','voces','raiz',{w:['El 18% acepta la oferta y nunca llega a la formación','Pasan 12 días de espera sin contacto','Nadie los llama ni les envía nada durante la espera','La espera no tiene dueño entre selección y formación','Para selección, el proceso termina al firmar el contrato'],nota:'Que quienes no llegan a la formación se fueran por motivos ajenos a la espera (por ejemplo, la ubicación)'}),
+  C('sistemas','Sistemas del piso distintos a los de la formación','voces','abierta'),
+  C('entorno','Salario base 8% bajo el mercado','caso','descartada',{nota:'La sede Norte subió el salario 10% y la rotación casi no cambió; solo 3 de 20 comentarios hablan de dinero'}),
+  C('entorno','Otras ofertas llegan durante la espera','voces','abierta'),
+  C('entorno','Los clientes cambian campañas y obligan a reasignar','voces','abierta')],
+ ai:{sug:'metodo: Formación sin práctica suficiente en el simulador\npersonas: Supervisores sin formación para acompañar nuevos\ngobierno: Selección y operaciones no comparten metas\nmedicion: Sin seguimiento semanal de los nuevos en piso\nsistemas: Sin canal para pedir ayuda en una llamada difícil\nentorno: Transporte largo hasta la sede Centro',
+  diablo:'1. Alternativa: cambió el perfil contratado (más jóvenes sin experiencia). Dato que la distingue: rotación por perfil y por sede en los últimos 12 meses; pídanlo al cliente.\n2. Alternativa: el salario sí pesa en quienes se van después del día 60. Dato: razones de salida según antigüedad.\n3. Alternativa: las campañas de cobranza expulsan más que las de servicio. Dato: rotación por tipo de campaña.\nCausa débil: “Sin aviso durante la espera” se apoya en voces; pregunten cuántos de los que no llegan recibieron contacto.\nPregunta incómoda al cliente: ¿quién decidió que un supervisor puede tener 22 personas nuevas, y con qué dato?'}};};
+
+/* =====================================================================
+   VALORACIÓN DE MEJORAS · matriz de restricciones (misma fórmula del Excel)
+   Total ponderado = Σ puntaje × peso. Intervalos (Sturges):
+   rango = máx − mín; n.º intervalos = 1 + 3,322·log10(n); tamaño = rango / n.º intervalos;
+   R1: 1 ≤ x ≤ 1+t (muy baja) · R2: ≤ 1+2t (baja) · R3: ≤ 1+3t (media) · R4: x > 1+3t (muy alta)
+   ===================================================================== */
+const CRIT=[['inv','Inversión'],['tie','Tiempo'],['per','Personas']];
+const ESCALA={inv:['Sin costo adicional: reorganizar lo que existe','Bajo: cabe en el presupuesto del área','Medio: requiere aprobación de gerencia','Alto: requiere aprobación de la junta','Muy alto: inversión mayor o costo recurrente'],
+ tie:['Menos de 1 mes','De 1 a 3 meses','De 3 a 6 meses','De 6 a 12 meses','Más de 12 meses'],
+ per:['Una o dos personas de un área','Un equipo completo','Dos o tres áreas','Varias áreas, con capacitación','Toda la organización o contratar']};
+const LVL=[['Muy baja restricción','#1d7552'],['Baja restricción','#4f9a72'],['Media restricción','#c99400'],['Muy alta restricción','#c0392b']];
+function mcalc(d,cid){const P=PESOS[cid]||PESOS.andes;const C=(d.causas||[]).filter(x=>x.st!=='descartada').sort((a,b)=>(a.st==='raiz'?0:1)-(b.st==='raiz'?0:1)||CATS.findIndex(c=>c[0]===a.cat)-CATS.findIndex(c=>c[0]===b.cat));
+  const R=C.map(x=>{const ok=!!(x.inv&&x.tie&&x.per);return {x,ok,pt:ok?(x.inv*P.inv+x.tie*P.tie+x.per*P.per)/100:null,lv:null};});
+  const v=R.filter(r=>r.ok).map(r=>r.pt),n=v.length;let st=null;
+  if(n){const mx=Math.max(...v),mn=Math.min(...v),rg=mx-mn,k=1+3.322*Math.log10(n),t=rg/k,L=[1,1+t,1+2*t,1+3*t];st={n,mx,mn,rg,k,t,L};
+    const e=1e-9;R.forEach(r=>{if(!r.ok)return;const x=r.pt;r.lv=(x>=L[0]-e&&x<=L[1]+e)?0:(x>L[1]+e&&x<=L[2]+e)?1:(x>L[2]+e&&x<=L[3]+e)?2:3;});}
+  return {R,st,P};}
+function matSection(){const P=PESOS[curCaseId()]||PESOS.andes;const {R}=mcalc(ST,curCaseId());
+  return `<div class="card"><h2><span class="n">06</span>Valoración de mejoras · matriz de restricciones</h2>
+  <p class="lead">Para cada causa vigente, la mejora que proponen. Valoren de 1 a 5 cuánto exige en inversión, tiempo y personas (1 = poco, 5 = mucho). El total y el nivel de restricción se calculan solos.</p>
+  <div class="row"><span class="label">Pesos del cliente</span>${CRIT.map(([k,l])=>`<span class="pill"><b>${l}</b> ${P[k]}%</span>`).join('')}<span class="note">Los fija el cliente: no se modifican.</span></div>
+  <details><summary class="link" style="cursor:pointer">Ver la escala de 1 a 5</summary><div class="tbl" style="margin-top:8px"><table><thead><tr><th></th>${CRIT.map(([,l])=>`<th>${l}</th>`).join('')}</tr></thead><tbody>${[0,1,2,3,4].map(i=>`<tr><td class="num"><b>${i+1}</b></td>${CRIT.map(([k])=>`<td>${ESCALA[k][i]}</td>`).join('')}</tr>`).join('')}</tbody></table></div></details>
+  ${R.length?`<div class="tbl"><table class="mtx" style="min-width:1000px"><thead><tr><th>Espina</th><th style="min-width:190px">Causa</th><th style="min-width:230px">Mejora propuesta</th>${CRIT.map(([k,l])=>`<th>${l}<br><span style="font-weight:400">${P[k]}%</span></th>`).join('')}<th>Total pond.</th><th>Nivel de restricción</th></tr></thead><tbody>
+   ${R.map(r=>{const x=r.x,i=ST.causas.indexOf(x);return `<tr${x.st==='raiz'?' style="background:#fffaf0"':''}><td style="font-size:12.5px">${CATN[x.cat]}${x.st==='raiz'?'<br><span class="pill" style="font-size:11px;border-color:var(--gold)">causa raíz</span>':''}</td><td style="font-size:13px">${esc(x.t)}</td>
+    <td><textarea data-k="causas.${i}.mej" rows="2" style="min-height:0;font-size:13px" placeholder="¿Qué cambia en el proceso?">${esc(x.mej||'')}</textarea></td>
+    ${CRIT.map(([k])=>`<td><select data-k="causas.${i}.${k}" data-num style="width:58px;padding:6px">${['–',1,2,3,4,5].map((v,j)=>`<option value="${j}"${(x[k]||0)===j?' selected':''}${j?` title="${ESCALA[k][j-1]}"`:''}>${v}</option>`).join('')}</select></td>`).join('')}
+    <td class="num" id="mpt-${x.id}">–</td><td id="mlv-${x.id}" style="min-width:150px"></td></tr>`;}).join('')}</tbody></table></div>
+   <div class="grid2"><div><span class="label">Escala de restricción (se calcula sola)</span><div class="tbl" style="margin-top:8px"><table><thead><tr><th>Intervalo</th><th>Rango</th><th>Clasificación</th><th>Mejoras</th></tr></thead><tbody id="mscale"></tbody></table></div></div>
+   <div><span class="label">Cálculo</span><div id="mparams" class="chk" style="margin-top:8px;font-size:14px"></div></div></div>`
+  :`<p class="note">Aún no hay causas vigentes. Agréguenlas en la sección 02.</p>`}</div>`;}
+function matLive(){const {R,st}=mcalc(ST,curCaseId());
+  R.forEach(r=>{const a=$('#mpt-'+r.x.id),b=$('#mlv-'+r.x.id);if(!a)return;a.textContent=r.ok?r.pt.toFixed(2):'–';b.innerHTML=r.ok?`<span class="pill" style="border-color:${LVL[r.lv][1]};color:${LVL[r.lv][1]};font-weight:700">${LVL[r.lv][0]}</span>`:'<span class="note">Falta valorar</span>';});
+  const sc=$('#mscale'),pa=$('#mparams');if(!sc)return;
+  if(!st){sc.innerHTML='<tr><td colspan="4" class="note">Valoren al menos una mejora.</td></tr>';pa.innerHTML='';return;}
+  const f=v=>v.toFixed(2),cnt=i=>R.filter(r=>r.lv===i).length,L=st.L;
+  sc.innerHTML=[['R1',`${f(L[0])} ≤ x ≤ ${f(L[1])}`],['R2',`${f(L[1])} < x ≤ ${f(L[2])}`],['R3',`${f(L[2])} < x ≤ ${f(L[3])}`],['R4',`x > ${f(L[3])}`]].map(([r,t],i)=>`<tr><td class="num">${r}</td><td class="num">${t}</td><td><span class="dot" style="background:${LVL[i][1]}"></span> ${LVL[i][0]}</td><td class="num">${cnt(i)}</td></tr>`).join('');
+  pa.innerHTML=[[`Mejoras valoradas (n): <b>${st.n}</b> de ${R.length}`],[`Rango = máx − mín = ${f(st.mx)} − ${f(st.mn)} = <b>${f(st.rg)}</b>`],[`N.º de intervalos = 1 + 3,322 · log₁₀(${st.n}) = <b>${f(st.k)}</b>`],[`Tamaño del intervalo = ${f(st.rg)} / ${f(st.k)} = <b>${f(st.t)}</b>`],[`Los intervalos parten de 1, el mínimo posible de la escala.`]].map(([t])=>`<div style="grid-template-columns:minmax(0,1fr)"><span>${t}</span></div>`).join('')+(st.n<3?`<p class="note" style="color:var(--signal)">Con menos de 3 mejoras valoradas la escala todavía no discrimina: sigan valorando.</p>`:'');}
+
+/* ---- ejemplo del profesor: valoraciones ---- */
+const _exBase=APP.example;
+APP.example=function(){const d=_exBase();const M={'Cohortes de formación cada quince días generan fila':['Cohortes semanales de 15 en lugar de quincenales de 25',2,2,2],'Exámenes médicos programados una semana después':['Agendar los exámenes el mismo día de la firma',1,1,1],'Documentos pedidos tres veces':['Lista única de documentos con carga en línea',2,1,1],'Supervisor con 22 personas no puede acompañar':['Tutor activo y líder con 12 personas en las primeras seis semanas',3,3,3],'Tutor asignado pero inactivo':['Liberar horas al tutor y medirlo por acompañamiento',2,1,2],'Nadie es dueño del proceso de punta a punta':['Un dueño del proceso, de la oferta al día 90',1,1,1],'La decisión de subir el salario se tomó sin diagnóstico':['Comité que aprueba iniciativas con datos del proceso',1,2,2],'Metas de productividad desde la semana 2':['Metas progresivas: plenas desde la semana 5',1,2,2],'Se mide la rotación, no los días de espera':['Tablero semanal de días de espera y salida por semana',2,2,2],'La encuesta de salida induce a marcar salario':['Entrevista de salida abierta, con preguntas por etapa',1,1,1],'Sin aviso al candidato durante la espera':['Preincorporación: llamada semanal y contenidos en línea',1,1,2],'Sistemas del piso distintos a los de la formación':['Formación con los sistemas reales del piso',4,3,3],'Otras ofertas llegan durante la espera':['Firmar más cerca del inicio de la formación',1,2,1],'Los clientes cambian campañas y obligan a reasignar':['Proteger a los nuevos de cambios de campaña las primeras 8 semanas',2,2,3]};
+  d.causas.forEach(x=>{const m=M[x.t];if(m){x.mej=m[0];x.inv=m[1];x.tie=m[2];x.per=m[3];}});return d;};
+
+/* =====================================================================
+   ACCESO DOCENTE (DNI): estados, entregas y descargas
+   ===================================================================== */
+const fmtT=t=>t?new Date(t).toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'}):'–';
+const hace=t=>{if(!t)return '';const m=Math.round((Date.now()-t)/60000);return m<1?'hace segundos':m<60?`hace ${m} min`:`hace ${Math.round(m/60)} h`;};
+function pTeam(tk){const p=tk.split('-');return {slot:p[p.length-1],cid:p[p.length-2],prac:p.length===3};}
+function estado(d){const C=d.causas||[];if(!C.length)return ['Sin empezar','n'];const act=C.filter(x=>x.st!=='descartada');const esp=CATS.every(([k])=>act.filter(x=>x.cat===k).length>=2);const raiz=C.some(x=>x.st==='raiz');return esp&&raiz?['Completo · entregado','g']:['En progreso','y'];}
+let _DB=null,_docT=null;
+APP.renderDoc=async function(){let DB;try{DB=await binFetch('GET');if(!DB||typeof DB!=='object')DB={};}catch(e){return `<div class="card"><h2>No pude leer la base de datos</h2><p class="err">${esc(e.message)}</p><div class="row"><button class="btn" data-dd="refresh">Reintentar</button></div></div>`;}
+  _DB=DB;const A=(DB.apps&&DB.apps.ishikawa)||{},U=DB.users||{};const T=Object.entries(A).filter(([tk])=>!pTeam(tk).prac).sort((a,b)=>a[0].localeCompare(b[0]));
+  const all=CFG.USERS.map(u=>u+'@'+CFG.DOMAIN);const nIn=all.filter(e=>U[e]).length;
+  clearTimeout(_docT);_docT=setTimeout(()=>{if(S.doc&&!S.view)route();},30000);
+  return `<div class="card"><div class="row" style="justify-content:space-between"><div><span class="label">Acceso docente</span><h2>Ishikawa · equipos</h2></div>
+   <div class="row"><button class="btn ghost sm" data-dd="refresh">Actualizar</button><button class="btn sm" data-dd="xlsx">Descargar todo (Excel)</button><button class="btn ghost sm" data-dd="pngall">Descargar todos los Ishikawa (PNG)</button></div></div>
+   <div class="row">${[[`${nIn} / ${all.length}`,'participantes ingresaron'],[T.length,'equipos con Ishikawa'],[T.filter(([,d])=>estado(d)[1]==='g').length,'completos']].map(([v,l])=>`<div class="pill" style="padding:8px 14px;border-radius:12px"><b style="font-family:var(--display);font-size:20px">${v}</b><span class="note">${l}</span></div>`).join('')}</div>
+   <p class="note">Se actualiza solo cada 30 segundos. Última lectura: ${new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}.</p></div>
+  <div class="card"><h2>Equipos</h2>${T.length?`<div class="tbl"><table><thead><tr><th>Equipo</th><th>Empresa</th><th>Integrantes</th><th>Último guardado</th><th>Entrega</th><th>Avance</th><th></th></tr></thead><tbody>
+   ${T.map(([tk,d],i)=>{const p=pTeam(tk),e=estado(d),C=d.causas||[],act=C.filter(x=>x.st!=='descartada');const mem=Object.values(U).filter(u=>u.case===p.cid&&u.slot===p.slot).map(u=>u.email.split('@')[0]);
+     return `<tr><td><b>${esc(d.team||'Equipo '+p.slot)}</b></td><td>${esc(CASES[p.cid]?.corto||p.cid)}</td><td style="font-size:12.5px">${esc(mem.join(', ')||'–')}</td><td class="num">${fmtT(d.upd)}<br><span class="note">${hace(d.upd)}</span></td><td><span class="pill"><span class="dot d-${e[1]}"></span>${e[0]}</span></td>
+     <td style="font-size:13px">${C.length} causas · ${C.filter(x=>x.st==='raiz').length} raíz · ${C.filter(x=>x.st==='descartada').length} descartadas</td>
+     <td><div class="row" style="flex-wrap:nowrap;gap:6px"><button class="btn ghost sm" data-dd="ver" data-i="${tk}">Ver</button><button class="btn sm" data-dd="png" data-i="${tk}">Ishikawa PNG</button></div></td></tr>`;}).join('')}</tbody></table></div>`:'<p class="note">Todavía no hay equipos con trabajo guardado.</p>'}</div>
+  <div class="card"><h2>Participantes</h2><div class="tbl"><table><thead><tr><th>Correo</th><th>Empresa</th><th>Equipo</th><th>Último ingreso</th></tr></thead><tbody>${all.map(e=>{const u=U[e];return `<tr><td>${esc(e)}</td><td>${u?esc(CASES[u.case]?.corto||u.case):'<span class="note">No ha ingresado</span>'}</td><td>${u?esc(u.slot):''}</td><td class="num">${u?fmtT(u.last):''}</td></tr>`;}).join('')}</tbody></table></div></div>`;};
+function teamPng(tk){const d=_DB.apps.ishikawa[tk],p=pTeam(tk);const box=document.createElement('div');box.style.cssText='position:absolute;left:-9999px';box.innerHTML=fishSVG(d,CASES[p.cid]||CASES.andes,d.team||'Equipo '+p.slot);document.body.appendChild(box);svgPng(box.querySelector('svg'),`ishikawa-${tk}.png`);setTimeout(()=>box.remove(),3000);}
+function docSheets(){const A=(_DB.apps&&_DB.apps.ishikawa)||{},U=_DB.users||{};const T=Object.entries(A).filter(([tk])=>!pTeam(tk).prac);const all=CFG.USERS.map(u=>u+'@'+CFG.DOMAIN);
+  const S1=[['Correo','Ingresó','Empresa','Equipo','Consultora','Último ingreso']].concat(all.map(e=>{const u=U[e]||{};return [e,u.last?'Sí':'No',CASES[u.case]?.corto||'',u.slot||'',u.name||'',u.last?fmtT(u.last):''];}));
+  const S2=[['Equipo','Empresa','Último guardado','Por','Entrega','Resultado (efecto)','Hipótesis','Causas','Causas raíz','Descartadas','Abogado del diablo (IA)']].concat(T.map(([tk,d])=>{const p=pTeam(tk),C=d.causas||[],act=C.filter(x=>x.st!=='descartada');return [d.team||'Equipo '+p.slot,CASES[p.cid]?.corto||p.cid,fmtT(d.upd),d.by||'',estado(d)[0],d.efecto||'',d.hip||'',C.length,C.filter(x=>x.st==='raiz').length,C.filter(x=>x.st==='descartada').length,d.ai?.diablo||''];}));
+  const EVN3={'':'Sin fuente',caso:'Dato del caso',estudio:'Estudio científico',voces:'Voces de grupos de interés',exp:'Experiencia profesional',sup:'Supuesto'};
+  const S3=[['Equipo','Empresa','Espina','Causa','Fuente','Estado','Porqué 1','Porqué 2','Porqué 3','Porqué 4','Porqué 5','Nota']].concat(T.flatMap(([tk,d])=>{const p=pTeam(tk);const {R}=mcalc(d,p.cid);const m=new Map(R.map(r=>[r.x.id,r]));
+    return (d.causas||[]).map(x=>{const r=m.get(x.id);return [d.team||'Equipo '+p.slot,CASES[p.cid]?.corto||p.cid,CATN[x.cat]||x.cat,x.t,EVN3[x.ev||''],STN[x.st]||x.st,...[0,1,2,3,4].map(j=>(x.w||[])[j]||''),x.nota||''];});}));
+  return [['Participantes',S1],['Equipos',S2],['Causas',S3]];}
+function loadXLSX(){return window.XLSX?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s);});}
+async function docXlsx(){const sh=docSheets(),st=new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');try{await loadXLSX();const wb=XLSX.utils.book_new();sh.forEach(([n,rows])=>{const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=rows[0].map((h,i)=>({wch:Math.min(60,Math.max(10,...rows.slice(0,60).map(r=>String(r[i]??'').length))+2)}));XLSX.utils.book_append_sheet(wb,ws,n);});XLSX.writeFile(wb,`MGDP-ishikawa-${st}.xlsx`);}
+  catch(e){toast('Sin conexión al generador de Excel: descargo CSV');const q=t=>'"'+String(t??'').replace(/"/g,'""')+'"';sh.forEach(([n,rows],i)=>setTimeout(()=>dl(`MGDP-${n}-${st}.csv`,new Blob(['﻿'+rows.map(r=>r.map(q).join(';')).join('\n')],{type:'text/csv'})),i*400));}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-dd]');if(!b||!S.doc)return;const a=b.dataset.dd;
+  if(a==='refresh')return route();
+  if(a==='xlsx')return docXlsx();
+  if(a==='png')return teamPng(b.dataset.i);
+  if(a==='pngall'){Object.keys(_DB.apps?.ishikawa||{}).filter(tk=>!pTeam(tk).prac).forEach((tk,i)=>setTimeout(()=>teamPng(tk),i*700));return;}
+  if(a==='ver'){const tk=b.dataset.i,d=_DB.apps.ishikawa[tk],p=pTeam(tk);clearTimeout(_docT);S.view={team:tk,data:d};S.case=p.cid;S.slot=p.slot;S.name=d.team||'Equipo '+p.slot;S.practice=false;ST=JSON.parse(JSON.stringify(d));ST.ai=ST.ai||{};window.scrollTo(0,0);return route();}
+});
+
+boot();
+
+</script>
+</body>
+</html>
