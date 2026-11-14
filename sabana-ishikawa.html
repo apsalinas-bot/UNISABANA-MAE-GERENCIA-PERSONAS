@@ -96,6 +96,16 @@ fieldset.ro{border:0;margin:0;padding:0;min-width:0;display:flex;flex-direction:
 .foot{font-size:12.5px;color:var(--muted);text-align:center;padding-top:10px}
 .mtx th,.mtx td{padding:8px 6px}
 
+.savepill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:12.5px;font-weight:600;background:#fff;white-space:nowrap}
+.savepill i{width:9px;height:9px;border-radius:50%;background:#b7c1d1;flex:none}
+.sv-ok{border-color:#a7d7bf;color:var(--ok);background:var(--ok-soft)}.sv-ok i{background:var(--ok)}
+.sv-idle{color:var(--ok)}.sv-idle i{background:var(--ok)}
+.sv-pend,.sv-saving{border-color:#ecd28a;color:var(--signal);background:var(--signal-soft)}.sv-pend i,.sv-saving i{background:#d9a400;animation:blink 1s ease-in-out infinite}
+.sv-err{border-color:#efb3aa;color:var(--bad);background:var(--bad-soft)}.sv-err i{background:var(--bad);animation:blink .7s ease-in-out infinite}
+.sv-demo{color:var(--muted)}
+@keyframes blink{50%{opacity:.2}}
+@media (prefers-reduced-motion:reduce){.savepill i{animation:none!important}}
+
 </style>
 </head>
 <body>
@@ -197,11 +207,14 @@ async function binFetch(method,body,bin=binOf(APP.id)){const url=`https://api.js
     if(method!=='GET')return true;const j=await r.json();return j&&j.record&&j.metadata?j.record:j;}
   throw new Error('La clave del BIN no tiene permiso');}
 let _q=Promise.resolve();
-function binUpdate(fn){_q=_q.then(async()=>{let r=await binFetch('GET');if(!r||typeof r!=='object'||Array.isArray(r))r={};fn(r);await binFetch('PUT',r);const t=$('#syncst');if(t)t.textContent='Guardado en la nube a las '+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});}).catch(e=>{console.warn(e);const t=$('#syncst');if(t)t.textContent='Sin conexión con la nube: guardado en este navegador';});return _q;}
+let _sv=['idle',''];
+function setSave(k,t){_sv=[k,t];const el=$('#savepill');if(el){el.className='savepill sv-'+k;el.innerHTML=`<i></i>${t}`;}}
+const hhmm=()=>new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+function binUpdate(fn){_q=_q.then(async()=>{let r=await binFetch('GET');if(!r||typeof r!=='object'||Array.isArray(r))r={};fn(r);await binFetch('PUT',r);const t=$('#syncst');if(t)t.textContent='Guardado en la nube a las '+hhmm();if(!_dirty)setSave('ok','Guardado '+hhmm());}).catch(e=>{console.warn(e);const t=$('#syncst');if(t)t.textContent='Sin conexión con la nube: guardado en este navegador';setSave('err','Sin conexión: se reintenta');_dirty=true;});return _q;}
 function touchUser(r,app){if(S.slot==='P')return;r.users=r.users||{};const u=r.users[S.email]||{email:S.email,apps:{}};Object.assign(u,{case:S.case,slot:S.slot,name:S.name,last:Date.now()});u.apps=u.apps||{};u.apps[app]=Date.now();r.users[S.email]=u;}
 const cloudOn=()=>binOn()&&S.slot!=='P';
 let _dirty=false;
-function pushCloud(){if(!_dirty||!ST||!cloudOn())return _q;_dirty=false;const app=APP.id,tk=teamKey(),data=JSON.parse(JSON.stringify(ST));return binUpdate(r=>{r.apps=r.apps||{};r.apps[app]=r.apps[app]||{};r.apps[app][tk]=data;touchUser(r,app);});}
+function pushCloud(){if(!_dirty||!ST||!cloudOn())return _q;_dirty=false;setSave('saving','Guardando…');const app=APP.id,tk=teamKey(),data=JSON.parse(JSON.stringify(ST));return binUpdate(r=>{r.apps=r.apps||{};r.apps[app]=r.apps[app]||{};r.apps[app][tk]=data;touchUser(r,app);});}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')pushCloud();});
 window.addEventListener('pagehide',()=>pushCloud());
 
@@ -216,7 +229,7 @@ async function loadState(){
 let _cloudT=null;
 setInterval(()=>{if(_dirty&&!S.doc)pushCloud();},5000);   // autoguardado en la nube cada 5 segundos
 function save(){if(ro())return;ST.upd=Date.now();ST.by=S.email;ST.team=S.name;LS.set(localKey(),ST);
-  if(cloudOn()){_dirty=true;const t=$('#syncst');if(t)t.textContent='Guardando…';}
+  if(cloudOn()){_dirty=true;const t=$('#syncst');if(t)t.textContent='Guardando…';if(_sv[0]!=='saving')setSave('pend','Cambios por guardar…');}
   else if(CFG.WORKER_URL&&!binOn()){clearTimeout(_cloudT);_cloudT=setTimeout(()=>api('/save',{email:S.email,app:APP.id,team:teamKey(),data:ST}).catch(()=>toast('Sin conexión: guardado solo en este navegador')),1500);}}
 async function loadOther(app){ // lee el trabajo del mismo equipo en otra herramienta (p. ej., el Ishikawa desde la matriz)
   const tk=`${S.case}-${S.slot}`;let st=LS.get(`sab-${app}-${tk}`);
@@ -244,7 +257,8 @@ function aiPrompt(id){const {system,prompt}=AI[id].build();return (system||SYS)+
 function header(){const c=S.case?curCase():null;
   $('#appname').innerHTML=`<span class="stage">${S.doc?'Docente':APP.stage}</span>${APP.title}`;
   if(S.doc){$('#who').innerHTML=`<b>Acceso docente</b><button class="link" data-act="out">Salir</button>`;return;}
-  $('#who').innerHTML=S.email?`${c?`<span><b>${esc(S.name||(S.slot==='P'?'Profesor':'Equipo '+S.slot))}</b> · ${esc(c.corto)}</span>`:''}${S.admin&&binOn()&&CFG.PANEL_URL?`<a class="btn ghost sm" href="${CFG.PANEL_URL}" target="_blank" rel="noopener">Panel docente ↗</a>`:''}${S.admin&&CFG.WORKER_URL&&!binOn()?`<button class="btn ghost sm" data-act="panel">Panel del profesor</button>`:''}${isDemo()&&APP.example?`<button class="btn ghost sm" data-act="reset">Restablecer ejemplo</button>`:''}${S.case?`<button class="link" data-act="team">Cambiar equipo</button>`:''}<button class="link" data-act="out">Salir</button>`:'';}
+  const pill=S.email&&S.case&&!S.view?(cloudOn()?`<span id="savepill" class="savepill sv-${_sv[0]}"><i></i>${_sv[1]||'Guardado automático activo'}</span>`:`<span id="savepill" class="savepill sv-demo"><i></i>Modo ejemplo: no se guarda en la nube</span>`):'';
+  $('#who').innerHTML=S.email?`${pill}${c?`<span><b>${esc(S.name||(S.slot==='P'?'Profesor':'Equipo '+S.slot))}</b> · ${esc(c.corto)}</span>`:''}${S.admin&&binOn()&&CFG.PANEL_URL?`<a class="btn ghost sm" href="${CFG.PANEL_URL}" target="_blank" rel="noopener">Panel docente ↗</a>`:''}${S.admin&&CFG.WORKER_URL&&!binOn()?`<button class="btn ghost sm" data-act="panel">Panel del profesor</button>`:''}${isDemo()&&APP.example?`<button class="btn ghost sm" data-act="reset">Restablecer ejemplo</button>`:''}${S.case?`<button class="link" data-act="team">Cambiar equipo</button>`:''}<button class="link" data-act="out">Salir</button>`:'';}
 function viewLogin(msg){return `<div class="login card"><span class="label">Universidad de La Sabana · MGDP</span><h1>${APP.title}</h1><p class="lead">${APP.intro}</p>
   <label class="f">Correo de La Sabana<input type="email" id="em" placeholder="usuario@unisabana.edu.co" autocomplete="email"></label>
   <div id="admk" hidden><label class="f">Clave del panel (solo profesor)<input type="password" id="ak" placeholder="Opcional"></label></div>
