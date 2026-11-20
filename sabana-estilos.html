@@ -80,9 +80,10 @@ const CFG={
   BIN_KEY:'$2a$10$2sih3TPm3qkCuJG97N99ru4sHdofBFicx2zBOwK1MqUYzlDJ502W2',
   DOC_DNI_SHA256:'8d9408a0ea52e9c0a344486dc50f53e895364a2c9e44fd7b7aeefd9497df4cae',
   DOMAIN:'unisabana.edu.co',
-  ADMINS:['alexissr@unisabana.edu.co','apsalinas@ucsp.edu.pe']
+  ADMINS:['apsalinas@ucsp.edu.pe']
 };
-const GROUPS=['Empresa de Servicios Públicos de Pacho','LCJJ SAS','Network Switch Consulting'];
+const GROUPS=['Empresa de Servicios Públicos de Pacho','LCJJ SAS','Network Switch Consulting','Prueba del profesor'];
+const TEST_G=3; // no se cuenta en “Todo el curso” ni aparece para elegir
 const ROSTER={
   leidymove:['Leidy Katherine Moscoso Velásquez',0],
   giovannipeca:['Giovanny Peña',0],
@@ -93,7 +94,8 @@ const ROSTER={
   juanmelar:['Juan Manuel Meléndez Arango',1],
   franciscollba:['Francisco Llenera',2],
   mariaipro:['María Camila Ipus',2],
-  valentinatoqma:['Valentina Toquica Martínez',2]
+  valentinatoqma:['Valentina Toquica Martínez',2],
+  alexissr:['Alexis Salinas (prueba)',3]
 };
 
 /* ================= CONTENIDO ================= */
@@ -209,7 +211,7 @@ function viewLogin(){return `<div class="login card stack"><span class="label">U
  <details><summary class="note" style="cursor:pointer">Acceso docente</summary><div class="stack" style="margin-top:10px"><label class="f">DNI del profesor<input type="password" id="dni" inputmode="numeric"></label><button class="btn ghost" data-act="doc">Entrar como docente</button></div></details></div>`;}
 function viewNew(){return `<div class="login card stack"><span class="label">Primera vez</span><h2>No encontramos tu correo en la lista</h2><p class="lead">Completa tus datos para entrar a tu consultora.</p>
  <label class="f">Nombre completo<input id="nm"></label>
- <label class="f">Tu consultora<select id="gr"><option value="">Elige…</option>${GROUPS.map((g,i)=>`<option value="${i}">${g}</option>`).join('')}</select></label>
+ <label class="f">Tu consultora<select id="gr"><option value="">Elige…</option>${GROUPS.map((g,i)=>i===TEST_G?'':`<option value="${i}">${g}</option>`).join('')}</select></label>
  ${S.msg?`<p class="err">${esc(S.msg)}</p>`:''}<button class="btn" data-act="newok">Continuar</button><button class="btn ghost" data-act="logout">Volver</button></div>`;}
 function viewTest(){const n1=Object.keys(S.a1).length,n2=Object.keys(S.a2).length;
  if(S.part===1){return `${header()}<div class="card stack"><span class="label">Parte 1 de 2 · Estilo de comunicación</span><h2>¿Cómo te comunicas en el trabajo?</h2>
@@ -256,7 +258,7 @@ function teamBlock(g){const ms=membersOf(g),done=ms.filter(m=>m.r&&m.r.com);
  ${done.length?`<div class="tip"><b>Lectura del equipo:</b> ${miss.length?`les falta el estilo <b>${miss.join(', ')}</b>: piensen quién cubrirá ese registro con la dirección.`:'tienen los cuatro estilos: aprovechen esa mezcla al repartir la exposición.'} Como equipo tienden a <b>${hi.toLowerCase()}</b> y usan poco <b>${lo.toLowerCase()}</b>; tómenlo en cuenta en su mapa de actores y en la gestión del cambio.</div>
  ${done.length>1?`<div><span class="mini">Reparto sugerido para responder mañana a la dirección</span><div class="roles" style="margin-top:6px">${asg.map(([r,st,m,also])=>`<div class="role" style="--rc:${STY[st].c}"><b>${r}</b><div class="note">escucha como ${st.toLowerCase()}</div><div style="margin-top:6px;font-weight:600">${m?esc(m.name)+(also?' <span class="note">(también)</span>':''):'—'}</div></div>`).join('')}</div><p class="note" style="margin-top:6px">Es una sugerencia según la cercanía de cada integrante al estilo de ese rol. El equipo decide.</p></div>`:''}`:''}</div>`;}
 function viewTeam(){const gs=S.doc?GROUPS.map((_,i)=>i):[S.grupo];return `${header()}${tabs()}<div class="stack" style="margin-top:14px">${S.loaded?'':'<p class="err">No se pudo leer la base de datos: se muestra solo lo guardado en este navegador.</p>'}${gs.map(teamBlock).join('')}</div>`;}
-function viewClass(){const done=Object.values(S.all).filter(r=>r&&r.com);const cnt={};Object.keys(STY).forEach(s=>cnt[s]=done.filter(r=>r.com.style===s).length);
+function viewClass(){const done=Object.values(S.all).filter(r=>r&&r.com&&r.grupo!==TEST_G);const cnt={};Object.keys(STY).forEach(s=>cnt[s]=done.filter(r=>r.com.style===s).length);
  const pts=done.map(r=>({x:r.com.x,y:r.com.y,style:r.com.style,lab:first(r.name)}));
  const avg={};MK.forEach(m=>avg[m]=done.length?+(done.reduce((s,x)=>s+x.tk[m],0)/done.length).toFixed(1):0);
  return `${header()}${tabs()}<div class="stack" style="margin-top:14px"><div class="grid2"><div class="card svgbox"><span class="mini">Todo el curso · ${done.length} con test</span>${quadSVG(pts)}<div class="legend">${Object.keys(STY).map(s=>`<span><span class="dot" style="background:${STY[s].c}"></span>${s}: <b>${cnt[s]}</b></span>`).join('')}</div></div>
