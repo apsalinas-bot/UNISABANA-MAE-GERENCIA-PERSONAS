@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Estilos de comunicación y conflicto · MGDP La Sabana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#f5f7fb;--surface:#fff;--ink:#0b2447;--muted:#51607a;--line:#d7deea;--accent:#0b4da2;--accent-soft:#e4edf9;--gold:#f2b91f;--ok:#1d7552;--bad:#c0392b;
+ --dir:#c0392b;--vig:#d9822b;--sis:#0b4da2;--con:#1d7552;
+ --display:"Source Serif 4",Georgia,serif;--body:"Instrument Sans","Segoe UI",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--display);line-height:1.15;margin:0;text-wrap:balance}
+p{margin:0}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 18px 60px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.label{font:600 11px/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#8f6700}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.lead{color:var(--muted);font-size:16px}
+.btn{background:var(--ink);color:#fff;border:0;border-radius:10px;padding:11px 18px;font-weight:600}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.f{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px}
+.f input,.f select{border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-weight:400;background:#fff}
+.err{color:var(--bad);font-weight:600}
+.note{color:var(--muted);font-size:13px}
+.login{max-width:460px;margin:40px auto}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font-weight:600;font-size:14px}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pill{display:inline-block;font:600 12px/1 var(--mono);padding:6px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.prog{height:8px;background:#e6ebf3;border-radius:99px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--gold);transition:width .2s}
+.q{border-top:1px solid var(--line);padding:16px 0;display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center}
+.q .s{font-size:15px}
+.q .s.r{text-align:right}
+.scale{display:flex;gap:8px}
+.scale button{width:34px;height:34px;border-radius:50%;border:2px solid #b8c4d8;background:#fff;font-weight:700;font-size:12px;color:var(--muted)}
+.scale button.big{width:40px;height:40px}
+.scale button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.qn{font:600 12px var(--mono);color:var(--muted);grid-column:1/-1;margin-bottom:-8px}
+.pair{border-top:1px solid var(--line);padding:14px 0}
+.pair .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.pair button{text-align:left;border:2px solid var(--line);background:#fff;border-radius:10px;padding:12px 14px;font-size:15px;line-height:1.35}
+.pair button.on{border-color:var(--accent);background:var(--accent-soft)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.style-h{display:flex;align-items:center;gap:12px}
+.dot{width:14px;height:14px;border-radius:50%;display:inline-block;flex:none}
+ul.l{margin:6px 0 0;padding-left:18px}
+ul.l li{margin:3px 0}
+.mini{font:600 12px/1.2 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px}
+.tip{background:#fbf1d2;border-left:4px solid var(--gold);border-radius:8px;padding:12px 14px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 12px var(--mono);text-transform:uppercase;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:6px;font-weight:600}
+.svgbox svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13px;margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.save{font:600 12px var(--mono);color:var(--muted)}
+.roles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.role{border:2px solid var(--rc);border-radius:12px;padding:12px;background:color-mix(in srgb,var(--rc) 7%,#fff)}
+.role b{color:var(--rc);font-family:var(--display);font-size:17px}
+@media (max-width:760px){.grid2,.roles{grid-template-columns:1fr}.q{grid-template-columns:1fr}.q .s.r{text-align:left}.pair .opts{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+/* ================= CONFIGURACIÓN ================= */
+const CFG={
+  // Misma base de datos que el Ishikawa (las respuestas van en la clave "estilos", sin tocar lo demás)
+  BIN_ID:'6af8594fffd5d16053c0f600',
+  BIN_KEY:'$2a$10$2sih3TPm3qkCuJG97N99ru4sHdofBFicx2zBOwK1MqUYzlDJ502W2',
+  DOC_DNI_SHA256:'8d9408a0ea52e9c0a344486dc50f53e895364a2c9e44fd7b7aeefd9497df4cae',
+  DOMAIN:'unisabana.edu.co',
+  ADMINS:['alexissr@unisabana.edu.co','apsalinas@ucsp.edu.pe']
+};
+const GROUPS=['Empresa de Servicios Públicos de Pacho','LCJJ SAS','Network Switch Consulting'];
+const ROSTER={
+  leidymove:['Leidy Katherine Moscoso Velásquez',0],
+  giovannipeca:['Giovanny Peña',0],
+  carmenprsa:['Carmen Prada',0],
+  marthagarcar:['Martha Liliana García Cárdenas',1],
+  claudiacabga:['Claudia Rocío Cabezas García',1],
+  josecarco:['José Ángel Carrasco Corrales',1],
+  juanmelar:['Juan Manuel Meléndez Arango',1],
+  franciscollba:['Francisco Llenera',2],
+  mariaipro:['María Camila Ipus',2],
+  valentinatoqma:['Valentina Toquica Martínez',2]
+};
+
+/* ================= CONTENIDO ================= */
+const STY={
+ Directo:{c:'#c0392b',ax:'Dice y controla sus emociones',ind:['Habla rápido y con voz firme','Trato formal y contacto visual directo','Saluda con firmeza'],f:['Entra directo al tema principal','Es persuasivo y enérgico','Presenta el tema de forma contundente'],d:['No escucha con atención','Se impacienta con los temas','No hace caso a los consejos y le gusta discutir'],exp:'Abre con la recomendación y responde a la gerencia general.',cui:'Escucha la pregunta completa antes de responder.'},
+ Vigoroso:{c:'#d9822b',ax:'Dice y demuestra sus emociones',ind:['Mucha inflexión en la voz','Animado, gesticula y se mueve','Saluda con entusiasmo'],f:['Se enfoca en el tema general','Habla de forma motivadora y persuasiva','Sabe contar historias'],d:['Generaliza','Puede ser demasiado dramático','No escucha los detalles y tiende a exagerar'],exp:'Cuenta la historia del antes y el después: la visión del cambio.',cui:'Respalda cada afirmación con un dato del caso.'},
+ 'Sistemático':{c:'#0b4da2',ax:'Pregunta y controla sus emociones',ind:['Rostro sereno y movimientos controlados','Cuida su espacio personal','Ordenado en su forma de trabajar'],f:['Presenta el tema con precisión','Se enfoca en los hechos','Habla con eficiencia'],d:['Se enfoca demasiado en los detalles','Le cuesta revelar lo personal','Puede ser escueto y de tono plano'],exp:'Defiende los datos, los supuestos y la matriz ante finanzas.',cui:'Di la conclusión primero y luego el detalle.'},
+ Considerado:{c:'#1d7552',ax:'Pregunta y demuestra sus emociones',ind:['Habla despacio y con voz suave','Paciente y cercano','Se mueve con calma'],f:['Genera confianza','Es buen consejero y usa lenguaje de apoyo','Escucha con atención'],d:['Se guarda sus opiniones','Pone mucho énfasis en los sentimientos','Cede fácilmente y evita el conflicto'],exp:'Explica el impacto en las personas y cómo se gestiona el cambio.',cui:'Sostén la recomendación cuando la cuestionen.'}
+};
+const MODES={
+ Competir:{c:'#c0392b',u:'Hay que decidir rápido o algo no es negociable.',r:'Desgasta las relaciones si es el único modo.'},
+ Colaborar:{c:'#1d7552',u:'El tema importa a ambos y hay tiempo para resolverlo a fondo.',r:'Es lento: no todo merece ese esfuerzo.'},
+ Negociar:{c:'#0b4da2',u:'Hay que avanzar con un acuerdo aceptable para ambos.',r:'Puede dejar soluciones a medias.'},
+ Evitar:{c:'#8a6d1d',u:'Conviene enfriar los ánimos o el tema es menor.',r:'Si se vuelve hábito, el problema crece.'},
+ Ceder:{c:'#7b3fa0',u:'La relación pesa más o el otro tiene razón.',r:'Si es constante, el cambio no ocurre.'}
+};
+const MK=Object.keys(MODES);
+const ZONES=[[10,12,'Exceso','lo usas casi siempre, aunque no convenga (rígido)'],[8,9,'Alto','es tu primera reacción'],[5,7,'Normal','lo usas cuando conviene (flexible)'],[3,4,'Bajo','lo usas poco'],[0,2,'Carencia','casi no lo usas: te falta en el repertorio (rígido)']];
+const zone=v=>ZONES.find(z=>v>=z[0]&&v<=z[1]);
+
+/* Parte 1: 12 ítems de diferencial (1 = totalmente la frase izquierda, 4 = totalmente la derecha)
+   ax 'y': izquierda = DICE, derecha = PREGUNTA · ax 'x': izquierda = CONTROLA emociones, derecha = DEMUESTRA */
+const COM=[
+ ['y','En una reunión, doy mi opinión primero.','En una reunión, pregunto antes de opinar.'],
+ ['x','Me enfoco en los resultados y los datos.','Me enfoco en las personas y en cómo se sienten.'],
+ ['y','Hablo rápido y con firmeza.','Hablo pausado y con cuidado.'],
+ ['x','Mantengo mis emociones en reserva.','Mis emociones se notan cuando hablo.'],
+ ['y','Tomo decisiones rápido.','Prefiero analizar antes de decidir.'],
+ ['x','Prefiero conversaciones formales y al grano.','Prefiero conversaciones cercanas, con anécdotas.'],
+ ['y','Digo lo que pienso de manera directa.','Busco la forma más prudente de decirlo.'],
+ ['x','Gesticulo poco y mantengo un tono parejo.','Gesticulo y cambio mucho el tono de voz.'],
+ ['y','Me gusta llevar la conversación.','Me gusta escuchar y luego aportar.'],
+ ['x','Para convencer, uso hechos y cifras.','Para convencer, uso historias y ejemplos.'],
+ ['y','Cuando delego, indico qué hacer y cómo.','Cuando delego, pregunto cómo lo harían.'],
+ ['x','Separo lo personal de lo laboral.','Me gusta conocer a las personas más allá del trabajo.']
+];
+/* Parte 2: 30 pares; cada modo aparece 12 veces (puntaje de 0 a 12 por modo). */
+const ST={
+ Competir:['Defiendo mi posición hasta convencer a los demás.','Si estoy seguro de tener razón, insisto.','Busco ganar la discusión con argumentos firmes.','Tomo la decisión aunque no todos estén de acuerdo.','Presiono para que se haga lo que considero correcto.','Dejo claro desde el inicio lo que necesito.'],
+ Colaborar:['Pongo todas las preocupaciones sobre la mesa para resolverlas juntos.','Busco una solución en la que ambos ganemos por completo.','Pido al otro que me explique qué le importa y por qué.','Trabajo con el otro hasta encontrar una idea mejor que las dos iniciales.','Me tomo el tiempo de resolver el fondo del problema.','Comparto mis razones y escucho las suyas para integrarlas.'],
+ Negociar:['Propongo un punto medio para avanzar.','Cedo en algunas cosas si el otro cede en otras.','Busco un acuerdo rápido y aceptable para ambos.','Intercambio concesiones para no estancarnos.','Acepto una solución parcial si nos permite seguir.','Divido la diferencia cuando las posturas están lejos.'],
+ Evitar:['Dejo pasar el tema hasta que los ánimos se calmen.','Evito las discusiones que generan tensión.','Pospongo la conversación hasta tener más claridad.','Prefiero no tocar los temas que pueden incomodar.','Dejo que otros asuman la responsabilidad de resolverlo.','Si el tema no es importante para mí, no me involucro.'],
+ Ceder:['Priorizo la relación aunque renuncie a lo que quiero.','Acepto el punto de vista del otro para evitar roces.','Si para el otro es más importante, le doy la razón.','Trato de calmar al otro y cuidar sus sentimientos.','Cedo para mantener la armonía del equipo.','Hago lo que el otro propone si eso lo deja tranquilo.']
+};
+const TK=(()=>{const pairs=[];for(let i=0;i<5;i++)for(let j=i+1;j<5;j++)pairs.push([MK[i],MK[j]]);
+  const idx={};MK.forEach(m=>idx[m]=0);const items=[];
+  for(let r=0;r<3;r++)pairs.forEach(([a,b],k)=>{const sa=ST[a][idx[a]++%6],sb=ST[b][idx[b]++%6];items.push((k+r)%2?[[b,sb],[a,sa]]:[[a,sa],[b,sb]]);});
+  let s=7;const rnd=()=>(s=(s*9301+49297)%233280)/233280;for(let i=items.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[items[i],items[j]]=[items[j],items[i]];}
+  return items;})();
+
+/* ================= ESTADO Y DATOS ================= */
+const $=q=>document.querySelector(q);
+const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
+const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let S={email:null,name:'',grupo:null,doc:false,view:'test',part:1,a1:{},a2:{},all:{},loaded:false,msg:''};
+let _hdr=LS.get('sab-binhdr')||'X-Access-Key';
+async function binFetch(method,body){const url=`https://api.jsonbin.io/v3/b/${CFG.BIN_ID}${method==='GET'?'/latest':''}`;
+  for(const h of [_hdr,_hdr==='X-Access-Key'?'X-Master-Key':'X-Access-Key']){
+    const r=await fetch(url,{method,cache:'no-store',headers:{[h]:CFG.BIN_KEY,'X-Bin-Meta':'false',...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});
+    if(r.status===401||r.status===403)continue;
+    if(h!==_hdr){_hdr=h;LS.set('sab-binhdr',h);}
+    if(!r.ok)throw new Error('JSONBin '+r.status);
+    return method==='GET'?await r.json():true;}
+  throw new Error('Sin acceso a la base de datos');}
+let _q=Promise.resolve();
+function binUpdate(fn){_q=_q.then(async()=>{let r=await binFetch('GET');if(!r||typeof r!=='object'||Array.isArray(r))r={};fn(r);await binFetch('PUT',r);setSave('Guardado en la nube a las '+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}));}).catch(e=>{console.warn(e);setSave('Sin conexión: tu resultado quedó en este navegador. Pulsa “Reintentar guardado”.');});return _q;}
+function setSave(t){S.save=t;const el=$('#save');if(el)el.textContent=t;}
+async function loadAll(){try{const r=await binFetch('GET');S.all=(r&&r.estilos)||{};S.loaded=true;}catch(e){S.loaded=false;}
+  const mine=S.email&&mineLocal();if(mine&&S.email&&!S.all[S.email])S.all[S.email]=mine;}
+const mineLocal=()=>{try{return JSON.parse(LS.get('est-res-'+S.email)||'null')}catch(e){return null}};
+
+/* ================= CÁLCULO ================= */
+function scoreCom(a){let x=0,y=0;COM.forEach(([ax],i)=>{const v=a[i]||2.5;if(ax==='x')x+=v;else y+=v;});
+  x=(x-15)/9;y=(y-15)/9; // -1..1 ; y negativo = DICE ; x negativo = CONTROLA
+  const dice=y<=0,controla=x<=0;const style=dice?(controla?'Directo':'Vigoroso'):(controla?'Sistemático':'Considerado');
+  const near=[];if(Math.abs(x)<0.12)near.push('x');if(Math.abs(y)<0.12)near.push('y');
+  return {x:+x.toFixed(3),y:+y.toFixed(3),style,near};}
+function scoreTk(a){const s={};MK.forEach(m=>s[m]=0);TK.forEach((it,i)=>{if(a[i]!=null)s[it[a[i]][0]]++;});return s;}
+const topMode=tk=>MK.slice().sort((a,b)=>tk[b]-tk[a])[0];
+function neighbor(r){if(!r.near||!r.near.length)return '';const flip=(st,ax)=>({Directo:{x:'Vigoroso',y:'Sistemático'},Vigoroso:{x:'Directo',y:'Considerado'},'Sistemático':{x:'Considerado',y:'Directo'},Considerado:{x:'Sistemático',y:'Vigoroso'}})[st][ax];
+  return ' · cerca de '+r.near.map(ax=>flip(r.style,ax)).join(' y ');}
+
+/* ================= GRÁFICOS (SVG) ================= */
+function quadSVG(pts,big){const W=520,H=420,p=40,cx=W/2,cy=H/2;const q=[['Directo',p,p],['Vigoroso',cx,p],['Sistemático',p,cy],['Considerado',cx,cy]];
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cuadrante de estilos de comunicación">`;
+  q.forEach(([n,x,y])=>{s+=`<rect x="${x+2}" y="${y+2}" width="${cx-p-4}" height="${cy-p-4}" rx="12" fill="${STY[n].c}" fill-opacity=".09" stroke="${STY[n].c}" stroke-width="2"/><text x="${x+14}" y="${y<cy?y+28:y+cy-p-16}" font-family="Source Serif 4,Georgia,serif" font-weight="700" font-size="20" fill="${STY[n].c}">${n}</text>`;});
+  s+=`<line x1="${p}" y1="${cy}" x2="${W-p}" y2="${cy}" stroke="#0b2447" stroke-width="1.5" stroke-dasharray="4 4"/><line x1="${cx}" y1="${p}" x2="${cx}" y2="${H-p}" stroke="#0b2447" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+  const t=(x,y,txt,a='middle')=>`<text x="${x}" y="${y}" text-anchor="${a}" font-family="JetBrains Mono,monospace" font-size="11" font-weight="600" fill="#51607a">${txt}</text>`;
+  s+=t(cx,22,'▲ DICE')+t(cx,H-10,'▼ PREGUNTA')+t(p,H/2-8,'◀ CONTROLA','start')+t(W-p,H/2-8,'DEMUESTRA ▶','end');
+  const used={};
+  pts.forEach((pt,i)=>{const X=cx+pt.x*(cx-p-14),Y=cy+pt.y*(cy-p-14);const k=Math.round(X/18)+'_'+Math.round(Y/18);const off=(used[k]=(used[k]||0)+1)-1;const Xo=X+off*14,Yo=Y+off*10;
+    s+=`<circle cx="${Xo}" cy="${Yo}" r="${big?11:9}" fill="${pt.c||STY[pt.style].c}" stroke="#fff" stroke-width="3"/>`;
+    if(pt.lab)s+=`<text x="${Xo+14}" y="${Yo+5}" font-family="Instrument Sans,sans-serif" font-size="14" font-weight="700" fill="#0b2447" paint-order="stroke" stroke="#fff" stroke-width="4">${esc(pt.lab)}</text>`;});
+  return s+'</svg>';}
+function tkSVG(series){/* series: [{lab,c,tk}] */const W=640,H=360,L=118,R=16,T=20,B=48,ch=H-T-B,cw=W-L-R;const yv=v=>T+ch-(v/12)*ch;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Perfil de manejo de conflicto">`;
+  const bands=[[9.5,12,'#f6d5d0','10–12 exceso'],[7.5,9.5,'#fbe9c9','8–9 alto'],[4.5,7.5,'#d8eedf','5–7 normal'],[2.5,4.5,'#fbe9c9','3–4 bajo'],[0,2.5,'#f6d5d0','0–2 carencia']];
+  bands.forEach(([a,b,c,t])=>{s+=`<rect x="${L}" y="${yv(b)}" width="${cw}" height="${yv(a)-yv(b)}" fill="${c}"/><text x="${L-8}" y="${(yv(a)+yv(b))/2+4}" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="600" fill="#24324a">${t}</text>`;});
+  const gw=cw/5,n=series.length,bw=Math.min(46,(gw-18)/n);
+  MK.forEach((m,i)=>{const gx=L+i*gw+(gw-bw*n)/2;series.forEach((se,k)=>{const v=se.tk[m]||0,x=gx+k*bw;s+=`<rect x="${x+2}" y="${yv(v)}" width="${bw-4}" height="${yv(0)-yv(v)}" rx="3" fill="${n===1?MODES[m].c:se.c}"/>`;if(n<=4)s+=`<text x="${x+bw/2}" y="${yv(v)-5}" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="${n===1?15:11}" font-weight="700" fill="#0b2447">${v}</text>`;});
+    s+=`<text x="${L+i*gw+gw/2}" y="${H-22}" text-anchor="middle" font-family="Instrument Sans,sans-serif" font-size="14" font-weight="700" fill="#0b2447">${m}</text>`;});
+  return s+'</svg>';}
+
+/* ================= VISTAS ================= */
+const groupOf=e=>{const u=S.all[e];return u?u.grupo:null};
+function header(){return `<div class="top"><div><span class="label">Universidad de La Sabana · MGDP · Liderar el cambio</span><h2 style="margin-top:4px">Estilos de comunicación y conflicto</h2></div>
+ <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${S.doc?'<span class="pill">Docente</span>':`<span class="pill">${esc(S.name)} · ${esc(GROUPS[S.grupo]||'')}</span>`}<button class="btn ghost" data-act="logout">Salir</button></div></div>`;}
+function viewLogin(){return `<div class="login card stack"><span class="label">Universidad de La Sabana · MGDP</span><h1>Estilos de comunicación y conflicto</h1>
+ <p class="lead">Un test breve en dos partes. Al final ves tu diagnóstico y el de tu consultora.</p>
+ <label class="f">Correo de La Sabana<input type="email" id="em" placeholder="usuario@unisabana.edu.co" autocomplete="email"></label>
+ ${S.msg?`<p class="err">${esc(S.msg)}</p>`:''}<button class="btn" data-act="login">Entrar</button>
+ <p class="note">Puedes escribir solo tu usuario (por ejemplo, <b>leidymove</b>).</p>
+ <details><summary class="note" style="cursor:pointer">Acceso docente</summary><div class="stack" style="margin-top:10px"><label class="f">DNI del profesor<input type="password" id="dni" inputmode="numeric"></label><button class="btn ghost" data-act="doc">Entrar como docente</button></div></details></div>`;}
+function viewNew(){return `<div class="login card stack"><span class="label">Primera vez</span><h2>No encontramos tu correo en la lista</h2><p class="lead">Completa tus datos para entrar a tu consultora.</p>
+ <label class="f">Nombre completo<input id="nm"></label>
+ <label class="f">Tu consultora<select id="gr"><option value="">Elige…</option>${GROUPS.map((g,i)=>`<option value="${i}">${g}</option>`).join('')}</select></label>
+ ${S.msg?`<p class="err">${esc(S.msg)}</p>`:''}<button class="btn" data-act="newok">Continuar</button><button class="btn ghost" data-act="logout">Volver</button></div>`;}
+function viewTest(){const n1=Object.keys(S.a1).length,n2=Object.keys(S.a2).length;
+ if(S.part===1){return `${header()}<div class="card stack"><span class="label">Parte 1 de 2 · Estilo de comunicación</span><h2>¿Cómo te comunicas en el trabajo?</h2>
+  <p class="lead">Elige el punto más cercano a lo que <b>haces</b>, no a lo que te gustaría hacer. 1 = totalmente la frase de la izquierda; 4 = totalmente la de la derecha.</p>
+  <div class="prog"><i style="width:${n1/12*100}%"></i></div>
+  <div>${COM.map(([ax,a,b],i)=>`<div class="q"><span class="qn">${i+1} de 12</span><span class="s">${a}</span><span class="scale">${[1,2,3,4].map(v=>`<button class="${v===1||v===4?'big ':''}${S.a1[i]===v?'on':''}" data-a1="${i}" data-v="${v}" aria-label="${v}">${v}</button>`).join('')}</span><span class="s r">${b}</span></div>`).join('')}</div>
+  <button class="btn" data-act="next" ${n1<12?'disabled':''}>Continuar a la parte 2 (${n1}/12)</button></div>`;}
+ return `${header()}<div class="card stack"><span class="label">Parte 2 de 2 · Manejo de conflicto</span><h2>Cuando hay un desacuerdo en el trabajo…</h2>
+  <p class="lead">En cada par elige la frase que más se parece a lo que <b>sueles hacer</b>. Las dos pueden parecerte buenas: elige la más frecuente.</p>
+  <div class="prog"><i style="width:${n2/30*100}%"></i></div>
+  <div>${TK.map((it,i)=>`<div class="pair"><span class="qn">${i+1} de 30</span><div class="opts">${it.map(([m,t],k)=>`<button class="${S.a2[i]===k?'on':''}" data-a2="${i}" data-v="${k}">${t}</button>`).join('')}</div></div>`).join('')}</div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn ghost" data-act="back">Volver a la parte 1</button><button class="btn" data-act="finish" ${n2<30?'disabled':''}>Ver mi diagnóstico (${n2}/30)</button></div></div>`;}
+function styleCard(st,extra=''){const d=STY[st];return `<div class="card stack" style="border:2px solid ${d.c}"><div class="style-h"><span class="dot" style="background:${d.c};width:18px;height:18px"></span><div><span class="mini">Tu estilo de comunicación</span><h2 style="color:${d.c}">${st}${extra}</h2></div></div>
+ <p class="lead">${d.ax}.</p>
+ <div class="grid2"><div><div class="mini">Cómo se reconoce</div><ul class="l">${d.ind.map(x=>`<li>${x}</li>`).join('')}</ul></div><div><div class="mini">Fortalezas</div><ul class="l">${d.f.map(x=>`<li>${x}</li>`).join('')}</ul><div class="mini" style="margin-top:10px">Debilidades</div><ul class="l">${d.d.map(x=>`<li>${x}</li>`).join('')}</ul></div></div>
+ <div class="tip"><b>En la consultoría y la exposición:</b> ${d.exp} <b>Cuida:</b> ${d.cui}</div></div>`;}
+function viewMine(){const u=S.all[S.email]||mineLocal();if(!u)return viewTest();const tm=topMode(u.tk);
+ return `${header()}${tabs()}<div class="stack" style="margin-top:14px">
+ <div class="grid2"><div class="card svgbox"><span class="mini">Tu posición</span>${quadSVG([{x:u.com.x,y:u.com.y,style:u.com.style,lab:'Tú'}],1)}</div>${styleCard(u.com.style,`<span style="font-size:15px;color:#51607a;font-family:var(--body)">${neighbor(u.com)}</span>`)}</div>
+ <div class="card stack"><span class="mini">Tu manejo de conflicto (0 a 12 por modo)</span><div class="svgbox" style="max-width:760px">${tkSVG([{lab:'Tú',tk:u.tk}])}</div>
+  <table><thead><tr><th>Modo</th><th>Puntaje</th><th>Lectura</th><th>Útil cuando</th><th>Riesgo</th></tr></thead><tbody>${MK.map(m=>{const z=zone(u.tk[m]);return `<tr><td><span class="chip"><span class="dot" style="background:${MODES[m].c}"></span>${m}</span></td><td><b>${u.tk[m]}</b></td><td><b>${z[2]}</b>: ${z[3]}</td><td>${MODES[m].u}</td><td>${MODES[m].r}</td></tr>`;}).join('')}</tbody></table>
+  <div class="tip">Tu primera reacción ante el roce es <b>${tm.toLowerCase()}</b>. Al implementar su rediseño, pregúntate si ese modo conviene con cada actor o si necesitas otro.</div></div>
+ <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn ghost" data-act="redo">Repetir el test</button><button class="btn ghost" data-act="retry">Reintentar guardado</button><span class="save" id="save">${esc(S.save||'')}</span></div></div>`;}
+function tabs(){return `<div class="tabs">${S.doc?'':`<button class="tab ${S.view==='mine'?'on':''}" data-view="mine">Mi diagnóstico</button>`}<button class="tab ${S.view==='team'?'on':''}" data-view="team">${S.doc?'Consultoras':'Mi consultora'}</button>${S.doc?`<button class="tab ${S.view==='class'?'on':''}" data-view="class">Todo el curso</button>`:''}<button class="tab" data-act="refresh">↻ Actualizar</button></div>`;}
+const PAL=['#0b2447','#c0392b','#1d7552','#d9822b','#7b3fa0','#0e7c86'];
+function membersOf(g){const out=[];Object.entries(ROSTER).forEach(([u,[n,gi]])=>{if(gi===g){const e=u+'@'+CFG.DOMAIN;out.push({e,name:n,r:S.all[e]});}});
+ Object.entries(S.all).forEach(([e,r])=>{if(r&&r.grupo===g&&!out.find(o=>o.e===e))out.push({e,name:r.name,r});});return out;}
+const first=n=>String(n||'').split(' ')[0];
+function teamBlock(g){const ms=membersOf(g),done=ms.filter(m=>m.r&&m.r.com);
+ const pts=done.map(m=>({x:m.r.com.x,y:m.r.com.y,style:m.r.com.style,lab:first(m.name)}));
+ const ser=done.map((m,i)=>({lab:first(m.name),c:PAL[i%PAL.length],tk:m.r.tk}));
+ const have=new Set(done.map(m=>m.r.com.style)),miss=Object.keys(STY).filter(s=>!have.has(s));
+ // reparto sugerido para la exposición: cada rol al integrante más cercano a su cuadrante
+ const roles=[['Gerencia general','Directo',[-1,-1]],['La visión','Vigoroso',[1,-1]],['Finanzas','Sistemático',[-1,1]],['Colaboradores','Considerado',[1,1]]];
+ const dist=(m,[cx,cy])=>Math.hypot(m.r.com.x-cx,m.r.com.y-cy);const pairs=[];roles.forEach((ro,i)=>done.forEach(m=>pairs.push([dist(m,ro[2]),i,m])));pairs.sort((a,b)=>a[0]-b[0]);
+ const took=new Set(),fill={};pairs.forEach(([d,i,m])=>{if(fill[i]||took.has(m.e))return;fill[i]=m;took.add(m.e);});
+ const asg=roles.map(([r,st,c],i)=>{let m=fill[i],also=false;if(!m&&done.length){m=done.slice().sort((a,b)=>dist(a,c)-dist(b,c))[0];also=true;}return [r,st,m,also];});
+ const avg={};MK.forEach(m=>avg[m]=done.length?done.reduce((s,x)=>s+x.r.tk[m],0)/done.length:0);
+ const hi=MK.slice().sort((a,b)=>avg[b]-avg[a])[0],lo=MK.slice().sort((a,b)=>avg[a]-avg[b])[0];
+ return `<div class="card stack"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline"><h2>${esc(GROUPS[g])}</h2><span class="pill">${done.length} de ${ms.length} con test</span></div>
+ ${done.length?`<div class="grid2"><div class="svgbox"><span class="mini">Estilos de comunicación del equipo</span>${quadSVG(pts)}</div>
+  <div class="svgbox"><span class="mini">Manejo de conflicto por integrante</span>${tkSVG(ser)}<div class="legend">${ser.map(s=>`<span><span class="dot" style="background:${s.c}"></span>${esc(s.lab)}</span>`).join('')}</div></div></div>`:'<p class="lead">Todavía nadie de la consultora terminó el test.</p>'}
+ <table><thead><tr><th>Integrante</th><th>Estilo</th><th>Primera reacción ante el conflicto</th></tr></thead><tbody>${ms.map(m=>`<tr><td>${esc(m.name)}</td><td>${m.r&&m.r.com?`<span class="chip"><span class="dot" style="background:${STY[m.r.com.style].c}"></span>${m.r.com.style}</span>`:'<span class="note">Pendiente</span>'}</td><td>${m.r&&m.r.tk?`${topMode(m.r.tk)} (${m.r.tk[topMode(m.r.tk)]})`:'—'}</td></tr>`).join('')}</tbody></table>
+ ${done.length?`<div class="tip"><b>Lectura del equipo:</b> ${miss.length?`les falta el estilo <b>${miss.join(', ')}</b>: piensen quién cubrirá ese registro con la dirección.`:'tienen los cuatro estilos: aprovechen esa mezcla al repartir la exposición.'} Como equipo tienden a <b>${hi.toLowerCase()}</b> y usan poco <b>${lo.toLowerCase()}</b>; tómenlo en cuenta en su mapa de actores y en la gestión del cambio.</div>
+ ${done.length>1?`<div><span class="mini">Reparto sugerido para responder mañana a la dirección</span><div class="roles" style="margin-top:6px">${asg.map(([r,st,m,also])=>`<div class="role" style="--rc:${STY[st].c}"><b>${r}</b><div class="note">escucha como ${st.toLowerCase()}</div><div style="margin-top:6px;font-weight:600">${m?esc(m.name)+(also?' <span class="note">(también)</span>':''):'—'}</div></div>`).join('')}</div><p class="note" style="margin-top:6px">Es una sugerencia según la cercanía de cada integrante al estilo de ese rol. El equipo decide.</p></div>`:''}`:''}</div>`;}
+function viewTeam(){const gs=S.doc?GROUPS.map((_,i)=>i):[S.grupo];return `${header()}${tabs()}<div class="stack" style="margin-top:14px">${S.loaded?'':'<p class="err">No se pudo leer la base de datos: se muestra solo lo guardado en este navegador.</p>'}${gs.map(teamBlock).join('')}</div>`;}
+function viewClass(){const done=Object.values(S.all).filter(r=>r&&r.com);const cnt={};Object.keys(STY).forEach(s=>cnt[s]=done.filter(r=>r.com.style===s).length);
+ const pts=done.map(r=>({x:r.com.x,y:r.com.y,style:r.com.style,lab:first(r.name)}));
+ const avg={};MK.forEach(m=>avg[m]=done.length?+(done.reduce((s,x)=>s+x.tk[m],0)/done.length).toFixed(1):0);
+ return `${header()}${tabs()}<div class="stack" style="margin-top:14px"><div class="grid2"><div class="card svgbox"><span class="mini">Todo el curso · ${done.length} con test</span>${quadSVG(pts)}<div class="legend">${Object.keys(STY).map(s=>`<span><span class="dot" style="background:${STY[s].c}"></span>${s}: <b>${cnt[s]}</b></span>`).join('')}</div></div>
+ <div class="card svgbox"><span class="mini">Promedio del curso en manejo de conflicto</span>${tkSVG([{lab:'Curso',tk:avg}])}</div></div></div>`;}
+function route(){const a=$('#app');
+ if(!S.email&&!S.doc){a.innerHTML=viewLogin();return;}
+ if(S.view==='new'){a.innerHTML=viewNew();return;}
+ if(S.doc){if(S.view!=='class')S.view='team';a.innerHTML=S.view==='class'?viewClass():viewTeam();return;}
+ if(S.view==='test'){a.innerHTML=viewTest();return;}
+ a.innerHTML=S.view==='team'?viewTeam():viewMine();}
+
+/* ================= ACCIONES ================= */
+function normEmail(v){v=(v||'').trim().toLowerCase();if(!v)return '';if(!v.includes('@'))v+='@'+CFG.DOMAIN;return v;}
+async function enter(email){S.email=email;sessionStorage.setItem('est-email',email);
+ const u=email.split('@')[0],ro=email.endsWith('@'+CFG.DOMAIN)?ROSTER[u]:null;
+ await loadAll();const saved=S.all[email]||mineLocal();
+ if(ro){S.name=ro[0];S.grupo=ro[1];}else if(saved){S.name=saved.name;S.grupo=saved.grupo;}else{const p=JSON.parse(LS.get('est-prof-'+email)||'null');if(p){S.name=p.name;S.grupo=p.grupo;}else{S.view='new';return route();}}
+ S.a1=JSON.parse(LS.get('est-a1-'+email)||'{}');S.a2=JSON.parse(LS.get('est-a2-'+email)||'{}');
+ S.view=saved?'mine':'test';S.part=Object.keys(S.a1).length>=12?2:1;route();}
+document.addEventListener('click',async ev=>{const b=ev.target.closest('button');if(!b)return;
+ if(b.dataset.a1!=null){S.a1[b.dataset.a1]=+b.dataset.v;LS.set('est-a1-'+S.email,JSON.stringify(S.a1));const y=scrollY;route();scrollTo(0,y);return;}
+ if(b.dataset.a2!=null){S.a2[b.dataset.a2]=+b.dataset.v;LS.set('est-a2-'+S.email,JSON.stringify(S.a2));const y=scrollY;route();scrollTo(0,y);return;}
+ if(b.dataset.view){S.view=b.dataset.view;if(S.view!=='mine')await loadAll();route();return;}
+ const a=b.dataset.act;
+ if(a==='login'){const e=normEmail($('#em').value);S.msg='';
+   if(CFG.ADMINS.includes(e)){S.msg='Para el panel docente usa “Acceso docente”.';return route();}
+   if(!e.endsWith('@'+CFG.DOMAIN)){S.msg='Usa tu correo @'+CFG.DOMAIN+'.';return route();}
+   return enter(e);}
+ if(a==='doc'){const v=($('#dni').value||'').replace(/\D/g,'');const h=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)))].map(x=>x.toString(16).padStart(2,'0')).join('');
+   if(h!==CFG.DOC_DNI_SHA256){S.msg='DNI docente incorrecto.';return route();}S.doc=true;S.msg='';sessionStorage.setItem('est-doc','1');S.view='team';await loadAll();return route();}
+ if(a==='newok'){const n=$('#nm').value.trim(),g=$('#gr').value;if(!n||g===''){S.msg='Completa tu nombre y tu consultora.';return route();}S.name=n;S.grupo=+g;S.msg='';LS.set('est-prof-'+S.email,JSON.stringify({name:n,grupo:+g}));S.view='test';S.part=1;return route();}
+ if(a==='logout'){S={email:null,name:'',grupo:null,doc:false,view:'test',part:1,a1:{},a2:{},all:{},loaded:false,msg:''};sessionStorage.removeItem('est-email');sessionStorage.removeItem('est-doc');return route();}
+ if(a==='next'){S.part=2;route();scrollTo(0,0);return;}
+ if(a==='back'){S.part=1;route();scrollTo(0,0);return;}
+ if(a==='finish'){const res={name:S.name,grupo:S.grupo,com:scoreCom(S.a1),tk:scoreTk(S.a2),ts:new Date().toISOString()};
+   LS.set('est-res-'+S.email,JSON.stringify(res));S.all[S.email]=res;S.view='mine';setSave('Guardando…');route();scrollTo(0,0);
+   binUpdate(r=>{r.estilos=r.estilos||{};r.estilos[S.email]=res;});return;}
+ if(a==='retry'){const res=mineLocal();if(res){setSave('Guardando…');binUpdate(r=>{r.estilos=r.estilos||{};r.estilos[S.email]=res;});}return;}
+ if(a==='redo'){S.a1={};S.a2={};LS.set('est-a1-'+S.email,'{}');LS.set('est-a2-'+S.email,'{}');S.part=1;S.view='test';route();scrollTo(0,0);return;}
+ if(a==='refresh'){await loadAll();route();return;}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&$('#em')&&document.activeElement===$('#em'))$('[data-act=login]').click();});
+setInterval(async()=>{if((S.view==='team'||S.view==='class')&&document.visibilityState==='visible'){await loadAll();const y=scrollY;route();scrollTo(0,y);}},20000);
+(async()=>{if(sessionStorage.getItem('est-doc')){S.doc=true;S.view='team';await loadAll();return route();}const e=sessionStorage.getItem('est-email');if(e)return enter(e);route();})();
+</script>
+</body>
+</html>
