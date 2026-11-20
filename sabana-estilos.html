@@ -64,6 +64,10 @@ th{font:600 12px var(--mono);text-transform:uppercase;color:var(--muted)}
 .legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13px;margin-top:8px}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .save{font:600 12px var(--mono);color:var(--muted)}
+.pix{transition:filter .25s}
+.pix.on{filter:blur(12px) saturate(.6);pointer-events:none;user-select:none}
+.st{display:inline-block;font:600 12px/1 var(--mono);padding:5px 9px;border-radius:999px}
+.st.ok{background:#e1f1e9;color:#1d7552}.st.mid{background:#fbf1d2;color:#8f6700}.st.no{background:#fbe7e4;color:#c0392b}
 .roles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .role{border:2px solid var(--rc);border-radius:12px;padding:12px;background:color-mix(in srgb,var(--rc) 7%,#fff)}
 .role b{color:var(--rc);font-family:var(--display);font-size:17px}
@@ -308,8 +312,9 @@ function sheetRes(u){const X=XLSX;const tm=topMode(u.tk);const tmp=document.crea
 async function download(kind){try{setSave('Preparando Excel…');await loadXLSX();}catch(e){setSave('No se pudo cargar el generador de Excel. Revisa tu conexión.');return;}
   const X=XLSX,wb=X.utils.book_new();const u=myRes();const blank=kind==='blank';const a1=blank?{}:S.a1,a2=blank?{}:S.a2;
   if(kind==='course'){const rows=[['Consultora','Nombre','Correo','Estilo','Eje vertical','Eje horizontal',...MK,'Primera reacción','Fecha']];
-    Object.entries(S.all).filter(([e,r])=>r&&r.com).sort((a,b)=>(a[1].grupo-b[1].grupo)).forEach(([e,r])=>rows.push([GROUPS[r.grupo]||'',r.name,e,r.com.style,r.com.y,r.com.x,...MK.map(m=>r.tk[m]),topMode(r.tk),r.ts?new Date(r.ts).toLocaleString('es-CO'):'']));
-    const ws=X.utils.aoa_to_sheet(rows);ws['!cols']=[{wch:34},{wch:34},{wch:32},{wch:14},{wch:12},{wch:12},...MK.map(()=>({wch:11})),{wch:16},{wch:20}];X.utils.book_append_sheet(wb,ws,'Curso');X.writeFile(wb,'Estilos_MGDP_curso.xlsx');setSave('Excel descargado');return;}
+    Object.entries(S.all).filter(([e,r])=>r&&r.com&&r.grupo!==TEST_G).sort((a,b)=>(a[1].grupo-b[1].grupo)).forEach(([e,r])=>rows.push([GROUPS[r.grupo]||'',r.name,e,r.com.style,r.com.y,r.com.x,...MK.map(m=>r.tk[m]),topMode(r.tk),r.ts?new Date(r.ts).toLocaleString('es-CO'):'']));
+    const ws=X.utils.aoa_to_sheet(rows);ws['!cols']=[{wch:34},{wch:34},{wch:32},{wch:14},{wch:12},{wch:12},...MK.map(()=>({wch:11})),{wch:16},{wch:20}];X.utils.book_append_sheet(wb,ws,'Curso');
+    const rg=[['Consultora','Integrante','Correo','Estado','Última actividad']];registro().forEach(r=>rg.push([GROUPS[r.g],r.name,r.e,r.st.t,r.st.when?new Date(r.st.when).toLocaleString('es-CO'):'']));const w2=X.utils.aoa_to_sheet(rg);w2['!cols']=[{wch:34},{wch:34},{wch:32},{wch:22},{wch:22}];X.utils.book_append_sheet(wb,w2,'Registro');X.writeFile(wb,'Estilos_MGDP_curso.xlsx');setSave('Excel descargado');return;}
   if(kind==='p1'||kind==='all'||blank)X.utils.book_append_sheet(wb,sheet1(a1),'Parte 1 Comunicación');
   if(kind==='p2'||kind==='all'||blank)X.utils.book_append_sheet(wb,sheet2(a2),'Parte 2 Conflicto');
   if(kind==='all'&&u&&u.com)X.utils.book_append_sheet(wb,sheetRes(u),'Mi diagnóstico');
@@ -360,6 +365,14 @@ const PAL=['#0b2447','#c0392b','#1d7552','#d9822b','#7b3fa0','#0e7c86'];
 function membersOf(g){const out=[];Object.entries(ROSTER).forEach(([u,[n,gi]])=>{if(gi===g){const e=u+'@'+CFG.DOMAIN;out.push({e,name:n,r:S.all[e]});}});
  Object.entries(S.all).forEach(([e,r])=>{if(r&&r.grupo===g&&!out.find(o=>o.e===e))out.push({e,name:r.name,r});});return out;}
 const first=n=>String(n||'').split(' ')[0];
+let BLUR={};try{BLUR=JSON.parse(sessionStorage.getItem('est-blur')||'{}')}catch(e){}
+function statusOf(r){if(r&&r.com)return {k:'ok',t:'Completó',n:42,when:r.ts};const n=r?Object.keys(r.a1||{}).length+Object.keys(r.a2||{}).length:0;
+  return n?{k:'mid',t:`En progreso · ${n} de 42`,n,when:r.draftTs}:{k:'no',t:'No ingresó',n:0,when:null};}
+function registro(){const rows=[];GROUPS.forEach((g,gi)=>{if(gi===TEST_G)return;membersOf(gi).forEach(m=>rows.push({g:gi,name:m.name,e:m.e,st:statusOf(m.r)}));});return rows;}
+function registroHTML(){const rows=registro(),c=k=>rows.filter(r=>r.st.k===k).length;
+  return `<div class="card stack"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline"><h2>Registro de avance</h2><span class="pill">${c('ok')} completaron · ${c('mid')} en progreso · ${c('no')} faltan</span></div>
+  <table><thead><tr><th>Consultora</th><th>Integrante</th><th>Estado</th><th>Última actividad</th></tr></thead><tbody>${rows.sort((a,b)=>({no:0,mid:1,ok:2}[a.st.k]-{no:0,mid:1,ok:2}[b.st.k])||a.g-b.g).map(r=>`<tr><td>${esc(GROUPS[r.g])}</td><td>${esc(r.name)}<div class="note">${esc(r.e)}</div></td><td><span class="st ${r.st.k}">${r.st.t}</span></td><td>${r.st.when?new Date(r.st.when).toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}):'—'}</td></tr>`).join('')}</tbody></table>
+  <p class="note">Primero aparecen quienes faltan. Se actualiza solo cada 20 segundos.</p></div>`;}
 function teamBlock(g){const ms=membersOf(g),done=ms.filter(m=>m.r&&m.r.com);
  const pts=done.map(m=>({x:m.r.com.x,y:m.r.com.y,style:m.r.com.style,lab:first(m.name)}));
  const ser=done.map((m,i)=>({lab:first(m.name),c:PAL[i%PAL.length],tk:m.r.tk}));
@@ -371,14 +384,15 @@ function teamBlock(g){const ms=membersOf(g),done=ms.filter(m=>m.r&&m.r.com);
  const asg=roles.map(([r,st,c],i)=>{let m=fill[i],also=false;if(!m&&done.length){m=done.slice().sort((a,b)=>dist(a,c)-dist(b,c))[0];also=true;}return [r,st,m,also];});
  const avg={};MK.forEach(m=>avg[m]=done.length?done.reduce((s,x)=>s+x.r.tk[m],0)/done.length:0);
  const hi=MK.slice().sort((a,b)=>avg[b]-avg[a])[0],lo=MK.slice().sort((a,b)=>avg[a]-avg[b])[0];
- return `<div class="card stack"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline"><h2>${esc(GROUPS[g])}</h2><span class="pill">${done.length} de ${ms.length} con test</span></div>
+ const bl=S.doc&&BLUR[g];
+ return `<div class="card stack"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><h2>${esc(GROUPS[g])}</h2><div style="display:flex;gap:8px;align-items:center"><span class="pill">${done.length} de ${ms.length} con test</span>${S.doc?`<button class="btn ${bl?'':'ghost'}" data-act="blur" data-g="${g}">${bl?'Mostrar resultados':'Pixelear resultados'}</button>`:''}</div></div><div class="pix ${bl?'on':''} stack">
  ${done.length?`<div class="grid2"><div class="svgbox"><span class="mini">Estilos de comunicación del equipo</span>${quadSVG(pts)}</div>
   <div class="svgbox"><span class="mini">Manejo de conflicto por integrante</span>${tkSVG(ser)}<div class="legend">${ser.map(s=>`<span><span class="dot" style="background:${s.c}"></span>${esc(s.lab)}</span>`).join('')}</div></div></div>
   <div><span class="mini">Mapa radial del equipo</span>${radarsHTML(done.map((m,i)=>({lab:first(m.name),c:PAL[i%PAL.length],com:m.r.com,tk:m.r.tk,bold:m.e===S.email})),'Equipo')}</div>`:'<p class="lead">Todavía nadie de la consultora terminó el test.</p>'}
  <table><thead><tr><th>Integrante</th><th>Estilo</th><th>Primera reacción ante el conflicto</th></tr></thead><tbody>${ms.map(m=>`<tr><td>${esc(m.name)}</td><td>${m.r&&m.r.com?`<span class="chip"><span class="dot" style="background:${STY[m.r.com.style].c}"></span>${m.r.com.style}</span>`:'<span class="note">Pendiente</span>'}</td><td>${m.r&&m.r.tk?`${topMode(m.r.tk)} (${m.r.tk[topMode(m.r.tk)]})`:'—'}</td></tr>`).join('')}</tbody></table>
  ${done.length?`<div class="tip"><b>Lectura del equipo:</b> ${miss.length?`les falta el estilo <b>${miss.join(', ')}</b>: piensen quién cubrirá ese registro con la dirección.`:'tienen los cuatro estilos: aprovechen esa mezcla al repartir la exposición.'} Como equipo tienden a <b>${hi.toLowerCase()}</b> y usan poco <b>${lo.toLowerCase()}</b>; tómenlo en cuenta en su mapa de actores y en la gestión del cambio.</div>
- ${done.length>1?`<div><span class="mini">Reparto sugerido para responder mañana a la dirección</span><div class="roles" style="margin-top:6px">${asg.map(([r,st,m,also])=>`<div class="role" style="--rc:${STY[st].c}"><b>${r}</b><div class="note">escucha como ${st.toLowerCase()}</div><div style="margin-top:6px;font-weight:600">${m?esc(m.name)+(also?' <span class="note">(también)</span>':''):'—'}</div></div>`).join('')}</div><p class="note" style="margin-top:6px">Es una sugerencia según la cercanía de cada integrante al estilo de ese rol. El equipo decide.</p></div>`:''}`:''}</div>`;}
-function viewTeam(){const gs=S.doc?GROUPS.map((_,i)=>i):[S.grupo];return `${header()}${tabs()}<div class="stack" style="margin-top:14px">${S.doc?`<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn" data-act="xlcourse">Descargar resultados del curso (Excel)</button><span class="save">${esc(S.save||'')}</span></div>`:''}${S.loaded?(S_err?`<p class="err">${esc(S_err)}</p>`:''):`<p class="err">No se pudo leer la base de datos (${esc(S_err)}). Se muestra solo lo guardado en este navegador.</p>`}${gs.map(teamBlock).join('')}</div>`;}
+ ${done.length>1?`<div><span class="mini">Reparto sugerido para responder mañana a la dirección</span><div class="roles" style="margin-top:6px">${asg.map(([r,st,m,also])=>`<div class="role" style="--rc:${STY[st].c}"><b>${r}</b><div class="note">escucha como ${st.toLowerCase()}</div><div style="margin-top:6px;font-weight:600">${m?esc(m.name)+(also?' <span class="note">(también)</span>':''):'—'}</div></div>`).join('')}</div><p class="note" style="margin-top:6px">Es una sugerencia según la cercanía de cada integrante al estilo de ese rol. El equipo decide.</p></div>`:''}`:''}</div></div>`;}
+function viewTeam(){const gs=S.doc?GROUPS.map((_,i)=>i):[S.grupo];return `${header()}${tabs()}<div class="stack" style="margin-top:14px">${S.doc?`<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn" data-act="xlcourse">Descargar resultados del curso (Excel)</button><span class="save">${esc(S.save||'')}</span></div>${registroHTML()}`:''}${S.loaded?(S_err?`<p class="err">${esc(S_err)}</p>`:''):`<p class="err">No se pudo leer la base de datos (${esc(S_err)}). Se muestra solo lo guardado en este navegador.</p>`}${gs.map(teamBlock).join('')}</div>`;}
 function viewClass(){const done=Object.values(S.all).filter(r=>r&&r.com&&r.grupo!==TEST_G);const cnt={};Object.keys(STY).forEach(s=>cnt[s]=done.filter(r=>r.com.style===s).length);
  const pts=done.map(r=>({x:r.com.x,y:r.com.y,style:r.com.style,lab:first(r.name)}));
  const avg={};MK.forEach(m=>avg[m]=done.length?+(done.reduce((s,x)=>s+x.tk[m],0)/done.length).toFixed(1):0);
@@ -421,6 +435,7 @@ document.addEventListener('click',async ev=>{const b=ev.target.closest('button')
  if(a==='retry'){const res=mineLocal();if(res){setSave('Guardando…');binUpdate(r=>{r.estilos=r.estilos||{};r.estilos[S.email]=res;});}return;}
  if(a==='redo'){S.a1={};S.a2={};markDirty();S.part=1;S.view='test';route();scrollTo(0,0);return;}
  if(a==='refresh'){await loadAll();route();return;}
+ if(a==='blur'){const g=b.dataset.g;BLUR[g]=!BLUR[g];sessionStorage.setItem('est-blur',JSON.stringify(BLUR));const y=scrollY;route();scrollTo(0,y);return;}
  if(a==='recover')return recover();
  if(a==='del'){if(!S.armDel){S.armDel=true;const y=scrollY;route();scrollTo(0,y);setTimeout(()=>{if(S.armDel){S.armDel=false;if(S.view==='mine'){const yy=scrollY;route();scrollTo(0,yy);}}},5000);return;}S.armDel=false;return delMine();}
  if(['xl1','xl2','xlall','xlblank','xlcourse'].includes(a))return download({xl1:'p1',xl2:'p2',xlall:'all',xlblank:'blank',xlcourse:'course'}[a]);
