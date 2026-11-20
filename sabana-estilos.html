@@ -87,7 +87,7 @@ const CFG={
   DOMAIN:'unisabana.edu.co',
   ADMINS:['apsalinas@ucsp.edu.pe'],
   XLSX_URL:'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js',
-  AUTOSAVE_MS:5000
+  AUTOSAVE_MS:20000   // borradores en la nube cada 20 s (en el navegador, al instante); el resultado final se sube y verifica de inmediato
 };
 const GROUPS=['Empresa de Servicios Públicos de Pacho','LCJJ SAS','Network Switch Consulting','Prueba del profesor'];
 const TEST_G=3; // no se cuenta en “Todo el curso” ni aparece para elegir
@@ -201,24 +201,56 @@ let _q=Promise.resolve();
 function binUpdate(fn){_q=_q.then(async()=>{let r=await binFetch('GET');if(!r||typeof r!=='object'||Array.isArray(r))r={};fn(r);await binFetch('PUT',r);setSave((S_used===CFG.BIN_FALLBACK?'Guardado en el respaldo a las ':'Guardado en la nube a las ')+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}));}).catch(e=>{console.warn(e);setSave('No se guardó en la nube ('+S_err+'). Tus respuestas siguen en este navegador: pulsa “Reintentar guardado”.');});return _q;}
 function setSave(t){S.save=t;document.querySelectorAll('.save').forEach(el=>el.textContent=t);}
 const hhmm=()=>new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-function markDirty(){S.dirty=true;LS.set('est-a1-'+S.email,JSON.stringify(S.a1));LS.set('est-a2-'+S.email,JSON.stringify(S.a2));setSave('Cambios sin guardar…');}
-function flush(){if(!S.dirty||!S.email||S.doc)return;S.dirty=false;setSave('Guardando…');
-  const a1=Object.assign({},S.a1),a2=Object.assign({},S.a2),name=S.name,grupo=S.grupo,em=S.email;
-  binUpdate(r=>{r.estilos=r.estilos||{};const o=r.estilos[em]||{};r.estilos[em]=Object.assign(o,{name,grupo,a1,a2,draftTs:new Date().toISOString()});});}
-setInterval(flush,CFG.AUTOSAVE_MS);
-window.addEventListener('beforeunload',()=>{if(S.dirty)flush();});
+/* ===== Sincronización segura =====
+   JSONBin guarda el archivo completo: si dos estudiantes guardan a la vez, uno puede pisar al otro.
+   Por eso cada navegador guarda su registro, lo VERIFICA y, si alguien lo pisó, lo vuelve a escribir. */
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const verN=x=>x&&x.v?parseInt(String(x.v),10)||0:0;
+/* Cada navegador conserva lo último que vio de todos y lo re-incluye al guardar: si alguien pisó un resultado, se repone. */
+function mergeKnown(r){r.estilos=r.estilos||{};
+  for(const [e,rec] of Object.entries(S.all)){const c=r.estilos[e];if(rec&&(!c||verN(rec)>verN(c)))r.estilos[e]=rec;}
+  for(const [e,c] of Object.entries(r.estilos)){if(c&&(!S.all[e]||verN(c)>=verN(S.all[e])))S.all[e]=c;}}
+const verKey=()=>'est-ver-'+S.email;
+function bumpVer(){S.ver=Date.now()+'-'+Math.random().toString(36).slice(2,7);LS.set(verKey(),S.ver);}
+let _lastDraft=0;
+function markDirty(){S.dirty=true;S.deleted=false;bumpVer();LS.set('est-a1-'+S.email,JSON.stringify(S.a1));LS.set('est-a2-'+S.email,JSON.stringify(S.a2));setSave('Guardado en este navegador · subiendo a la nube…');}
+function buildMine(){const res=mineLocal();const nA=Object.keys(S.a1).length+Object.keys(S.a2).length;
+  if(!(res&&res.com)&&!nA)return null;
+  return Object.assign({},(res&&res.com)?res:{},{name:S.name,grupo:S.grupo,a1:Object.assign({},S.a1),a2:Object.assign({},S.a2),draftTs:new Date().toISOString(),v:S.ver||(bumpVer(),S.ver)});}
+let _syncing=false,_lastCheck=0;
+async function syncMine(force){if(!S.email||S.doc||S.deleted)return;if(_syncing){if(force)S.pend=true;return;}const want=buildMine();if(!want)return;
+  if(!force&&S.dirty&&Date.now()-_lastCheck<CFG.AUTOSAVE_MS)return;
+  if(!force&&!S.dirty&&Date.now()-_lastCheck<(Date.now()-(S.finAt||0)<90000?3000:12000))return;
+  _syncing=true;const em=S.email;S.dirty=false;_lastCheck=Date.now();let okc=0,wrote=false;
+  try{for(let k=0;k<10;k++){
+      let r=await binFetch('GET');if(!r||typeof r!=='object'||Array.isArray(r))r={};r.estilos=r.estilos||{};
+      const cur=r.estilos[em];const before=JSON.stringify(r.estilos);mergeKnown(r);const healed=JSON.stringify(r.estilos)!==before;
+      if(cur&&cur.v===want.v&&!healed){S.all[em]=cur;okc++;if(wrote&&okc<2){await sleep(1800+Math.random()*1200);continue;}setSave((S_used===CFG.BIN_FALLBACK?'Guardado en el respaldo · ':'Guardado en la nube · ')+hhmm());return;}
+      if(S.ver!==want.v){S.dirty=true;S.pend=true;return;}            // hubo cambios nuevos: el próximo ciclo sube la versión nueva
+      okc=0;wrote=true;r.estilos[em]=want;await binFetch('PUT',r);
+      await sleep(700+Math.random()*1800);              // espera y verifica que nadie lo haya pisado
+    }
+    S.dirty=true;setSave('La nube está muy ocupada: se reintenta en unos segundos…');
+  }catch(e){S.dirty=true;setSave('No se pudo guardar en la nube ('+(S_err||e.message)+'). Se reintenta solo; tus respuestas están en este navegador.');}
+  finally{_syncing=false;if(S.pend){S.pend=false;setTimeout(()=>syncMine(true),30);}}}
+setInterval(()=>syncMine(false),3000);
+window.addEventListener('beforeunload',e=>{if(S.dirty||_syncing){e.preventDefault();e.returnValue='Aún se están guardando tus respuestas';}});
 async function recover(){try{setSave('Buscando lo último guardado…');const r=await binFetch('GET');const rec=r&&r.estilos&&r.estilos[S.email];
   if(!rec||(!rec.a1&&!rec.com)){setSave('No hay respuestas guardadas en la nube para '+S.email);return;}
   S.a1=Object.assign({},rec.a1||{});S.a2=Object.assign({},rec.a2||{});LS.set('est-a1-'+S.email,JSON.stringify(S.a1));LS.set('est-a2-'+S.email,JSON.stringify(S.a2));
   if(rec.com){LS.set('est-res-'+S.email,JSON.stringify(rec));S.all[S.email]=rec;S.view='mine';}else{S.view='test';S.part=Object.keys(S.a1).length>=12?2:1;}
   route();setSave('Recuperado lo último guardado ('+new Date(rec.ts||rec.draftTs).toLocaleString('es-CO')+')');}catch(e){setSave('No se pudo leer la nube. Revisa tu conexión.');}}
-async function delMine(){const em=S.email;LS.set('est-res-'+em,'null');LS.set('est-a1-'+em,'{}');LS.set('est-a2-'+em,'{}');S.a1={};S.a2={};delete S.all[em];S.dirty=false;
-  setSave('Borrando…');await binUpdate(r=>{if(r.estilos)delete r.estilos[em];});S.view='test';S.part=1;route();scrollTo(0,0);setSave('Tus resultados se borraron.');}
+async function delMine(){const em=S.email;S.deleted=true;LS.set('est-res-'+em,'null');LS.set('est-a1-'+em,'{}');LS.set('est-a2-'+em,'{}');S.a1={};S.a2={};S.dirty=false;
+  bumpVer();const tomb={deleted:true,name:S.name,grupo:S.grupo,v:S.ver};S.all[em]=tomb;setSave('Borrando…');
+  for(let k=0;k<6;k++){try{let r=await binFetch('GET');if(!r||typeof r!=='object'||Array.isArray(r))r={};r.estilos=r.estilos||{};const c=r.estilos[em];
+     if(c&&c.deleted&&c.v===tomb.v)break;mergeKnown(r);r.estilos[em]=tomb;S.all[em]=tomb;await binFetch('PUT',r);await sleep(700+Math.random()*1500);}catch(e){break;}}
+  S.view='test';S.part=1;route();scrollTo(0,0);setSave('Tus resultados se borraron.');}
 async function loadAll(){let main=null,fb=null,e1='';
   try{main=await binTry(CFG.BIN_ID,'GET');}catch(e){e1=e.msg;}
   if(CFG.BIN_FALLBACK){try{fb=await binTry(CFG.BIN_FALLBACK,'GET');}catch(e){}}
   S.loaded=!!(main||fb);S_err=e1?(S.loaded?'BIN principal: '+e1+' · se muestran los datos del respaldo':e1):'';
-  S.all=Object.assign({},(fb&&fb.estilos)||{},(main&&main.estilos)||{});
+  const fresh=Object.assign({},(fb&&fb.estilos)||{},(main&&main.estilos)||{});
+  for(const [e,c] of Object.entries(fresh)){if(c&&(!S.all[e]||verN(c)>=verN(S.all[e])))S.all[e]=c;}
   const mine=S.email&&mineLocal();if(mine&&mine.com&&S.email&&!(S.all[S.email]&&S.all[S.email].com))S.all[S.email]=mine;}
 const mineLocal=()=>{try{return JSON.parse(LS.get('est-res-'+S.email)||'null')}catch(e){return null}};
 const myRes=()=>{const c=S.all[S.email];return (c&&c.com)?c:mineLocal();};
@@ -277,7 +309,7 @@ function radarsHTML(series,title){return `<div class="grid2"><div class="svgbox"
 function feedbackHTML(u){const c=u.com,st=c.style,tm=topMode(u.tk),ax=Math.abs(c.x),ay=Math.abs(c.y);
   const inten=Math.min(ax,ay)<0.12?`cerca del límite${neighbor(c).replace(' · cerca de',' con')}: puedes moverte entre ambos estilos según la situación, una ventaja si lo haces a propósito`:(ax>=0.4&&ay>=0.4?'de forma marcada: es tu forma natural y los demás la reconocen rápido':'de forma moderada: tienes margen para adaptarte a tu interlocutor');
   const zs=MK.map(m=>[m,u.tk[m],zone(u.tk[m])[2]]);const altos=zs.filter(z=>z[2]==='Exceso'||z[2]==='Alto'),bajos=zs.filter(z=>z[2]==='Carencia'||z[2]==='Bajo'),flex=zs.filter(z=>z[2]==='Normal');
-  const mates=membersOf(u.grupo).filter(m=>m.e!==S.email&&m.r&&m.r.com);
+  const mates=membersOf(u.grupo).filter(m=>m.e!==S.email&&m.alt!==S.email&&m.r&&m.r.com);
   const far=mates.slice().sort((a,b)=>Math.hypot(b.r.com.x-c.x,b.r.com.y-c.y)-Math.hypot(a.r.com.x-c.x,a.r.com.y-c.y))[0];
   return `<div class="card stack"><span class="label">Retroalimentación personalizada</span><h2>${esc(first(u.name))}, esto dicen tus resultados</h2>
   <div><div class="mini">Tu perfil</div><p>Tu estilo predominante es <b style="color:${STY[st].c}">${st}</b>, ${inten}. ${COMBO[st+'|'+tm]}</p></div>
@@ -350,7 +382,7 @@ function styleCard(st,extra=''){const d=STY[st];return `<div class="card stack" 
  <div class="grid2"><div><div class="mini">Cómo se reconoce</div><ul class="l">${d.ind.map(x=>`<li>${x}</li>`).join('')}</ul></div><div><div class="mini">Fortalezas</div><ul class="l">${d.f.map(x=>`<li>${x}</li>`).join('')}</ul><div class="mini" style="margin-top:10px">Debilidades</div><ul class="l">${d.d.map(x=>`<li>${x}</li>`).join('')}</ul></div></div>
  <div class="tip"><b>En la consultoría y la exposición:</b> ${d.exp} <b>Cuida:</b> ${d.cui}</div></div>`;}
 function viewMine(){const u=myRes();if(!u||!u.com)return viewTest();
- const mates=membersOf(u.grupo).filter(m=>m.e!==S.email&&m.r&&m.r.com);const ser=[...mates.map((m,i)=>({lab:first(m.name),c:PAL[(i+1)%PAL.length],com:m.r.com,tk:m.r.tk})),{lab:first(u.name),c:STY[u.com.style].c,com:u.com,tk:u.tk,bold:true}];const tm=topMode(u.tk);
+ const mates=membersOf(u.grupo).filter(m=>m.e!==S.email&&m.alt!==S.email&&m.r&&m.r.com);const ser=[...mates.map((m,i)=>({lab:first(m.name),c:PAL[(i+1)%PAL.length],com:m.r.com,tk:m.r.tk})),{lab:first(u.name),c:STY[u.com.style].c,com:u.com,tk:u.tk,bold:true}];const tm=topMode(u.tk);
  return `${header()}${tabs()}<div class="stack" style="margin-top:14px">
  <div class="grid2"><div class="card svgbox"><span class="mini">Tu posición</span>${quadSVG([{x:u.com.x,y:u.com.y,style:u.com.style,lab:'Tú'}],1)}</div>${styleCard(u.com.style,`<span style="font-size:15px;color:#51607a;font-family:var(--body)">${neighbor(u.com)}</span>`)}</div>
  <div class="card stack"><span class="mini">Tu manejo de conflicto (0 a 12 por modo)</span><div class="svgbox" style="max-width:760px">${tkSVG([{lab:'Tú',tk:u.tk}])}</div>
@@ -362,17 +394,22 @@ function viewMine(){const u=myRes();if(!u||!u.com)return viewTest();
  <p class="note">El Excel trae tus respuestas y las fórmulas: si borras las respuestas, te sirve como plantilla para aplicarlo a otras personas (por ejemplo, a los actores de tu cliente).</p><span class="save">${esc(S.save||'')}</span></div></div>`;}
 function tabs(){return `<div class="tabs">${S.doc?'':`<button class="tab ${S.view==='mine'?'on':''}" data-view="mine">Mi diagnóstico</button>`}<button class="tab ${S.view==='team'?'on':''}" data-view="team">${S.doc?'Consultoras':'Mi consultora'}</button>${S.doc?`<button class="tab ${S.view==='class'?'on':''}" data-view="class">Todo el curso</button>`:''}<button class="tab" data-act="refresh">↻ Actualizar</button></div>`;}
 const PAL=['#0b2447','#c0392b','#1d7552','#d9822b','#7b3fa0','#0e7c86'];
+const toks=n=>String(n||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().split(/[^a-zñ]+/).filter(t=>t.length>2);
+function nameMatch(a,b){const A=toks(a),B=new Set(toks(b));const sh=A.filter(t=>B.has(t)).length;return sh>=2||(sh>=1&&A.length===1);}
 function membersOf(g){const out=[];Object.entries(ROSTER).forEach(([u,[n,gi]])=>{if(gi===g){const e=u+'@'+CFG.DOMAIN;out.push({e,name:n,r:S.all[e]});}});
- Object.entries(S.all).forEach(([e,r])=>{if(r&&r.grupo===g&&!out.find(o=>o.e===e))out.push({e,name:r.name,r});});return out;}
+ Object.entries(S.all).forEach(([e,r])=>{if(!r||r.deleted||out.find(o=>o.e===e))return;
+   const twin=Object.values(ROSTER).length&&out.find(o=>!(o.r&&o.r.com)&&nameMatch(r.name,o.name)&&(r.grupo===g));
+   if(twin){twin.r=r;twin.alt=e;return;}
+   if(r.grupo===g)out.push({e,name:r.name,r});});return out;}
 const first=n=>String(n||'').split(' ')[0];
 let BLUR={};try{BLUR=JSON.parse(sessionStorage.getItem('est-blur')||'{}')}catch(e){}
-function statusOf(r){if(r&&r.com)return {k:'ok',t:'Completó',n:42,when:r.ts};const n=r?Object.keys(r.a1||{}).length+Object.keys(r.a2||{}).length:0;
+function statusOf(r){if(r&&r.deleted)r=null;if(r&&r.com)return {k:'ok',t:'Completó',n:42,when:r.ts};const n=r?Object.keys(r.a1||{}).length+Object.keys(r.a2||{}).length:0;
   return n?{k:'mid',t:`En progreso · ${n} de 42`,n,when:r.draftTs}:{k:'no',t:'No ingresó',n:0,when:null};}
-function registro(){const rows=[];GROUPS.forEach((g,gi)=>{if(gi===TEST_G)return;membersOf(gi).forEach(m=>rows.push({g:gi,name:m.name,e:m.e,st:statusOf(m.r)}));});return rows;}
+function registro(){const rows=[];GROUPS.forEach((g,gi)=>{if(gi===TEST_G)return;membersOf(gi).forEach(m=>rows.push({g:gi,name:m.name,e:m.alt?m.alt+' (entró con este correo)':m.e,st:statusOf(m.r)}));});return rows;}
 function registroHTML(){const rows=registro(),c=k=>rows.filter(r=>r.st.k===k).length;
   return `<div class="card stack"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline"><h2>Registro de avance</h2><span class="pill">${c('ok')} completaron · ${c('mid')} en progreso · ${c('no')} faltan</span></div>
   <table><thead><tr><th>Consultora</th><th>Integrante</th><th>Estado</th><th>Última actividad</th></tr></thead><tbody>${rows.sort((a,b)=>({no:0,mid:1,ok:2}[a.st.k]-{no:0,mid:1,ok:2}[b.st.k])||a.g-b.g).map(r=>`<tr><td>${esc(GROUPS[r.g])}</td><td>${esc(r.name)}<div class="note">${esc(r.e)}</div></td><td><span class="st ${r.st.k}">${r.st.t}</span></td><td>${r.st.when?new Date(r.st.when).toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}):'—'}</td></tr>`).join('')}</tbody></table>
-  <p class="note">Primero aparecen quienes faltan. Se actualiza solo cada 20 segundos.</p></div>`;}
+  <p class="note">Primero aparecen quienes faltan. Se actualiza solo cada 8 segundos.</p></div>`;}
 function teamBlock(g){const ms=membersOf(g),done=ms.filter(m=>m.r&&m.r.com);
  const pts=done.map(m=>({x:m.r.com.x,y:m.r.com.y,style:m.r.com.style,lab:first(m.name)}));
  const ser=done.map((m,i)=>({lab:first(m.name),c:PAL[i%PAL.length],tk:m.r.tk}));
@@ -398,6 +435,9 @@ function viewClass(){const done=Object.values(S.all).filter(r=>r&&r.com&&r.grupo
  const avg={};MK.forEach(m=>avg[m]=done.length?+(done.reduce((s,x)=>s+x.tk[m],0)/done.length).toFixed(1):0);
  return `${header()}${tabs()}<div class="stack" style="margin-top:14px"><div class="grid2"><div class="card svgbox"><span class="mini">Todo el curso · ${done.length} con test</span>${quadSVG(pts)}<div class="legend">${Object.keys(STY).map(s=>`<span><span class="dot" style="background:${STY[s].c}"></span>${s}: <b>${cnt[s]}</b></span>`).join('')}</div></div>
  <div class="card svgbox"><span class="mini">Promedio del curso en manejo de conflicto</span>${tkSVG([{lab:'Curso',tk:avg}])}</div></div></div>`;}
+function fastUI(){const n1=Object.keys(S.a1).length,n2=Object.keys(S.a2).length,pg=$('.prog i');
+  if(S.part===1){if(pg)pg.style.width=(n1/12*100)+'%';const bt=$('[data-act=next]');if(bt){bt.disabled=n1<12;bt.textContent=`Continuar a la parte 2 (${n1}/12)`;}}
+  else{if(pg)pg.style.width=(n2/30*100)+'%';const bt=$('[data-act=finish]');if(bt){bt.disabled=n2<30;bt.textContent=`Ver mi diagnóstico (${n2}/30)`;}}}
 function route(){const a=$('#app');
  if(!S.email&&!S.doc){a.innerHTML=viewLogin();return;}
  if(S.view==='new'){a.innerHTML=viewNew();return;}
@@ -407,16 +447,18 @@ function route(){const a=$('#app');
 
 /* ================= ACCIONES ================= */
 function normEmail(v){v=(v||'').trim().toLowerCase();if(!v)return '';if(!v.includes('@'))v+='@'+CFG.DOMAIN;return v;}
-async function enter(email){S.email=email;sessionStorage.setItem('est-email',email);
+async function enter(email){S.email=email;S.all={};sessionStorage.setItem('est-email',email);
  const u=email.split('@')[0],ro=email.endsWith('@'+CFG.DOMAIN)?ROSTER[u]:null;
- await loadAll();const cloud=S.all[email]||null;const saved=(cloud&&cloud.com)?cloud:mineLocal();
+ await loadAll();let cloud=S.all[email]||null;if(cloud&&cloud.deleted)cloud=null;const saved=(cloud&&cloud.com)?cloud:mineLocal();
  if(ro){S.name=ro[0];S.grupo=ro[1];}else if(saved){S.name=saved.name;S.grupo=saved.grupo;}else{const p=JSON.parse(LS.get('est-prof-'+email)||'null');if(p){S.name=p.name;S.grupo=p.grupo;}else{S.view='new';return route();}}
  S.a1=JSON.parse(LS.get('est-a1-'+email)||'{}');S.a2=JSON.parse(LS.get('est-a2-'+email)||'{}');
  if(cloud&&(Object.keys(cloud.a1||{}).length+Object.keys(cloud.a2||{}).length)>(Object.keys(S.a1).length+Object.keys(S.a2).length)){S.a1=Object.assign({},cloud.a1||{});S.a2=Object.assign({},cloud.a2||{});S.save='Se trajeron tus últimas respuestas guardadas';}
+ S.ver=LS.get(verKey())||'';if(saved&&saved.com)LS.set('est-res-'+email,JSON.stringify(Object.assign({},saved)));
+ const loc=buildMine();if(loc&&!(cloud&&cloud.v&&cloud.v===loc.v&&(!!cloud.com===!!loc.com))){if(!S.ver)bumpVer();S.dirty=true;setTimeout(()=>syncMine(true),300);}
  S.view=saved?'mine':'test';S.part=Object.keys(S.a1).length>=12?2:1;route();}
 document.addEventListener('click',async ev=>{const b=ev.target.closest('button');if(!b)return;
- if(b.dataset.a1!=null){S.a1[b.dataset.a1]=+b.dataset.v;markDirty();const y=scrollY;route();scrollTo(0,y);return;}
- if(b.dataset.a2!=null){S.a2[b.dataset.a2]=+b.dataset.v;markDirty();const y=scrollY;route();scrollTo(0,y);return;}
+ if(b.dataset.a1!=null){S.a1[b.dataset.a1]=+b.dataset.v;markDirty();b.parentNode.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));fastUI();return;}
+ if(b.dataset.a2!=null){S.a2[b.dataset.a2]=+b.dataset.v;markDirty();b.parentNode.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));fastUI();return;}
  if(b.dataset.view){S.view=b.dataset.view;if(S.view!=='mine')await loadAll();route();return;}
  const a=b.dataset.act;
  if(a==='login'){const e=normEmail($('#em').value);S.msg='';
@@ -431,8 +473,8 @@ document.addEventListener('click',async ev=>{const b=ev.target.closest('button')
  if(a==='back'){S.part=1;route();scrollTo(0,0);return;}
  if(a==='finish'){S.dirty=false;const res={name:S.name,grupo:S.grupo,a1:Object.assign({},S.a1),a2:Object.assign({},S.a2),com:scoreCom(S.a1),tk:scoreTk(S.a2),ts:new Date().toISOString()};
    LS.set('est-res-'+S.email,JSON.stringify(res));S.all[S.email]=res;S.view='mine';setSave('Guardando…');route();scrollTo(0,0);
-   binUpdate(r=>{r.estilos=r.estilos||{};r.estilos[S.email]=res;});return;}
- if(a==='retry'){const res=mineLocal();if(res){setSave('Guardando…');binUpdate(r=>{r.estilos=r.estilos||{};r.estilos[S.email]=res;});}return;}
+   S.finAt=Date.now();bumpVer();S.dirty=true;syncMine(true);return;}
+ if(a==='retry'){bumpVer();S.dirty=true;setSave('Guardando…');syncMine(true);return;}
  if(a==='redo'){S.a1={};S.a2={};markDirty();S.part=1;S.view='test';route();scrollTo(0,0);return;}
  if(a==='refresh'){await loadAll();route();return;}
  if(a==='blur'){const g=b.dataset.g;BLUR[g]=!BLUR[g];sessionStorage.setItem('est-blur',JSON.stringify(BLUR));const y=scrollY;route();scrollTo(0,y);return;}
@@ -441,7 +483,10 @@ document.addEventListener('click',async ev=>{const b=ev.target.closest('button')
  if(['xl1','xl2','xlall','xlblank','xlcourse'].includes(a))return download({xl1:'p1',xl2:'p2',xlall:'all',xlblank:'blank',xlcourse:'course'}[a]);
 });
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&$('#em')&&document.activeElement===$('#em'))$('[data-act=login]').click();});
-setInterval(async()=>{if((S.view==='team'||S.view==='class')&&document.visibilityState==='visible'){await loadAll();const y=scrollY;route();scrollTo(0,y);}},20000);
+async function docHeal(){if(!S.doc)return;try{let r=await binFetch('GET');if(!r||typeof r!=='object'||Array.isArray(r))r={};r.estilos=r.estilos||{};
+  const before=JSON.stringify(r.estilos);mergeKnown(r);if(JSON.stringify(r.estilos)!==before){await binFetch('PUT',r);console.log('Panel docente: se repusieron resultados pisados');}}catch(e){}}
+setInterval(()=>{if(S.doc)docHeal();},4000);
+setInterval(async()=>{if((S.view==='team'||S.view==='class')&&document.visibilityState==='visible'){await loadAll();const y=scrollY;route();scrollTo(0,y);}},8000);
 (async()=>{if(sessionStorage.getItem('est-doc')){S.doc=true;S.view='team';await loadAll();return route();}const e=sessionStorage.getItem('est-email');if(e)return enter(e);route();})();
 </script>
 </body>
