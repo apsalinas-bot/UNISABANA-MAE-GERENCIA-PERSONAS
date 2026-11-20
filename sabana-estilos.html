@@ -178,13 +178,13 @@ const $=q=>document.querySelector(q);
 const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
 const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let S={email:null,name:'',grupo:null,doc:false,view:'test',part:1,a1:{},a2:{},all:{},loaded:false,msg:''};
-let _hdr=LS.get('sab-binhdr')||'X-Access-Key';var S_err='';
+const HDRS=['X-Access-Key','X-Master-Key'];let _hdr=(()=>{const v=String(LS.get('est-binhdr')||'').replace(/[^A-Za-z-]/g,'');return HDRS.includes(v)?v:'X-Access-Key';})();var S_err='';
 var S_used='';
 async function binTry(bin,method,body){let last='';
   for(const h of [_hdr,_hdr==='X-Access-Key'?'X-Master-Key':'X-Access-Key']){
     let r;try{r=await fetch(`https://api.jsonbin.io/v3/b/${bin}${method==='GET'?'/latest':''}`,{method,cache:'no-store',headers:{[h]:CFG.BIN_KEY,'X-Bin-Meta':'false',...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});}
     catch(e){throw {soft:false,msg:'sin conexión con JSONBin ('+(e.message||e)+')'};}
-    if(r.ok){if(h!==_hdr){_hdr=h;LS.set('sab-binhdr',h);}return method==='GET'?await r.json():true;}
+    if(r.ok){if(h!==_hdr){_hdr=h;LS.set('est-binhdr',h);}return method==='GET'?await r.json():true;}
     let m='';try{m=(await r.json()).message||'';}catch(e){}
     last=`JSONBin ${r.status}${m?': '+m:''}`;
     if(r.status!==401&&r.status!==403)break;}
