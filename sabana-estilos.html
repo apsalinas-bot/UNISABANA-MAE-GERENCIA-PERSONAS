@@ -80,7 +80,9 @@ const CFG={
   BIN_KEY:'$2a$10$2sih3TPm3qkCuJG97N99ru4sHdofBFicx2zBOwK1MqUYzlDJ502W2',
   DOC_DNI_SHA256:'8d9408a0ea52e9c0a344486dc50f53e895364a2c9e44fd7b7aeefd9497df4cae',
   DOMAIN:'unisabana.edu.co',
-  ADMINS:['apsalinas@ucsp.edu.pe']
+  ADMINS:['apsalinas@ucsp.edu.pe'],
+  XLSX_URL:'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js',
+  AUTOSAVE_MS:5000
 };
 const GROUPS=['Empresa de Servicios Públicos de Pacho','LCJJ SAS','Network Switch Consulting','Prueba del profesor'];
 const TEST_G=3; // no se cuenta en “Todo el curso” ni aparece para elegir
@@ -113,6 +115,30 @@ const MODES={
  Ceder:{c:'#7b3fa0',u:'La relación pesa más o el otro tiene razón.',r:'Si es constante, el cambio no ocurre.'}
 };
 const MK=Object.keys(MODES);
+const HABLAR={Directo:'ve al punto: la conclusión primero y sin rodeos',Vigoroso:'dale la visión general y espacio para opinar','Sistemático':'trae datos, orden y tiempo para analizar',Considerado:'cuida la relación y pregúntale cómo le afecta el cambio'};
+const MAS={Competir:'cuando algo no es negociable, dilo con claridad y sostén la decisión',Colaborar:'en los temas clave, invita al otro a construir la solución contigo',Negociar:'cuando el avance se estanque, propón un punto medio concreto',Evitar:'date permiso de posponer cuando los ánimos están altos',Ceder:'cuando el otro tiene razón o la relación pesa más, cede sin culpa'};
+const MENOS={Competir:'antes de defender tu posición, pregunta qué le preocupa al otro',Colaborar:'no todo necesita consenso: reserva la colaboración para lo importante',Negociar:'antes de partir la diferencia, verifica que el acuerdo resuelva el fondo del problema',Evitar:'ponle fecha a la conversación que estás postergando',Ceder:'antes de ceder, di en voz alta lo que tú necesitas'};
+const COMBO={
+ 'Directo|Competir':'Avanzas rápido y con firmeza; el riesgo es imponer el cambio sin escuchar a quienes lo van a ejecutar.',
+ 'Directo|Colaborar':'Combinas claridad con apertura: puedes liderar el cambio sumando a los demás, si te das el tiempo de escuchar.',
+ 'Directo|Negociar':'Vas al punto y buscas acuerdos prácticos; cuida que la prisa no te lleve a soluciones a medias.',
+ 'Directo|Evitar':'Eres claro en lo operativo, pero el roce te lleva a postergar; en la implementación, ponle fecha a las conversaciones difíciles.',
+ 'Directo|Ceder':'Hablas con firmeza, pero ante el conflicto cedes; sostén tu recomendación cuando la dirección la cuestione.',
+ 'Vigoroso|Competir':'Convences con entusiasmo y empuje; el riesgo es arrollar las dudas de los demás en lugar de responderlas.',
+ 'Vigoroso|Colaborar':'Movilizas a las personas y buscas que todos ganen: un perfil fuerte para liderar el cambio, si aterrizas los detalles.',
+ 'Vigoroso|Negociar':'Motivas y buscas acuerdos; asegúrate de que el entusiasmo venga con cifras que lo respalden.',
+ 'Vigoroso|Evitar':'Inspiras en lo general, pero esquivas el roce; prepara cómo responderás a las objeciones concretas.',
+ 'Vigoroso|Ceder':'Conectas con la gente y cuidas la relación; no dejes que eso diluya los cambios que el proceso necesita.',
+ 'Sistemático|Competir':'Defiendes tus conclusiones con datos; los datos convencen más cuando primero escuchas.',
+ 'Sistemático|Colaborar':'Analizas con rigor y buscas soluciones integrales: ideal para diseñar el rediseño, si cuidas los tiempos.',
+ 'Sistemático|Negociar':'Buscas acuerdos con base en hechos; explica las concesiones con la misma claridad que tus datos.',
+ 'Sistemático|Evitar':'Te refugias en el análisis cuando hay tensión; en la implementación, el mejor dato no reemplaza la conversación difícil.',
+ 'Sistemático|Ceder':'Eres preciso, pero cedes ante la presión; sostén lo que dicen tus datos aunque incomode.',
+ 'Considerado|Competir':'Escuchas y generas confianza, y cuando algo te importa lo defiendes: una combinación valiosa si eliges bien tus batallas.',
+ 'Considerado|Colaborar':'Generas confianza y buscas que todos ganen: ideal para acompañar a los afectados por el cambio.',
+ 'Considerado|Negociar':'Cuidas a las personas y buscas acuerdos; verifica que el acuerdo no deje intacto el cuello de botella.',
+ 'Considerado|Evitar':'Cuidas la armonía y esquivas el roce; el riesgo es que la resistencia al cambio crezca sin que nadie la nombre.',
+ 'Considerado|Ceder':'Priorizas la relación; en la exposición, practica sostener la recomendación ante preguntas duras.'};
 const ZONES=[[10,12,'Exceso','lo usas casi siempre, aunque no convenga (rígido)'],[8,9,'Alto','es tu primera reacción'],[5,7,'Normal','lo usas cuando conviene (flexible)'],[3,4,'Bajo','lo usas poco'],[0,2,'Carencia','casi no lo usas: te falta en el repertorio (rígido)']];
 const zone=v=>ZONES.find(z=>v>=z[0]&&v<=z[1]);
 
@@ -162,10 +188,25 @@ async function binFetch(method,body){const url=`https://api.jsonbin.io/v3/b/${CF
   throw new Error('Sin acceso a la base de datos');}
 let _q=Promise.resolve();
 function binUpdate(fn){_q=_q.then(async()=>{let r=await binFetch('GET');if(!r||typeof r!=='object'||Array.isArray(r))r={};fn(r);await binFetch('PUT',r);setSave('Guardado en la nube a las '+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}));}).catch(e=>{console.warn(e);setSave('Sin conexión: tu resultado quedó en este navegador. Pulsa “Reintentar guardado”.');});return _q;}
-function setSave(t){S.save=t;const el=$('#save');if(el)el.textContent=t;}
+function setSave(t){S.save=t;document.querySelectorAll('.save').forEach(el=>el.textContent=t);}
+const hhmm=()=>new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+function markDirty(){S.dirty=true;LS.set('est-a1-'+S.email,JSON.stringify(S.a1));LS.set('est-a2-'+S.email,JSON.stringify(S.a2));setSave('Cambios sin guardar…');}
+function flush(){if(!S.dirty||!S.email||S.doc)return;S.dirty=false;setSave('Guardando…');
+  const a1=Object.assign({},S.a1),a2=Object.assign({},S.a2),name=S.name,grupo=S.grupo,em=S.email;
+  binUpdate(r=>{r.estilos=r.estilos||{};const o=r.estilos[em]||{};r.estilos[em]=Object.assign(o,{name,grupo,a1,a2,draftTs:new Date().toISOString()});});}
+setInterval(flush,CFG.AUTOSAVE_MS);
+window.addEventListener('beforeunload',()=>{if(S.dirty)flush();});
+async function recover(){try{setSave('Buscando lo último guardado…');const r=await binFetch('GET');const rec=r&&r.estilos&&r.estilos[S.email];
+  if(!rec||(!rec.a1&&!rec.com)){setSave('No hay respuestas guardadas en la nube para '+S.email);return;}
+  S.a1=Object.assign({},rec.a1||{});S.a2=Object.assign({},rec.a2||{});LS.set('est-a1-'+S.email,JSON.stringify(S.a1));LS.set('est-a2-'+S.email,JSON.stringify(S.a2));
+  if(rec.com){LS.set('est-res-'+S.email,JSON.stringify(rec));S.all[S.email]=rec;S.view='mine';}else{S.view='test';S.part=Object.keys(S.a1).length>=12?2:1;}
+  route();setSave('Recuperado lo último guardado ('+new Date(rec.ts||rec.draftTs).toLocaleString('es-CO')+')');}catch(e){setSave('No se pudo leer la nube. Revisa tu conexión.');}}
+async function delMine(){const em=S.email;LS.set('est-res-'+em,'null');LS.set('est-a1-'+em,'{}');LS.set('est-a2-'+em,'{}');S.a1={};S.a2={};delete S.all[em];S.dirty=false;
+  setSave('Borrando…');await binUpdate(r=>{if(r.estilos)delete r.estilos[em];});S.view='test';S.part=1;route();scrollTo(0,0);setSave('Tus resultados se borraron.');}
 async function loadAll(){try{const r=await binFetch('GET');S.all=(r&&r.estilos)||{};S.loaded=true;}catch(e){S.loaded=false;}
-  const mine=S.email&&mineLocal();if(mine&&S.email&&!S.all[S.email])S.all[S.email]=mine;}
+  const mine=S.email&&mineLocal();if(mine&&mine.com&&S.email&&!(S.all[S.email]&&S.all[S.email].com))S.all[S.email]=mine;}
 const mineLocal=()=>{try{return JSON.parse(LS.get('est-res-'+S.email)||'null')}catch(e){return null}};
+const myRes=()=>{const c=S.all[S.email];return (c&&c.com)?c:mineLocal();};
 
 /* ================= CÁLCULO ================= */
 function scoreCom(a){let x=0,y=0;COM.forEach(([ax],i)=>{const v=a[i]||2.5;if(ax==='x')x+=v;else y+=v;});
@@ -199,6 +240,70 @@ function tkSVG(series){/* series: [{lab,c,tk}] */const W=640,H=360,L=118,R=16,T=
     s+=`<text x="${L+i*gw+gw/2}" y="${H-22}" text-anchor="middle" font-family="Instrument Sans,sans-serif" font-size="14" font-weight="700" fill="#0b2447">${m}</text>`;});
   return s+'</svg>';}
 
+function commVals(c){const dice=(1-c.y)/2,ctl=(1-c.x)/2,r=v=>Math.round(v*100);return {Directo:r((dice+ctl)/2),Vigoroso:r((dice+1-ctl)/2),Considerado:r((2-dice-ctl)/2),'Sistemático':r((1-dice+ctl)/2)};}
+const CAX=['Directo','Vigoroso','Considerado','Sistemático'];
+function radarSVG(axes,max,series,opt={}){const W=440,H=400,cx=220,cy=205,R=135,n=axes.length;const ang=i=>-Math.PI/2+i*2*Math.PI/n;
+  const P=(i,v)=>[cx+Math.cos(ang(i))*R*v/max,cy+Math.sin(ang(i))*R*v/max];const poly=v=>axes.map((a,i)=>P(i,typeof v==='number'?v:v[a]).map(z=>z.toFixed(1)).join(',')).join(' ');
+  let s=`<svg viewBox="-60 0 ${W+120} ${H}" role="img" aria-label="${opt.title||'Mapa radial'}">`;
+  if(opt.band){s+=`<polygon points="${poly(opt.band[1])}" fill="#d8eedf"/><polygon points="${poly(opt.band[0])}" fill="#fff"/>`;}
+  [.25,.5,.75,1].forEach(f=>s+=`<polygon points="${poly(max*f)}" fill="none" stroke="#d7deea"/>`);
+  axes.forEach((a,i)=>{const [x,y]=P(i,max);s+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#d7deea"/>`;const [lx,ly]=P(i,max*1.17);
+    s+=`<text x="${lx}" y="${ly+5}" text-anchor="${Math.abs(lx-cx)<8?'middle':lx>cx?'start':'end'}" font-family="Instrument Sans,sans-serif" font-size="14" font-weight="700" fill="${(opt.col&&opt.col[a])||'#0b2447'}">${a}</text>`;});
+  if(opt.ticks)opt.ticks.forEach(t=>{const [x,y]=P(0,t);s+=`<text x="${x+4}" y="${y-2}" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#51607a">${t}</text>`;});
+  series.slice().sort((a,b)=>(a.bold?1:0)-(b.bold?1:0)).forEach(se=>{s+=`<polygon points="${poly(se.v)}" fill="${se.c}" fill-opacity="${se.bold?.22:.06}" stroke="${se.c}" stroke-width="${se.bold?3.2:1.6}" ${se.bold?'':'stroke-dasharray="5 3"'}/>`;
+    axes.forEach((a,i)=>{const [x,y]=P(i,se.v[a]);s+=`<circle cx="${x}" cy="${y}" r="${se.bold?4.5:3}" fill="${se.c}"/>`;});});
+  return s+'</svg>';}
+const STYC={};Object.keys(STY).forEach(k=>STYC[k]=STY[k].c);const MODC={};MK.forEach(k=>MODC[k]=MODES[k].c);
+function radarsHTML(series,title){return `<div class="grid2"><div class="svgbox"><span class="mini">${title} · comunicación (0 a 100)</span>${radarSVG(CAX,100,series.map(s=>({...s,v:commVals(s.com)})),{col:STYC,ticks:[50,100],title:'Radar de comunicación'})}</div>
+  <div class="svgbox"><span class="mini">${title} · manejo de conflicto (0 a 12; franja verde = flexible)</span>${radarSVG(MK,12,series.map(s=>({...s,v:s.tk})),{col:MODC,band:[4.5,7.5],ticks:[6,12],title:'Radar de conflicto'})}</div></div>
+  <div class="legend">${series.map(s=>`<span><span class="dot" style="background:${s.c}"></span>${esc(s.lab)}${s.bold?' (tú)':''}</span>`).join('')}</div>`;}
+
+/* ================= RETROALIMENTACIÓN ================= */
+function feedbackHTML(u){const c=u.com,st=c.style,tm=topMode(u.tk),ax=Math.abs(c.x),ay=Math.abs(c.y);
+  const inten=Math.min(ax,ay)<0.12?`cerca del límite${neighbor(c).replace(' · cerca de',' con')}: puedes moverte entre ambos estilos según la situación, una ventaja si lo haces a propósito`:(ax>=0.4&&ay>=0.4?'de forma marcada: es tu forma natural y los demás la reconocen rápido':'de forma moderada: tienes margen para adaptarte a tu interlocutor');
+  const zs=MK.map(m=>[m,u.tk[m],zone(u.tk[m])[2]]);const altos=zs.filter(z=>z[2]==='Exceso'||z[2]==='Alto'),bajos=zs.filter(z=>z[2]==='Carencia'||z[2]==='Bajo'),flex=zs.filter(z=>z[2]==='Normal');
+  const mates=membersOf(u.grupo).filter(m=>m.e!==S.email&&m.r&&m.r.com);
+  const far=mates.slice().sort((a,b)=>Math.hypot(b.r.com.x-c.x,b.r.com.y-c.y)-Math.hypot(a.r.com.x-c.x,a.r.com.y-c.y))[0];
+  return `<div class="card stack"><span class="label">Retroalimentación personalizada</span><h2>${esc(first(u.name))}, esto dicen tus resultados</h2>
+  <div><div class="mini">Tu perfil</div><p>Tu estilo predominante es <b style="color:${STY[st].c}">${st}</b>, ${inten}. ${COMBO[st+'|'+tm]}</p></div>
+  <div><div class="mini">Tu repertorio ante el conflicto</div><p>${flex.length?`Usas con flexibilidad: <b>${flex.map(z=>z[0].toLowerCase()).join(', ')}</b>. `:''}${altos.length?'':'Ningún modo aparece en exceso. '}${bajos.length?'':'No tienes modos en carencia. '}</p>
+   <ul class="l">${altos.map(z=>`<li><b>${z[0]} (${z[1]}, ${z[2].toLowerCase()}):</b> ${MENOS[z[0]]}.</li>`).join('')}${bajos.map(z=>`<li><b>${z[0]} (${z[1]}, ${z[2].toLowerCase()}):</b> ${MAS[z[0]]}.</li>`).join('')}</ul></div>
+  ${mates.length?`<div><div class="mini">Con tu consultora</div><ul class="l">${mates.map(m=>`<li><b>${esc(first(m.name))}</b> es ${m.r.com.style.toLowerCase()}: ${HABLAR[m.r.com.style]}.</li>`).join('')}</ul>${far?`<p class="note" style="margin-top:6px">La persona más distinta a ti es ${esc(first(far.name))}: es la que más te complementa y con quien más conviene acordar cómo se reparten la exposición.</p>`:''}</div>`:'<p class="note">Cuando tus compañeros terminen el test, aquí verás cómo comunicarte con cada uno.</p>'}
+  <div class="tip"><b>Para tu consultoría y la exposición:</b> ${STY[st].exp} <b>Cuida:</b> ${STY[st].cui} Y ante el roce con el cliente, recuerda que tu primera reacción es <b>${tm.toLowerCase()}</b>: ${MODES[tm].u.charAt(0).toLowerCase()+MODES[tm].u.slice(1)} Pero ${MODES[tm].r.charAt(0).toLowerCase()+MODES[tm].r.slice(1)}</div></div>`;}
+
+/* ================= EXCEL ================= */
+function loadXLSX(){return window.XLSX?Promise.resolve():new Promise((ok,ko)=>{const sc=document.createElement('script');sc.src=CFG.XLSX_URL;sc.onload=ok;sc.onerror=()=>ko(new Error('xlsx'));document.head.appendChild(sc);});}
+const AX1={x:'Controla ↔ Demuestra',y:'Dice ↔ Pregunta'};
+function sheet1(a1){const X=XLSX;const rows=[['Parte 1 · Estilo de comunicación'],['Escribe un número del 1 al 4 en la columna E (1 = totalmente la frase de la izquierda; 4 = totalmente la de la derecha). Los resultados se calculan solos. Para usarla como plantilla, borra la columna E.'],[],['N°','Eje','Frase izquierda (1)','Frase derecha (4)','Respuesta (1 a 4)']];
+  COM.forEach(([ax,l,r],i)=>rows.push([i+1,AX1[ax],l,r,a1[i]!=null?a1[i]:'']));
+  const ws=X.utils.aoa_to_sheet(rows);const set=(ref,v,f)=>{ws[ref]=f?{t:typeof v==='number'?'n':'s',v,f}:{t:typeof v==='number'?'n':'s',v};};
+  const n=Object.keys(a1).length,sy=COM.reduce((t,[ax],i)=>t+(ax==='y'?(a1[i]||0):0),0),sx=COM.reduce((t,[ax],i)=>t+(ax==='x'?(a1[i]||0):0),0),sc=n>=12?scoreCom(a1):null;
+  const L=[['Respondidas',n,'COUNT(E5:E16)'],['Suma Dice ↔ Pregunta',sy,'SUMIF(B5:B16,"Dice ↔ Pregunta",E5:E16)'],['Suma Controla ↔ Demuestra',sx,'SUMIF(B5:B16,"Controla ↔ Demuestra",E5:E16)'],['Eje vertical (−1 dice · +1 pregunta)',+((sy-15)/9).toFixed(2),'ROUND((H6-15)/9,2)'],['Eje horizontal (−1 controla · +1 demuestra)',+((sx-15)/9).toFixed(2),'ROUND((H7-15)/9,2)'],['Estilo',sc?sc.style:'Faltan respuestas','IF(H5<12,"Faltan respuestas",IF(AND(H8<=0,H9<=0),"Directo",IF(H8<=0,"Vigoroso",IF(H9<=0,"Sistemático","Considerado"))))']];
+  set('G4','Resultado');L.forEach(([l,v,f],i)=>{set('G'+(5+i),l);set('H'+(5+i),v,f);});
+  ws['!ref']='A1:H16';ws['!cols']=[{wch:5},{wch:22},{wch:48},{wch:48},{wch:16},{wch:3},{wch:40},{wch:20}];return ws;}
+function sheet2(a2){const X=XLSX;const rows=[['Parte 2 · Manejo de conflicto'],['En la columna D escribe A o B según la frase que más se parece a lo que sueles hacer. Los puntajes se calculan solos. Para usarla como plantilla, borra la columna D.'],[],['N°','Frase A','Frase B','Elección (A o B)','Modo A','Modo B','Modo elegido']];
+  TK.forEach((it,i)=>{const ch=a2[i]!=null?(a2[i]===0?'A':'B'):'';rows.push([i+1,it[0][1],it[1][1],ch,it[0][0],it[1][0],ch?it[a2[i]][0]:'']);});
+  const ws=X.utils.aoa_to_sheet(rows);TK.forEach((_,i)=>{const r=5+i;ws['G'+r]={t:'s',v:rows[r-1][6],f:`IF(UPPER(D${r})="A",E${r},IF(UPPER(D${r})="B",F${r},""))`};});
+  const tk=scoreTk(a2),n=Object.keys(a2).length;const set=(ref,v,f)=>{ws[ref]=f?{t:typeof v==='number'?'n':'s',v,f}:{t:typeof v==='number'?'n':'s',v};};
+  set('I4','Modo');set('J4','Puntaje (0 a 12)');set('K4','Lectura');
+  MK.forEach((m,i)=>{const r=5+i;set('I'+r,m);set('J'+r,tk[m],`COUNTIF($G$5:$G$34,I${r})`);set('K'+r,zone(tk[m])[2],`IF(J${r}>=10,"Exceso",IF(J${r}>=8,"Alto",IF(J${r}>=5,"Normal",IF(J${r}>=3,"Bajo","Carencia"))))`);});
+  set('I11','Respondidas');set('J11',n,'COUNTIF(D5:D34,"A")+COUNTIF(D5:D34,"B")');set('I12','Primera reacción');set('J12',n?topMode(tk):'','IF(J11=0,"",INDEX(I5:I9,MATCH(MAX(J5:J9),J5:J9,0)))');
+  set('I14','Escala: 10–12 exceso · 8–9 alto · 5–7 normal (flexible) · 3–4 bajo · 0–2 carencia');
+  ws['!ref']='A1:K34';ws['!cols']=[{wch:5},{wch:52},{wch:52},{wch:16},{hidden:true},{hidden:true},{hidden:true},{wch:3},{wch:18},{wch:16},{wch:14}];return ws;}
+function sheetRes(u){const X=XLSX;const tm=topMode(u.tk);const tmp=document.createElement('div');tmp.innerHTML=feedbackHTML(u);
+  const fb=[...tmp.querySelectorAll('p,li,.tip')].map(e=>e.textContent.trim()).filter(Boolean);
+  const rows=[['Mi diagnóstico · Estilos de comunicación y conflicto'],[],['Nombre',u.name],['Consultora',GROUPS[u.grupo]||''],['Fecha',new Date(u.ts||Date.now()).toLocaleString('es-CO')],[],['Estilo de comunicación',u.com.style],['Eje vertical (−1 dice · +1 pregunta)',u.com.y],['Eje horizontal (−1 controla · +1 demuestra)',u.com.x],...CAX.map(a=>['Radar · '+a+' (0 a 100)',commVals(u.com)[a]]),[],['Modo de conflicto','Puntaje','Lectura'],...MK.map(m=>[m,u.tk[m],zone(u.tk[m])[2]]),['Primera reacción',tm],[],['Retroalimentación'],...fb.map(t=>[t])];
+  const ws=X.utils.aoa_to_sheet(rows);ws['!cols']=[{wch:44},{wch:30},{wch:14}];return ws;}
+async function download(kind){try{setSave('Preparando Excel…');await loadXLSX();}catch(e){setSave('No se pudo cargar el generador de Excel. Revisa tu conexión.');return;}
+  const X=XLSX,wb=X.utils.book_new();const u=myRes();const blank=kind==='blank';const a1=blank?{}:S.a1,a2=blank?{}:S.a2;
+  if(kind==='course'){const rows=[['Consultora','Nombre','Correo','Estilo','Eje vertical','Eje horizontal',...MK,'Primera reacción','Fecha']];
+    Object.entries(S.all).filter(([e,r])=>r&&r.com).sort((a,b)=>(a[1].grupo-b[1].grupo)).forEach(([e,r])=>rows.push([GROUPS[r.grupo]||'',r.name,e,r.com.style,r.com.y,r.com.x,...MK.map(m=>r.tk[m]),topMode(r.tk),r.ts?new Date(r.ts).toLocaleString('es-CO'):'']));
+    const ws=X.utils.aoa_to_sheet(rows);ws['!cols']=[{wch:34},{wch:34},{wch:32},{wch:14},{wch:12},{wch:12},...MK.map(()=>({wch:11})),{wch:16},{wch:20}];X.utils.book_append_sheet(wb,ws,'Curso');X.writeFile(wb,'Estilos_MGDP_curso.xlsx');setSave('Excel descargado');return;}
+  if(kind==='p1'||kind==='all'||blank)X.utils.book_append_sheet(wb,sheet1(a1),'Parte 1 Comunicación');
+  if(kind==='p2'||kind==='all'||blank)X.utils.book_append_sheet(wb,sheet2(a2),'Parte 2 Conflicto');
+  if(kind==='all'&&u&&u.com)X.utils.book_append_sheet(wb,sheetRes(u),'Mi diagnóstico');
+  const who=(S.email||'').split('@')[0];X.writeFile(wb,blank?'Plantilla_estilos_comunicacion_conflicto.xlsx':`Estilos_${who}_${kind==='p1'?'parte1':kind==='p2'?'parte2':'resultados'}.xlsx`);setSave('Excel descargado');}
+
 /* ================= VISTAS ================= */
 const groupOf=e=>{const u=S.all[e];return u?u.grupo:null};
 function header(){return `<div class="top"><div><span class="label">Universidad de La Sabana · MGDP · Liderar el cambio</span><h2 style="margin-top:4px">Estilos de comunicación y conflicto</h2></div>
@@ -216,25 +321,29 @@ function viewNew(){return `<div class="login card stack"><span class="label">Pri
 function viewTest(){const n1=Object.keys(S.a1).length,n2=Object.keys(S.a2).length;
  if(S.part===1){return `${header()}<div class="card stack"><span class="label">Parte 1 de 2 · Estilo de comunicación</span><h2>¿Cómo te comunicas en el trabajo?</h2>
   <p class="lead">Elige el punto más cercano a lo que <b>haces</b>, no a lo que te gustaría hacer. 1 = totalmente la frase de la izquierda; 4 = totalmente la de la derecha.</p>
-  <div class="prog"><i style="width:${n1/12*100}%"></i></div>
+  <div class="prog"><i style="width:${n1/12*100}%"></i></div><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="save">${esc(S.save||'Guardado automático cada 5 segundos')}</span><button class="btn ghost" data-act="recover">Recuperar lo último guardado</button><button class="btn ghost" data-act="xl${S.part}">Descargar parte ${S.part} (Excel)</button></div>
   <div>${COM.map(([ax,a,b],i)=>`<div class="q"><span class="qn">${i+1} de 12</span><span class="s">${a}</span><span class="scale">${[1,2,3,4].map(v=>`<button class="${v===1||v===4?'big ':''}${S.a1[i]===v?'on':''}" data-a1="${i}" data-v="${v}" aria-label="${v}">${v}</button>`).join('')}</span><span class="s r">${b}</span></div>`).join('')}</div>
   <button class="btn" data-act="next" ${n1<12?'disabled':''}>Continuar a la parte 2 (${n1}/12)</button></div>`;}
  return `${header()}<div class="card stack"><span class="label">Parte 2 de 2 · Manejo de conflicto</span><h2>Cuando hay un desacuerdo en el trabajo…</h2>
   <p class="lead">En cada par elige la frase que más se parece a lo que <b>sueles hacer</b>. Las dos pueden parecerte buenas: elige la más frecuente.</p>
-  <div class="prog"><i style="width:${n2/30*100}%"></i></div>
+  <div class="prog"><i style="width:${n2/30*100}%"></i></div><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="save">${esc(S.save||'Guardado automático cada 5 segundos')}</span><button class="btn ghost" data-act="recover">Recuperar lo último guardado</button><button class="btn ghost" data-act="xl${S.part}">Descargar parte ${S.part} (Excel)</button></div>
   <div>${TK.map((it,i)=>`<div class="pair"><span class="qn">${i+1} de 30</span><div class="opts">${it.map(([m,t],k)=>`<button class="${S.a2[i]===k?'on':''}" data-a2="${i}" data-v="${k}">${t}</button>`).join('')}</div></div>`).join('')}</div>
   <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn ghost" data-act="back">Volver a la parte 1</button><button class="btn" data-act="finish" ${n2<30?'disabled':''}>Ver mi diagnóstico (${n2}/30)</button></div></div>`;}
 function styleCard(st,extra=''){const d=STY[st];return `<div class="card stack" style="border:2px solid ${d.c}"><div class="style-h"><span class="dot" style="background:${d.c};width:18px;height:18px"></span><div><span class="mini">Tu estilo de comunicación</span><h2 style="color:${d.c}">${st}${extra}</h2></div></div>
  <p class="lead">${d.ax}.</p>
  <div class="grid2"><div><div class="mini">Cómo se reconoce</div><ul class="l">${d.ind.map(x=>`<li>${x}</li>`).join('')}</ul></div><div><div class="mini">Fortalezas</div><ul class="l">${d.f.map(x=>`<li>${x}</li>`).join('')}</ul><div class="mini" style="margin-top:10px">Debilidades</div><ul class="l">${d.d.map(x=>`<li>${x}</li>`).join('')}</ul></div></div>
  <div class="tip"><b>En la consultoría y la exposición:</b> ${d.exp} <b>Cuida:</b> ${d.cui}</div></div>`;}
-function viewMine(){const u=S.all[S.email]||mineLocal();if(!u)return viewTest();const tm=topMode(u.tk);
+function viewMine(){const u=myRes();if(!u||!u.com)return viewTest();
+ const mates=membersOf(u.grupo).filter(m=>m.e!==S.email&&m.r&&m.r.com);const ser=[...mates.map((m,i)=>({lab:first(m.name),c:PAL[(i+1)%PAL.length],com:m.r.com,tk:m.r.tk})),{lab:first(u.name),c:STY[u.com.style].c,com:u.com,tk:u.tk,bold:true}];const tm=topMode(u.tk);
  return `${header()}${tabs()}<div class="stack" style="margin-top:14px">
  <div class="grid2"><div class="card svgbox"><span class="mini">Tu posición</span>${quadSVG([{x:u.com.x,y:u.com.y,style:u.com.style,lab:'Tú'}],1)}</div>${styleCard(u.com.style,`<span style="font-size:15px;color:#51607a;font-family:var(--body)">${neighbor(u.com)}</span>`)}</div>
  <div class="card stack"><span class="mini">Tu manejo de conflicto (0 a 12 por modo)</span><div class="svgbox" style="max-width:760px">${tkSVG([{lab:'Tú',tk:u.tk}])}</div>
   <table><thead><tr><th>Modo</th><th>Puntaje</th><th>Lectura</th><th>Útil cuando</th><th>Riesgo</th></tr></thead><tbody>${MK.map(m=>{const z=zone(u.tk[m]);return `<tr><td><span class="chip"><span class="dot" style="background:${MODES[m].c}"></span>${m}</span></td><td><b>${u.tk[m]}</b></td><td><b>${z[2]}</b>: ${z[3]}</td><td>${MODES[m].u}</td><td>${MODES[m].r}</td></tr>`;}).join('')}</tbody></table>
   <div class="tip">Tu primera reacción ante el roce es <b>${tm.toLowerCase()}</b>. Al implementar su rediseño, pregúntate si ese modo conviene con cada actor o si necesitas otro.</div></div>
- <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn ghost" data-act="redo">Repetir el test</button><button class="btn ghost" data-act="retry">Reintentar guardado</button><span class="save" id="save">${esc(S.save||'')}</span></div></div>`;}
+ ${feedbackHTML(u)}
+ <div class="card stack"><span class="label">Mapa radial</span><h2>Tú y tu consultora</h2><p class="note">Tu figura va en trazo grueso; la de cada compañero, punteada.</p>${radarsHTML(ser,'Tú y tu equipo')}</div>
+ <div class="card stack"><span class="mini">Tus archivos y tus datos</span><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn" data-act="xlall">Descargar mis resultados (Excel)</button><button class="btn ghost" data-act="xlblank">Plantilla en blanco (Excel)</button><button class="btn ghost" data-act="recover">Recuperar lo último guardado</button><button class="btn ghost" data-act="retry">Reintentar guardado</button><button class="btn ghost" data-act="redo">Repetir el test</button><button class="btn ghost" data-act="del" style="color:var(--bad);border-color:var(--bad)">${S.armDel?'¿Seguro? Pulsa de nuevo para borrar':'Borrar mis resultados'}</button></div>
+ <p class="note">El Excel trae tus respuestas y las fórmulas: si borras las respuestas, te sirve como plantilla para aplicarlo a otras personas (por ejemplo, a los actores de tu cliente).</p><span class="save">${esc(S.save||'')}</span></div></div>`;}
 function tabs(){return `<div class="tabs">${S.doc?'':`<button class="tab ${S.view==='mine'?'on':''}" data-view="mine">Mi diagnóstico</button>`}<button class="tab ${S.view==='team'?'on':''}" data-view="team">${S.doc?'Consultoras':'Mi consultora'}</button>${S.doc?`<button class="tab ${S.view==='class'?'on':''}" data-view="class">Todo el curso</button>`:''}<button class="tab" data-act="refresh">↻ Actualizar</button></div>`;}
 const PAL=['#0b2447','#c0392b','#1d7552','#d9822b','#7b3fa0','#0e7c86'];
 function membersOf(g){const out=[];Object.entries(ROSTER).forEach(([u,[n,gi]])=>{if(gi===g){const e=u+'@'+CFG.DOMAIN;out.push({e,name:n,r:S.all[e]});}});
@@ -253,11 +362,12 @@ function teamBlock(g){const ms=membersOf(g),done=ms.filter(m=>m.r&&m.r.com);
  const hi=MK.slice().sort((a,b)=>avg[b]-avg[a])[0],lo=MK.slice().sort((a,b)=>avg[a]-avg[b])[0];
  return `<div class="card stack"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline"><h2>${esc(GROUPS[g])}</h2><span class="pill">${done.length} de ${ms.length} con test</span></div>
  ${done.length?`<div class="grid2"><div class="svgbox"><span class="mini">Estilos de comunicación del equipo</span>${quadSVG(pts)}</div>
-  <div class="svgbox"><span class="mini">Manejo de conflicto por integrante</span>${tkSVG(ser)}<div class="legend">${ser.map(s=>`<span><span class="dot" style="background:${s.c}"></span>${esc(s.lab)}</span>`).join('')}</div></div></div>`:'<p class="lead">Todavía nadie de la consultora terminó el test.</p>'}
+  <div class="svgbox"><span class="mini">Manejo de conflicto por integrante</span>${tkSVG(ser)}<div class="legend">${ser.map(s=>`<span><span class="dot" style="background:${s.c}"></span>${esc(s.lab)}</span>`).join('')}</div></div></div>
+  <div><span class="mini">Mapa radial del equipo</span>${radarsHTML(done.map((m,i)=>({lab:first(m.name),c:PAL[i%PAL.length],com:m.r.com,tk:m.r.tk,bold:m.e===S.email})),'Equipo')}</div>`:'<p class="lead">Todavía nadie de la consultora terminó el test.</p>'}
  <table><thead><tr><th>Integrante</th><th>Estilo</th><th>Primera reacción ante el conflicto</th></tr></thead><tbody>${ms.map(m=>`<tr><td>${esc(m.name)}</td><td>${m.r&&m.r.com?`<span class="chip"><span class="dot" style="background:${STY[m.r.com.style].c}"></span>${m.r.com.style}</span>`:'<span class="note">Pendiente</span>'}</td><td>${m.r&&m.r.tk?`${topMode(m.r.tk)} (${m.r.tk[topMode(m.r.tk)]})`:'—'}</td></tr>`).join('')}</tbody></table>
  ${done.length?`<div class="tip"><b>Lectura del equipo:</b> ${miss.length?`les falta el estilo <b>${miss.join(', ')}</b>: piensen quién cubrirá ese registro con la dirección.`:'tienen los cuatro estilos: aprovechen esa mezcla al repartir la exposición.'} Como equipo tienden a <b>${hi.toLowerCase()}</b> y usan poco <b>${lo.toLowerCase()}</b>; tómenlo en cuenta en su mapa de actores y en la gestión del cambio.</div>
  ${done.length>1?`<div><span class="mini">Reparto sugerido para responder mañana a la dirección</span><div class="roles" style="margin-top:6px">${asg.map(([r,st,m,also])=>`<div class="role" style="--rc:${STY[st].c}"><b>${r}</b><div class="note">escucha como ${st.toLowerCase()}</div><div style="margin-top:6px;font-weight:600">${m?esc(m.name)+(also?' <span class="note">(también)</span>':''):'—'}</div></div>`).join('')}</div><p class="note" style="margin-top:6px">Es una sugerencia según la cercanía de cada integrante al estilo de ese rol. El equipo decide.</p></div>`:''}`:''}</div>`;}
-function viewTeam(){const gs=S.doc?GROUPS.map((_,i)=>i):[S.grupo];return `${header()}${tabs()}<div class="stack" style="margin-top:14px">${S.loaded?'':'<p class="err">No se pudo leer la base de datos: se muestra solo lo guardado en este navegador.</p>'}${gs.map(teamBlock).join('')}</div>`;}
+function viewTeam(){const gs=S.doc?GROUPS.map((_,i)=>i):[S.grupo];return `${header()}${tabs()}<div class="stack" style="margin-top:14px">${S.doc?`<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn" data-act="xlcourse">Descargar resultados del curso (Excel)</button><span class="save">${esc(S.save||'')}</span></div>`:''}${S.loaded?'':'<p class="err">No se pudo leer la base de datos: se muestra solo lo guardado en este navegador.</p>'}${gs.map(teamBlock).join('')}</div>`;}
 function viewClass(){const done=Object.values(S.all).filter(r=>r&&r.com&&r.grupo!==TEST_G);const cnt={};Object.keys(STY).forEach(s=>cnt[s]=done.filter(r=>r.com.style===s).length);
  const pts=done.map(r=>({x:r.com.x,y:r.com.y,style:r.com.style,lab:first(r.name)}));
  const avg={};MK.forEach(m=>avg[m]=done.length?+(done.reduce((s,x)=>s+x.tk[m],0)/done.length).toFixed(1):0);
@@ -274,13 +384,14 @@ function route(){const a=$('#app');
 function normEmail(v){v=(v||'').trim().toLowerCase();if(!v)return '';if(!v.includes('@'))v+='@'+CFG.DOMAIN;return v;}
 async function enter(email){S.email=email;sessionStorage.setItem('est-email',email);
  const u=email.split('@')[0],ro=email.endsWith('@'+CFG.DOMAIN)?ROSTER[u]:null;
- await loadAll();const saved=S.all[email]||mineLocal();
+ await loadAll();const cloud=S.all[email]||null;const saved=(cloud&&cloud.com)?cloud:mineLocal();
  if(ro){S.name=ro[0];S.grupo=ro[1];}else if(saved){S.name=saved.name;S.grupo=saved.grupo;}else{const p=JSON.parse(LS.get('est-prof-'+email)||'null');if(p){S.name=p.name;S.grupo=p.grupo;}else{S.view='new';return route();}}
  S.a1=JSON.parse(LS.get('est-a1-'+email)||'{}');S.a2=JSON.parse(LS.get('est-a2-'+email)||'{}');
+ if(cloud&&(Object.keys(cloud.a1||{}).length+Object.keys(cloud.a2||{}).length)>(Object.keys(S.a1).length+Object.keys(S.a2).length)){S.a1=Object.assign({},cloud.a1||{});S.a2=Object.assign({},cloud.a2||{});S.save='Se trajeron tus últimas respuestas guardadas';}
  S.view=saved?'mine':'test';S.part=Object.keys(S.a1).length>=12?2:1;route();}
 document.addEventListener('click',async ev=>{const b=ev.target.closest('button');if(!b)return;
- if(b.dataset.a1!=null){S.a1[b.dataset.a1]=+b.dataset.v;LS.set('est-a1-'+S.email,JSON.stringify(S.a1));const y=scrollY;route();scrollTo(0,y);return;}
- if(b.dataset.a2!=null){S.a2[b.dataset.a2]=+b.dataset.v;LS.set('est-a2-'+S.email,JSON.stringify(S.a2));const y=scrollY;route();scrollTo(0,y);return;}
+ if(b.dataset.a1!=null){S.a1[b.dataset.a1]=+b.dataset.v;markDirty();const y=scrollY;route();scrollTo(0,y);return;}
+ if(b.dataset.a2!=null){S.a2[b.dataset.a2]=+b.dataset.v;markDirty();const y=scrollY;route();scrollTo(0,y);return;}
  if(b.dataset.view){S.view=b.dataset.view;if(S.view!=='mine')await loadAll();route();return;}
  const a=b.dataset.act;
  if(a==='login'){const e=normEmail($('#em').value);S.msg='';
@@ -293,12 +404,15 @@ document.addEventListener('click',async ev=>{const b=ev.target.closest('button')
  if(a==='logout'){S={email:null,name:'',grupo:null,doc:false,view:'test',part:1,a1:{},a2:{},all:{},loaded:false,msg:''};sessionStorage.removeItem('est-email');sessionStorage.removeItem('est-doc');return route();}
  if(a==='next'){S.part=2;route();scrollTo(0,0);return;}
  if(a==='back'){S.part=1;route();scrollTo(0,0);return;}
- if(a==='finish'){const res={name:S.name,grupo:S.grupo,com:scoreCom(S.a1),tk:scoreTk(S.a2),ts:new Date().toISOString()};
+ if(a==='finish'){S.dirty=false;const res={name:S.name,grupo:S.grupo,a1:Object.assign({},S.a1),a2:Object.assign({},S.a2),com:scoreCom(S.a1),tk:scoreTk(S.a2),ts:new Date().toISOString()};
    LS.set('est-res-'+S.email,JSON.stringify(res));S.all[S.email]=res;S.view='mine';setSave('Guardando…');route();scrollTo(0,0);
    binUpdate(r=>{r.estilos=r.estilos||{};r.estilos[S.email]=res;});return;}
  if(a==='retry'){const res=mineLocal();if(res){setSave('Guardando…');binUpdate(r=>{r.estilos=r.estilos||{};r.estilos[S.email]=res;});}return;}
- if(a==='redo'){S.a1={};S.a2={};LS.set('est-a1-'+S.email,'{}');LS.set('est-a2-'+S.email,'{}');S.part=1;S.view='test';route();scrollTo(0,0);return;}
+ if(a==='redo'){S.a1={};S.a2={};markDirty();S.part=1;S.view='test';route();scrollTo(0,0);return;}
  if(a==='refresh'){await loadAll();route();return;}
+ if(a==='recover')return recover();
+ if(a==='del'){if(!S.armDel){S.armDel=true;const y=scrollY;route();scrollTo(0,y);setTimeout(()=>{if(S.armDel){S.armDel=false;if(S.view==='mine'){const yy=scrollY;route();scrollTo(0,yy);}}},5000);return;}S.armDel=false;return delMine();}
+ if(['xl1','xl2','xlall','xlblank','xlcourse'].includes(a))return download({xl1:'p1',xl2:'p2',xlall:'all',xlblank:'blank',xlcourse:'course'}[a]);
 });
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&$('#em')&&document.activeElement===$('#em'))$('[data-act=login]').click();});
 setInterval(async()=>{if((S.view==='team'||S.view==='class')&&document.visibilityState==='visible'){await loadAll();const y=scrollY;route();scrollTo(0,y);}},20000);
