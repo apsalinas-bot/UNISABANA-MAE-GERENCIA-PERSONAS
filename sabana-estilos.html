@@ -77,6 +77,7 @@ th{font:600 12px var(--mono);text-transform:uppercase;color:var(--muted)}
 const CFG={
   // Base de datos propia de la app de estilos (las respuestas van en la clave "estilos")
   BIN_ID:'6b00bae9ac6210605a98661c',
+  BIN_FALLBACK:'6af8594fffd5d16053c0f600',   // respaldo (BIN del Ishikawa) si el principal no responde
   BIN_KEY:'$2a$10$2sih3TPm3qkCuJG97N99ru4sHdofBFicx2zBOwK1MqUYzlDJ502W2',
   DOC_DNI_SHA256:'8d9408a0ea52e9c0a344486dc50f53e895364a2c9e44fd7b7aeefd9497df4cae',
   DOMAIN:'unisabana.edu.co',
@@ -177,17 +178,23 @@ const $=q=>document.querySelector(q);
 const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
 const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let S={email:null,name:'',grupo:null,doc:false,view:'test',part:1,a1:{},a2:{},all:{},loaded:false,msg:''};
-let _hdr=LS.get('sab-binhdr')||'X-Access-Key';
-async function binFetch(method,body){const url=`https://api.jsonbin.io/v3/b/${CFG.BIN_ID}${method==='GET'?'/latest':''}`;
+let _hdr=LS.get('sab-binhdr')||'X-Access-Key';var S_err='';
+var S_used='';
+async function binTry(bin,method,body){let last='';
   for(const h of [_hdr,_hdr==='X-Access-Key'?'X-Master-Key':'X-Access-Key']){
-    const r=await fetch(url,{method,cache:'no-store',headers:{[h]:CFG.BIN_KEY,'X-Bin-Meta':'false',...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});
-    if(r.status===401||r.status===403)continue;
-    if(h!==_hdr){_hdr=h;LS.set('sab-binhdr',h);}
-    if(!r.ok)throw new Error('JSONBin '+r.status);
-    return method==='GET'?await r.json():true;}
-  throw new Error('Sin acceso a la base de datos');}
+    let r;try{r=await fetch(`https://api.jsonbin.io/v3/b/${bin}${method==='GET'?'/latest':''}`,{method,cache:'no-store',headers:{[h]:CFG.BIN_KEY,'X-Bin-Meta':'false',...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});}
+    catch(e){throw {soft:false,msg:'sin conexión con JSONBin ('+(e.message||e)+')'};}
+    if(r.ok){if(h!==_hdr){_hdr=h;LS.set('sab-binhdr',h);}return method==='GET'?await r.json():true;}
+    let m='';try{m=(await r.json()).message||'';}catch(e){}
+    last=`JSONBin ${r.status}${m?': '+m:''}`;
+    if(r.status!==401&&r.status!==403)break;}
+  throw {soft:true,msg:last};}
+/* Siempre intenta primero el BIN principal; el respaldo solo si el principal falla. */
+async function binFetch(method,body){let err=null;
+  for(const b of [CFG.BIN_ID,CFG.BIN_FALLBACK].filter(Boolean)){try{const out=await binTry(b,method,body);S_err=b===CFG.BIN_ID?'':'BIN principal: '+(err&&err.msg);S_used=b;return out;}catch(e){if(!err)err=e;}}
+  S_err=(err&&err.msg)||'error desconocido';throw new Error(S_err);}
 let _q=Promise.resolve();
-function binUpdate(fn){_q=_q.then(async()=>{let r=await binFetch('GET');if(!r||typeof r!=='object'||Array.isArray(r))r={};fn(r);await binFetch('PUT',r);setSave('Guardado en la nube a las '+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}));}).catch(e=>{console.warn(e);setSave('Sin conexión: tu resultado quedó en este navegador. Pulsa “Reintentar guardado”.');});return _q;}
+function binUpdate(fn){_q=_q.then(async()=>{let r=await binFetch('GET');if(!r||typeof r!=='object'||Array.isArray(r))r={};fn(r);await binFetch('PUT',r);setSave((S_used===CFG.BIN_FALLBACK?'Guardado en el respaldo a las ':'Guardado en la nube a las ')+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}));}).catch(e=>{console.warn(e);setSave('No se guardó en la nube ('+S_err+'). Tus respuestas siguen en este navegador: pulsa “Reintentar guardado”.');});return _q;}
 function setSave(t){S.save=t;document.querySelectorAll('.save').forEach(el=>el.textContent=t);}
 const hhmm=()=>new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 function markDirty(){S.dirty=true;LS.set('est-a1-'+S.email,JSON.stringify(S.a1));LS.set('est-a2-'+S.email,JSON.stringify(S.a2));setSave('Cambios sin guardar…');}
@@ -203,7 +210,11 @@ async function recover(){try{setSave('Buscando lo último guardado…');const r=
   route();setSave('Recuperado lo último guardado ('+new Date(rec.ts||rec.draftTs).toLocaleString('es-CO')+')');}catch(e){setSave('No se pudo leer la nube. Revisa tu conexión.');}}
 async function delMine(){const em=S.email;LS.set('est-res-'+em,'null');LS.set('est-a1-'+em,'{}');LS.set('est-a2-'+em,'{}');S.a1={};S.a2={};delete S.all[em];S.dirty=false;
   setSave('Borrando…');await binUpdate(r=>{if(r.estilos)delete r.estilos[em];});S.view='test';S.part=1;route();scrollTo(0,0);setSave('Tus resultados se borraron.');}
-async function loadAll(){try{const r=await binFetch('GET');S.all=(r&&r.estilos)||{};S.loaded=true;}catch(e){S.loaded=false;}
+async function loadAll(){let main=null,fb=null,e1='';
+  try{main=await binTry(CFG.BIN_ID,'GET');}catch(e){e1=e.msg;}
+  if(CFG.BIN_FALLBACK){try{fb=await binTry(CFG.BIN_FALLBACK,'GET');}catch(e){}}
+  S.loaded=!!(main||fb);S_err=e1?(S.loaded?'BIN principal: '+e1+' · se muestran los datos del respaldo':e1):'';
+  S.all=Object.assign({},(fb&&fb.estilos)||{},(main&&main.estilos)||{});
   const mine=S.email&&mineLocal();if(mine&&mine.com&&S.email&&!(S.all[S.email]&&S.all[S.email].com))S.all[S.email]=mine;}
 const mineLocal=()=>{try{return JSON.parse(LS.get('est-res-'+S.email)||'null')}catch(e){return null}};
 const myRes=()=>{const c=S.all[S.email];return (c&&c.com)?c:mineLocal();};
@@ -367,7 +378,7 @@ function teamBlock(g){const ms=membersOf(g),done=ms.filter(m=>m.r&&m.r.com);
  <table><thead><tr><th>Integrante</th><th>Estilo</th><th>Primera reacción ante el conflicto</th></tr></thead><tbody>${ms.map(m=>`<tr><td>${esc(m.name)}</td><td>${m.r&&m.r.com?`<span class="chip"><span class="dot" style="background:${STY[m.r.com.style].c}"></span>${m.r.com.style}</span>`:'<span class="note">Pendiente</span>'}</td><td>${m.r&&m.r.tk?`${topMode(m.r.tk)} (${m.r.tk[topMode(m.r.tk)]})`:'—'}</td></tr>`).join('')}</tbody></table>
  ${done.length?`<div class="tip"><b>Lectura del equipo:</b> ${miss.length?`les falta el estilo <b>${miss.join(', ')}</b>: piensen quién cubrirá ese registro con la dirección.`:'tienen los cuatro estilos: aprovechen esa mezcla al repartir la exposición.'} Como equipo tienden a <b>${hi.toLowerCase()}</b> y usan poco <b>${lo.toLowerCase()}</b>; tómenlo en cuenta en su mapa de actores y en la gestión del cambio.</div>
  ${done.length>1?`<div><span class="mini">Reparto sugerido para responder mañana a la dirección</span><div class="roles" style="margin-top:6px">${asg.map(([r,st,m,also])=>`<div class="role" style="--rc:${STY[st].c}"><b>${r}</b><div class="note">escucha como ${st.toLowerCase()}</div><div style="margin-top:6px;font-weight:600">${m?esc(m.name)+(also?' <span class="note">(también)</span>':''):'—'}</div></div>`).join('')}</div><p class="note" style="margin-top:6px">Es una sugerencia según la cercanía de cada integrante al estilo de ese rol. El equipo decide.</p></div>`:''}`:''}</div>`;}
-function viewTeam(){const gs=S.doc?GROUPS.map((_,i)=>i):[S.grupo];return `${header()}${tabs()}<div class="stack" style="margin-top:14px">${S.doc?`<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn" data-act="xlcourse">Descargar resultados del curso (Excel)</button><span class="save">${esc(S.save||'')}</span></div>`:''}${S.loaded?'':'<p class="err">No se pudo leer la base de datos: se muestra solo lo guardado en este navegador.</p>'}${gs.map(teamBlock).join('')}</div>`;}
+function viewTeam(){const gs=S.doc?GROUPS.map((_,i)=>i):[S.grupo];return `${header()}${tabs()}<div class="stack" style="margin-top:14px">${S.doc?`<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn" data-act="xlcourse">Descargar resultados del curso (Excel)</button><span class="save">${esc(S.save||'')}</span></div>`:''}${S.loaded?(S_err?`<p class="err">${esc(S_err)}</p>`:''):`<p class="err">No se pudo leer la base de datos (${esc(S_err)}). Se muestra solo lo guardado en este navegador.</p>`}${gs.map(teamBlock).join('')}</div>`;}
 function viewClass(){const done=Object.values(S.all).filter(r=>r&&r.com&&r.grupo!==TEST_G);const cnt={};Object.keys(STY).forEach(s=>cnt[s]=done.filter(r=>r.com.style===s).length);
  const pts=done.map(r=>({x:r.com.x,y:r.com.y,style:r.com.style,lab:first(r.name)}));
  const avg={};MK.forEach(m=>avg[m]=done.length?+(done.reduce((s,x)=>s+x.tk[m],0)/done.length).toFixed(1):0);
