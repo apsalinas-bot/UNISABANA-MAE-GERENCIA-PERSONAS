@@ -672,7 +672,7 @@ const SES=[
  avance:'Consultoras formadas y su primera sospecha sobre el problema.',
  prep:['Confirmar Zoom o Teams y permiso para crear salas.','Pedir la lista de estudiantes con cargo y empresa.','Tablero (Miro, FigJam o Mural) con un marco por sala, la plantilla de auditoría y columnas por proceso para formar equipos.','Encuesta del caso (4 opciones) y de los 3 mitos.','Decidir la asignación de empresas (sorteo o elección; máximo 2 equipos por empresa) y tener sus fichas listas para enviar (pestaña Empresas).','Conseguir el PDF de Hammer (1990) por la biblioteca para compartirlo al cierre.','Enviar a cada equipo su ficha completa al cierre o esta noche (a más tardar antes de las 8 a.m. del sábado), junto con Hammer.'],
  guion:[[10,'plen','Bienvenida y check-in','En el chat, en cinco palabras: el proceso de gestión humana que hoy les quita el sueño. Lees varios, los agrupas y te presentas en 90 segundos.'],
-  [25,'plen','Cómo trabajaremos','El contrato del curso: tres etapas con su lectura eje, el ritmo de cada sesión, las partes de la exposición, la evaluación con rúbrica, las empresas y las reglas con el cliente. Cierras abriendo preguntas.'],
+  [25,'plen','Cómo trabajaremos','El contrato del curso: tres etapas con su lectura eje, las partes de la exposición, la evaluación con rúbrica, las empresas y las reglas con el cliente. Cierras abriendo preguntas.'],
   [20,'din','Caso de apertura: la decisión de los 3.400 millones','Votan qué aprobarían en Andes Contact; luego ven los pilotos: el aumento de salario casi no movió la rotación, el acompañamiento en piso sí.'],
   [20,'din','Discusión: mito, evidencia o depende','Tres afirmaciones; votan, defienden su voto y recién revelas. Cierras preguntando qué fuentes de evidencia usó su organización en su última gran decisión.'],
   [15,'pausa','Pausa',''],
@@ -773,7 +773,6 @@ const DECKS={
 curso:[
  {sec:'Curso',k:'cover',kick:'Universidad de La Sabana · Maestría en Gerencia y Desarrollo de Personas',title:'Cómo trabajaremos',sub:'Estructura, ritmo de las sesiones y evaluación del curso.'},
  {sec:'Estructura',k:'etapas',br:'Son seis sesiones agrupadas en tres etapas. Cada etapa gira alrededor de una lectura.',title:'Tres etapas, una lectura eje por etapa',n:'Explica solo la primera columna; las otras funcionan igual.'},
- {sec:'Dictado',k:'ritmo',br:'Cada sesión de cuatro horas tiene el mismo ritmo.',title:'Así serán nuestras cuatro horas'},
  {sec:'Evaluación',k:'eval',br:'Todo termina en un solo producto, y esa es la única evaluación.',title:'Una sola nota: la exposición final'},
  {sec:'Evaluación',k:'parts',br:'Cada sesión deja lista una parte de esa exposición.',title:'Las siete partes de la exposición'},
  {sec:'Empresas',k:'empresas',br:'Trabajarán sobre una empresa colombiana ficticia que recibirán hoy.',title:'Su empresa y las reglas del juego'},
@@ -786,7 +785,6 @@ s1:[
  {sec:'Bienvenida',k:'list',br:'Casi todo lo que escribieron es el síntoma de un proceso. De eso trata este curso, y por eso les cuento desde dónde lo miro.',title:'Desde dónde les hablo',items:[['Primero','Ingeniería Industrial y Gerencia de Operaciones: aprendí a ver las organizaciones como sistemas de procesos.'],['Después','Dirección de Personas y Desarrollo Organizacional: aprendí que esos procesos producen, sobre todo, experiencias humanas.'],['Hoy','Gestión académica y docencia en la Universidad Católica San Pablo, Arequipa.']],n:'Noventa segundos. No leas la diapositiva: cuéntala.'},
  {sec:'Bienvenida',k:'big',br:'Por eso la idea que nos acompañará estas tres semanas es simple:',text:'Gerenciar personas también es <em>diseñar operaciones</em>.',sub:'No vamos a estudiar la gestión humana desde afuera. Vamos a trabajar como consultores dentro de una empresa.'},
  {sec:'Cómo trabajaremos',k:'etapas',br:'Antes de empezar, el mapa completo. Son seis sesiones en tres etapas, y cada etapa gira alrededor de una lectura.',title:'Tres etapas, una lectura eje por etapa',n:'Señala una columna: el viernes trabajamos, la lectura queda para la noche, el sábado abrimos conversándola. No leas las tres columnas: basta con una.'},
- {sec:'Cómo trabajaremos',k:'ritmo',br:'Cada sesión de cuatro horas tiene el mismo ritmo.',title:'Así serán nuestras cuatro horas',n:'Una sola idea: casi todo el tiempo trabajan ellos. Y siempre hay un consultorio para dudas.'},
  {sec:'Cómo trabajaremos',k:'eval',br:'Todo lo que trabajen termina en un solo producto, y esa es la única evaluación.',title:'Una sola nota: la exposición final',n:'Cada sesión deja lista una parte de la exposición. La rúbrica completa la tendrán por escrito.'},
  {sec:'Cómo trabajaremos',k:'empresas',br:'No trabajarán sobre su propia organización, sino sobre una empresa colombiana ficticia que recibirán hoy.',title:'Su empresa y las reglas del juego',n:'Cada caso trae contexto, voces y lo que pide el cliente; no todos los datos. Interpretar es parte del trabajo.'},
  {sec:'Cómo trabajaremos',k:'big',br:'Ese es el mapa.',text:'¿Qué <em>dudas</em> tienen sobre cómo vamos a trabajar?',min:5,n:'Abre micrófonos. Resuelve dudas de equipos y evaluación. Luego pasa al caso con la frase de la siguiente diapositiva.'},
@@ -1111,17 +1109,14 @@ function viewCurso(){
 
   <div class="block"><h2>1. La estructura</h2><p class="lead">Seis sesiones en tres etapas. Cada etapa tiene una lectura que la articula.</p>${stg}</div>
 
-  <div class="block"><h2>2. Cómo es una sesión de cuatro horas</h2><p class="lead">Desde la sesión 4: un avance teórico breve, una dinámica guiada y el resto es consultoría sobre su caso. Siempre hay un consultorio para dudas.</p>
-   <div class="rit-page">${RITMO.map(([n,m,d,t])=>`<div class="rrow"><b>${n}</b><div class="trk"><i class="sw-${t}" style="width:${Math.round(m/RMAX()*100)}%"></i></div><span class="mono">${m} min</span><small>${d}</small></div>`).join('')}</div></div>
-
-  <div class="block"><h2>3. La evaluación</h2>
+  <div class="block"><h2>2. La evaluación</h2>
    <div class="eval"><div style="display:flex;flex-direction:column;gap:10px"><span class="label">Única nota del curso</span><h3>Exposición final del caso de su empresa, evaluada con rúbrica</h3><p class="note">Los avances de cada sesión no se califican: se retroalimentan en clase y se convierten en las diapositivas de la exposición.</p></div>
     <div class="facts"><div class="fact"><b>Cuándo</b><span>Sábado 21 de noviembre</span></div><div class="fact"><b>Quiénes</b><span>Equipos de 2 a 3, formados el viernes 6</span></div><div class="fact"><b>El caso</b><span>Una empresa colombiana ficticia asignada a cada equipo</span></div><div class="fact"><b>Formato</b><span>10 minutos de exposición + 5 de preguntas; máximo 8 diapositivas</span></div><div class="fact"><b>Entrega</b><span>Borrador antes de las 7:00 a.m. y versión final antes de las 9:35 a.m. del sábado 21</span></div><div class="fact"><b>Escala</b><span>0,0 a 5,0, ponderada por la rúbrica</span></div></div></div>
    <details class="prep"><summary>Ver las 7 partes de la exposición y la rúbrica completa</summary><div class="inner"><div class="tbl-wrap"><table><thead><tr><th>#</th><th>Parte de la exposición</th><th>Se construye en</th></tr></thead><tbody>${PARTS.map((p,i)=>`<tr><td class="num">${i+1}</td><td>${p[0]}</td><td class="num">${p[1]}</td></tr>`).join('')}</tbody></table></div>${rubricTable()}</div></details></div>
 
-  <div class="block"><h2>4. Cómo desarrollar su caso</h2><p class="lead">${GUIA_INTRO}</p>${guiaHTML()}<p class="note">${GUIA_CIERRE}</p></div>
+  <div class="block"><h2>3. Cómo desarrollar su caso</h2><p class="lead">${GUIA_INTRO}</p>${guiaHTML()}<p class="note">${GUIA_CIERRE}</p></div>
 
-  <div class="block"><h2>5. Los casos</h2><p class="lead">Tres empresas colombianas ficticias, una de ellas adaptada con la experiencia de un equipo. Reglas: interpretar, cuestionar lo que pide el cliente y aportar comentarios a las otras consultoras al cierre de cada sesión.</p>
+  <div class="block"><h2>4. Los casos</h2><p class="lead">Tres empresas colombianas ficticias, una de ellas adaptada con la experiencia de un equipo. Reglas: interpretar, cuestionar lo que pide el cliente y aportar comentarios a las otras consultoras al cierre de cada sesión.</p>
    <div class="tbl-wrap"><table><thead><tr><th>Empresa</th><th>Cliente</th><th>Proceso</th><th>Lo que pide el cliente</th></tr></thead><tbody>${CASES.map(c=>`<tr><td><b>${c.nombre}</b><br><span class="note">${c.ciudad.split(',')[0]}</span></td><td>${c.cliente[0]}<br><span class="note">${c.cliente[1]}</span></td><td>${c.proceso}</td><td class="note">${c.encargo.replace(/[“”]/g,'')}</td></tr>`).join('')}</tbody></table></div>
    </div>
   
